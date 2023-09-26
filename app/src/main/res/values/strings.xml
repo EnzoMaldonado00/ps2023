@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">Ps</string>
+
+    <!--Login Strings-->
+    <string name="email_text">Email</string>
+    <string name="password_text">Password</string>
+    <string name="login_button_text">Log in</string>
+    <string name="not_account_text">Don\'t have an account? Sign up</string>
+
+    <!--Register Strings-->
+    <string name="choose_img_text">Chose your profile picture:</string>
+    <string name="full_name_hint">Full name</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="register_button_text">Register</string>
+    <string name="account_text">Have an account already? Log in.</string>
+
+    <!--Error Strings-->
+    <string name="email_error_text">Please enter an email.</string>
+    <string name="password_error_text">Please enter a password.</string>
+
+    <!--NavBar Strings-->
+    <string name="open_nav">Open Navigation Drawer</string>
+    <string name="close_nav">Open Navigation Drawer</string>
+    <string name="profile_text">Profile</string>
+    <string name="log_out_text">Log Out</string>
+    <string name="settings_text">Settings</string>
+    <string name="nav_bar_title">Chat App</string>
+
+    <string name="profile_image_title_alert_dialog">Profile Picture</string>
+
+    <!--PopUp Menu-->
+    <string name="popup_menu_profile">Profile</string>
+    <string name="popup_menu_settings">Settings</string>
+    <string name="delete_account_text">Delete Account</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>

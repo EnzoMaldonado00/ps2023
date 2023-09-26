@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="container_margin">15dp</dimen>
+    <dimen name="icon_width">100sp</dimen>
+    <dimen name="icon_height">100sp</dimen>
+    <dimen name="sign_in_edit_text">200sp</dimen>
+
+    <dimen name="component_height">48dp</dimen>
+
+    <!--NavBar-->
+    <dimen name="navbar_header_padding">16dp</dimen>
+
+    <!--HomeActivity-->
+    <dimen name="profile_img_width">60dp</dimen>
+    <dimen name="profile_img_height">60dp</dimen>
+    <dimen name="profile_img_marginEnd">10dp</dimen>
+    <dimen name="profile_img_marginTop">10dp</dimen>
+</resources>

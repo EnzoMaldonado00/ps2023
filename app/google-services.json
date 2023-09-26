@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "123252993742",
+    "project_id": "ps2023-chatapp",
+    "storage_bucket": "ps2023-chatapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123252993742:android:4d6030dd5326ed98206a9f",
+        "android_client_info": {
+          "package_name": "com.maldEnz.ps"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWO5uDPTQq8jAu1i6mKqQAFXR_P3cNEbQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

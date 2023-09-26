@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/container_margin"
+    tools:context=".presentation.activity.LogInActivity">
+
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="@dimen/sign_in_edit_text"
+        android:layout_height="@dimen/component_height"
+        android:layout_margin="@dimen/container_margin"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:inputType="textEmailAddress"
+        android:hint="@string/email_text"
+        android:importantForAutofill="no"
+        tools:ignore="LabelFor"/>
+
+    <TextView
+        android:id="@+id/email_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/email"
+        android:text="@string/email_error_text"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/error_red"/>
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="@dimen/sign_in_edit_text"
+        android:layout_height="@dimen/component_height"
+        android:layout_margin="@dimen/container_margin"
+        app:layout_constraintTop_toBottomOf="@id/email"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:inputType="textPassword"
+        android:hint="@string/password_text"
+        android:importantForAutofill="no"
+        tools:ignore="LabelFor"/>
+
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_margin="@dimen/container_margin"
+        app:layout_constraintTop_toBottomOf="@id/password"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/login_button_text"/>
+
+    <TextView
+        android:id="@+id/not_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:layout_constraintTop_toBottomOf="@id/btn_login"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="@dimen/container_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/not_account_text"
+        android:focusable="true" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
