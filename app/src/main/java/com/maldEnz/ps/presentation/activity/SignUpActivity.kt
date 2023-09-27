@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +15,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.maldEnz.ps.databinding.ActivitySignUpBinding
 import com.maldEnz.ps.presentation.fragment.ImageMethodFragment
+import com.maldEnz.ps.presentation.fragment.SheetDialogProfileFragment
 import java.util.UUID
 
 class SignUpActivity : AppCompatActivity() {
@@ -34,9 +34,8 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun buttonListener() {
         binding.userIcon.setOnClickListener {
-            val intent =
-                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            startActivityForResult(intent, pickImageRC)
+            ImageMethodFragment().show(supportFragmentManager, "SelectImage")
+
         }
 
         binding.alreadyRegisteredText.setOnClickListener {
@@ -60,7 +59,7 @@ class SignUpActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
+        if (requestCode == pickImageRC && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
             // Selecciona una imagen desde la galería
             imageUri = data.data
             // Muestra la imagen en el ImageView
@@ -108,8 +107,8 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     // Arreglar para poder usar la camara
-    private fun selectImageDialog(imageView: ImageView) {
-        val dialogFragment = ImageMethodFragment.newInstance(imageView)
+    private fun selectImageDialog() {
+        val dialogFragment = ImageMethodFragment()
         dialogFragment.show(supportFragmentManager, "dialog")
     }
 

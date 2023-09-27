@@ -9,20 +9,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.maldEnz.ps.databinding.FragmentImageMethodBinding
+import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
 
-class ImageMethodFragment : DialogFragment() {
+class ImageMethodFragment : BottomSheetDialogFragment() {
 
     private val pickImageRC = 1
     private val imageCaptureRC = 2
     private lateinit var imageUri: Uri
     private lateinit var imageView: ImageView
+    private lateinit var userViewModel: UserViewModel
 
     private lateinit var binding: FragmentImageMethodBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentImageMethodBinding.inflate(layoutInflater)
+        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -58,23 +62,14 @@ class ImageMethodFragment : DialogFragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
+        if (requestCode == pickImageRC && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
             // Selecciona una imagen desde la galería
             imageUri = data.data!!
             // Muestra la imagen en el ImageView
             imageView.setImageURI(imageUri)
-        }
-    }
-
-    companion object {
-        private const val ARGS_TITLE_KEY = "image"
-
-        fun newInstance(imageView: ImageView): ImageMethodFragment {
-            val fragment = ImageMethodFragment()
-            val args = Bundle()
-            args.putString(ARGS_TITLE_KEY, imageView.toString())
-            fragment.arguments = args
-            return fragment
+        } else if (requestCode == imageCaptureRC && resultCode == Activity.RESULT_OK && data != null) {
+            imageUri = data.data!!
+            imageView.setImageURI(imageUri)
         }
     }
 }

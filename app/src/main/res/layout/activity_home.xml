@@ -10,43 +10,33 @@
         android:id="@+id/chats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        android:text="Chats!"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="Chats!"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profilePicture"
         android:layout_width="@dimen/profile_img_width"
         android:layout_height="@dimen/profile_img_height"
+        android:layout_marginTop="@dimen/profile_img_marginTop"
         android:layout_marginEnd="@dimen/profile_img_marginEnd"
         android:clickable="true"
-        android:layout_marginTop="@dimen/profile_img_marginTop"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:focusable="true"
         android:importantForAccessibility="no"
-        android:focusable="true"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/placeholder"
         android:layout_width="60dp"
         android:layout_height="30dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginEnd="30dp"
-        tools:hint="placeholder"/>
-
-    <FrameLayout
-        android:background="@color/white"
-        android:id="@+id/frame_container"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-
-
+        tools:hint="placeholder" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
