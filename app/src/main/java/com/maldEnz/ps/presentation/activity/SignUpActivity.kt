@@ -6,16 +6,17 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.ImageView
+import android.provider.MediaStore
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.maldEnz.ps.databinding.ActivitySignUpBinding
 import com.maldEnz.ps.presentation.fragment.ImageMethodFragment
-import com.maldEnz.ps.presentation.fragment.SheetDialogProfileFragment
 import java.util.UUID
 
 class SignUpActivity : AppCompatActivity() {
@@ -34,8 +35,9 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun buttonListener() {
         binding.userIcon.setOnClickListener {
-            ImageMethodFragment().show(supportFragmentManager, "SelectImage")
-
+            val intent =
+                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            imagePickerLauncher.launch(intent)
         }
 
         binding.alreadyRegisteredText.setOnClickListener {
@@ -55,17 +57,18 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == pickImageRC && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
-            // Selecciona una imagen desde la galería
-            imageUri = data.data
-            // Muestra la imagen en el ImageView
-            binding.userIcon.setImageURI(imageUri)
+    private val imagePickerLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                if (data != null) {
+                    imageUri = data.data
+                    Glide.with(this)
+                        .load(imageUri)
+                        .into(binding.userIcon)
+                }
+            }
         }
-    }
 
     private fun registerUser(fullName: String, email: String, password: String) {
         val progressDialog = ProgressDialog(this)
@@ -92,6 +95,7 @@ class SignUpActivity : AppCompatActivity() {
                                     "userEmail" to email,
                                     "status" to "default",
                                     "image" to imageUri,
+                                    "password" to password,
                                 )
 
                                 FirebaseFirestore.getInstance().collection("Users")
@@ -99,6 +103,7 @@ class SignUpActivity : AppCompatActivity() {
                                     .set(hashMap)
                                 progressDialog.dismiss()
                                 startActivity(Intent(this, LogInActivity::class.java))
+                                finish()
                             }
                         }
                 }

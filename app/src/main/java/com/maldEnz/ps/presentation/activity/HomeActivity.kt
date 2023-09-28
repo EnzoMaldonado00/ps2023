@@ -8,29 +8,29 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.maldEnz.ps.R
 import com.maldEnz.ps.databinding.ActivityHomeBinding
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
+import org.koin.android.ext.android.inject
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var firestore: FirebaseFirestore
-    private lateinit var userViewModel: UserViewModel
+    private lateinit var auth: FirebaseAuth
+    private val userViewModel: UserViewModel by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
-
+        userViewModel.getUserData(binding.profilePicture)
         firestore = FirebaseFirestore.getInstance()
-
-        userViewModel.imageUrl.observe(this) {
+        auth = FirebaseAuth.getInstance()
+        userViewModel.imageUri.observe(this) {
             Glide.with(this)
                 .load(String.format("%s", it))
                 .into(binding.profilePicture)
@@ -39,7 +39,6 @@ class HomeActivity : AppCompatActivity() {
         binding.profilePicture.setOnClickListener {
             binding.placeholder.performClick()
         }
-        userViewModel.getUserData(binding.profilePicture)
     }
 
     private fun profileOptions() {

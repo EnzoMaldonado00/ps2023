@@ -9,10 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.maldEnz.ps.databinding.FragmentImageMethodBinding
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
+import org.koin.android.ext.android.inject
 
 class ImageMethodFragment : BottomSheetDialogFragment() {
 
@@ -20,13 +20,12 @@ class ImageMethodFragment : BottomSheetDialogFragment() {
     private val imageCaptureRC = 2
     private lateinit var imageUri: Uri
     private lateinit var imageView: ImageView
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel: UserViewModel by inject()
 
     private lateinit var binding: FragmentImageMethodBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentImageMethodBinding.inflate(layoutInflater)
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
     }
 
     override fun onCreateView(

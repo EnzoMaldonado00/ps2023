@@ -5,19 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.maldEnz.ps.databinding.FragmentSheetDialogProfileBinding
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
+import org.koin.android.ext.android.inject
 
 class SheetDialogProfileFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentSheetDialogProfileBinding
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel: UserViewModel by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
+
         binding.btnSave.setOnClickListener {
             updateName()
         }
