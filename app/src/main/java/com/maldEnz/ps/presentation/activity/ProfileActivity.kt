@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
@@ -29,6 +30,7 @@ class ProfileActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         userViewModel.getUserData(binding.profilePicture)
         observers()
+        Log.d("ImagePickerActivity", "onResume ")
 
         binding.profileName.setOnClickListener {
             SheetDialogProfileFragment().show(supportFragmentManager, "UpdateName")
@@ -36,9 +38,6 @@ class ProfileActivity : AppCompatActivity() {
 
         binding.profilePicture.setOnClickListener {
             startActivity(Intent(this, ImagePickerActivity::class.java))
-            // val intent =
-            //  Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            // startActivityForResult(intent, pickImageRC)
         }
     }
 
@@ -82,5 +81,12 @@ class ProfileActivity : AppCompatActivity() {
                 .load(String.format("%s", it))
                 .into(binding.profilePicture)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        userViewModel.getUserData(binding.profilePicture)
+        observers()
     }
 }

@@ -27,17 +27,23 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         userViewModel.getUserData(binding.profilePicture)
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
+
         userViewModel.imageUri.observe(this) {
             Glide.with(this)
                 .load(String.format("%s", it))
                 .into(binding.profilePicture)
         }
+
         profileOptions()
+
         binding.profilePicture.setOnClickListener {
             binding.placeholder.performClick()
+        }
+        binding.btnFab.setOnClickListener {
         }
     }
 

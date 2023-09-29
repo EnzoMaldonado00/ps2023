@@ -9,6 +9,8 @@ import com.maldEnz.ps.databinding.ActivityLogInBinding
 
 class LogInActivity : AppCompatActivity() {
 
+    // HANDLE POSSIBLE EXCEPTIONS
+
     private lateinit var binding: ActivityLogInBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

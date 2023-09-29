@@ -6,13 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.maldEnz.ps.databinding.ActivitySettingsBinding
 import com.maldEnz.ps.presentation.fragment.PasswordReqFragment
-import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
-import org.koin.android.ext.android.inject
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
-    private val userViewModel: UserViewModel by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

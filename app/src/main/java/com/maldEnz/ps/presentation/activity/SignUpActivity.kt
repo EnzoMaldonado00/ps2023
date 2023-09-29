@@ -17,13 +17,11 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.maldEnz.ps.databinding.ActivitySignUpBinding
 import com.maldEnz.ps.presentation.fragment.ImageMethodFragment
-import java.util.UUID
 
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignUpBinding
     private var imageUri: Uri? = null
-    private val pickImageRC = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,21 +74,22 @@ class SignUpActivity : AppCompatActivity() {
         progressDialog.setCancelable(false)
         progressDialog.show()
 
-        val imageName = UUID.randomUUID().toString()
-        val imageRef = FirebaseStorage.getInstance().reference.child("profileImages/$imageName")
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { registrationTask ->
+                if (registrationTask.isSuccessful) {
+                    val user = FirebaseAuth.getInstance().currentUser
+                    val uid = user!!.uid
 
-        val uploadTask: UploadTask = imageRef.putFile(imageUri!!)
+                    val imageName = "profileImages/$uid.jpg"
+                    val imageRef = FirebaseStorage.getInstance().reference.child(imageName)
+                    val uploadTask: UploadTask = imageRef.putFile(imageUri!!)
 
-        uploadTask.addOnSuccessListener {
-            imageRef.downloadUrl.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val imageUri = task.result.toString()
-                    FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener {
-                            if (it.isSuccessful) {
-                                val user = FirebaseAuth.getInstance().currentUser
+                    uploadTask.addOnSuccessListener {
+                        imageRef.downloadUrl.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val imageUri = task.result.toString()
                                 val hashMap = hashMapOf(
-                                    "usedId" to user!!.uid,
+                                    "usedId" to uid,
                                     "userName" to fullName,
                                     "userEmail" to email,
                                     "status" to "default",
@@ -99,16 +98,20 @@ class SignUpActivity : AppCompatActivity() {
                                 )
 
                                 FirebaseFirestore.getInstance().collection("Users")
-                                    .document(user.uid)
+                                    .document(uid)
                                     .set(hashMap)
-                                progressDialog.dismiss()
-                                startActivity(Intent(this, LogInActivity::class.java))
-                                finish()
+                                    .addOnCompleteListener { firestoreTask ->
+                                        if (firestoreTask.isSuccessful) {
+                                            progressDialog.dismiss()
+                                            startActivity(Intent(this, LogInActivity::class.java))
+                                            finish()
+                                        }
+                                    }
                             }
                         }
+                    }
                 }
             }
-        }
     }
 
     // Arreglar para poder usar la camara

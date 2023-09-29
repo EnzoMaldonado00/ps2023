@@ -1,6 +1,5 @@
 package com.maldEnz.ps.presentation.mvvm.viewmodel
 
-import android.app.ProgressDialog
 import android.content.Context
 import android.net.Uri
 import android.widget.ImageView
@@ -16,9 +15,10 @@ import com.google.firebase.storage.UploadTask
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.UUID
 
 class UserViewModel : ViewModel() {
+    // HANDLE POSSIBLE EXCEPTIONS
+
     private val auth = FirebaseAuth.getInstance()
     var name = MutableLiveData<String>()
     var email = MutableLiveData<String>()
@@ -28,6 +28,10 @@ class UserViewModel : ViewModel() {
 
     init {
         passwordAuth.value = ""
+    }
+
+    private fun getCurrentUser(): String {
+        return auth.currentUser!!.uid
     }
 
     fun updateProfileName(context: Context, newName: String) = viewModelScope.launch {
@@ -46,14 +50,10 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    fun updateProfilePicture(context: Context) {
-        val progressDialog = ProgressDialog(context)
-        progressDialog.setMessage("Updating")
-        progressDialog.setCancelable(false)
-        progressDialog.show()
-
-        val imageName = UUID.randomUUID().toString()
-        val imageRef = FirebaseStorage.getInstance().reference.child("profileImages/$imageName")
+    fun updateProfilePicture(context: Context) = viewModelScope.launch {
+        val currentUser = getCurrentUser()
+        val imageRef =
+            FirebaseStorage.getInstance().reference.child("profileImages/$currentUser.jpg")
 
         val uploadTask: UploadTask = imageRef.putFile(imageUri.value!!)
 
@@ -72,17 +72,17 @@ class UserViewModel : ViewModel() {
                         .addOnSuccessListener {
                             Toast.makeText(context, "Name Updated", Toast.LENGTH_LONG).show()
                         }
-                    progressDialog.dismiss()
+                    // progressDialog.dismiss()
                 }
             }
         }
     }
 
-    fun getUserData(imageView: ImageView) {
-        val documentReference = FirebaseFirestore.getInstance().collection("Users")
+    fun getUserData(imageView: ImageView) = viewModelScope.launch {
+        val docRefer = FirebaseFirestore.getInstance().collection("Users")
             .document(getCurrentUser())
 
-        documentReference.addSnapshotListener { snapshot, _ ->
+        docRefer.addSnapshotListener { snapshot, _ ->
             if (snapshot != null && snapshot.exists()) {
                 val fullName = snapshot.getString("userName")
                 val mail = snapshot.getString("userEmail")
@@ -98,7 +98,10 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    private fun getCurrentUser(): String {
-        return auth.currentUser!!.uid
+    fun addFriend() {
+        val user = getCurrentUser()
+
+        val firestore = FirebaseFirestore.getInstance()
+
     }
 }
