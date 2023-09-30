@@ -89,19 +89,20 @@ class SignUpActivity : AppCompatActivity() {
                             if (task.isSuccessful) {
                                 val imageUri = task.result.toString()
                                 val hashMap = hashMapOf(
-                                    "usedId" to uid,
+                                    "userId" to uid,
                                     "userName" to fullName,
                                     "userEmail" to email,
                                     "status" to "default",
                                     "image" to imageUri,
                                     "password" to password,
+                                    "friends" to emptyList<Map<String, Any>>(),
                                 )
 
                                 FirebaseFirestore.getInstance().collection("Users")
                                     .document(uid)
                                     .set(hashMap)
-                                    .addOnCompleteListener { firestoreTask ->
-                                        if (firestoreTask.isSuccessful) {
+                                    .addOnCompleteListener {
+                                        if (it.isSuccessful) {
                                             progressDialog.dismiss()
                                             startActivity(Intent(this, LogInActivity::class.java))
                                             finish()

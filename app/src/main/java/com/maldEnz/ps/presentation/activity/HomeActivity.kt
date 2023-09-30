@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.maldEnz.ps.R
 import com.maldEnz.ps.databinding.ActivityHomeBinding
+import com.maldEnz.ps.presentation.fragment.AddFriendFragment
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
 import org.koin.android.ext.android.inject
 
@@ -28,11 +29,11 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        userViewModel.getUserData(binding.profilePicture)
+        userViewModel.getUserData()
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
-        userViewModel.imageUri.observe(this) {
+        userViewModel.imageURL.observe(this) {
             Glide.with(this)
                 .load(String.format("%s", it))
                 .into(binding.profilePicture)
@@ -44,6 +45,7 @@ class HomeActivity : AppCompatActivity() {
             binding.placeholder.performClick()
         }
         binding.btnFab.setOnClickListener {
+            deployFrag(AddFriendFragment())
         }
     }
 
@@ -80,6 +82,7 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, LogInActivity::class.java))
             finish()
         }
+        userViewModel.getUserData()
     }
 
     // for test
@@ -87,7 +90,7 @@ class HomeActivity : AppCompatActivity() {
         val fragmentManager: FragmentManager = supportFragmentManager
 
         val transaction: FragmentTransaction = fragmentManager.beginTransaction()
-        // transaction.replace(binding.frameContainer.id, fragment)
+        transaction.replace(binding.frameContainer.id, fragment)
         transaction.addToBackStack(null)
         transaction.commit()
     }

@@ -2,16 +2,16 @@ package com.maldEnz.ps.presentation.mvvm.viewmodel
 
 import android.content.Context
 import android.net.Uri
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
+import com.maldEnz.ps.presentation.mvvm.model.FriendModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -20,10 +20,13 @@ class UserViewModel : ViewModel() {
     // HANDLE POSSIBLE EXCEPTIONS
 
     private val auth = FirebaseAuth.getInstance()
+    private val firestore = FirebaseFirestore.getInstance()
+    private val storage = FirebaseStorage.getInstance()
     var name = MutableLiveData<String>()
     var email = MutableLiveData<String>()
     var imageUri = MutableLiveData<Uri?>()
-
+    var imageURL = MutableLiveData<String>()
+    val friendList = MutableLiveData<List<Map<String, Any>>>()
     var passwordAuth = MutableLiveData<String>()
 
     init {
@@ -38,7 +41,7 @@ class UserViewModel : ViewModel() {
         withContext(Dispatchers.IO) {
             if (newName.isNotEmpty() || newName != "") {
                 val documentReference =
-                    FirebaseFirestore.getInstance().collection("Users").document(getCurrentUser())
+                    firestore.collection("Users").document(getCurrentUser())
                 val updatedName = hashMapOf(
                     "userName" to newName,
                 )
@@ -53,7 +56,7 @@ class UserViewModel : ViewModel() {
     fun updateProfilePicture(context: Context) = viewModelScope.launch {
         val currentUser = getCurrentUser()
         val imageRef =
-            FirebaseStorage.getInstance().reference.child("profileImages/$currentUser.jpg")
+            storage.reference.child("profileImages/$currentUser.jpg")
 
         val uploadTask: UploadTask = imageRef.putFile(imageUri.value!!)
 
@@ -62,7 +65,7 @@ class UserViewModel : ViewModel() {
                 val imageUri = task.result.toString()
                 if (task.isSuccessful) {
                     val documentReference =
-                        FirebaseFirestore.getInstance().collection("Users")
+                        firestore.collection("Users")
                             .document(getCurrentUser())
                     val updatedImage = hashMapOf(
                         "image" to imageUri,
@@ -70,7 +73,8 @@ class UserViewModel : ViewModel() {
 
                     documentReference.update(updatedImage as Map<String, Any>)
                         .addOnSuccessListener {
-                            Toast.makeText(context, "Name Updated", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, "Profile Picture Updated", Toast.LENGTH_LONG)
+                                .show()
                         }
                     // progressDialog.dismiss()
                 }
@@ -78,8 +82,8 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    fun getUserData(imageView: ImageView) = viewModelScope.launch {
-        val docRefer = FirebaseFirestore.getInstance().collection("Users")
+    fun getUserData() = viewModelScope.launch {
+        val docRefer = firestore.collection("Users")
             .document(getCurrentUser())
 
         docRefer.addSnapshotListener { snapshot, _ ->
@@ -90,18 +94,61 @@ class UserViewModel : ViewModel() {
                 if (fullName != null && mail != null && imageUrl != null) {
                     name!!.value = fullName
                     email!!.value = mail
-                    Glide.with(imageView.context)
-                        .load(imageUrl)
-                        .into(imageView)
+                    imageURL!!.value = imageUrl
                 }
             }
         }
     }
 
-    fun addFriend() {
-        val user = getCurrentUser()
+    fun addFriend(friendEmail: String, context: Context) = viewModelScope.launch {
+        val currentUser = getCurrentUser()
+        val colRef = firestore.collection("Users")
+        val docRef = colRef.document(currentUser)
 
-        val firestore = FirebaseFirestore.getInstance()
+        docRef.get().addOnSuccessListener { doc ->
+            val currentUserData = doc.data
+            val currentFriends = currentUserData!!["friends"] as? List<HashMap<String, Any>>
+            friendList.value = currentFriends!!
 
+            // Verify that the friend is already added
+            val isAlreadyFriend = currentFriends?.any { friendData ->
+                friendData["friendEmail"] == friendEmail
+            } ?: false
+
+            if (!isAlreadyFriend) {
+                colRef.whereEqualTo("userEmail", friendEmail).get()
+                    .addOnSuccessListener { querySnapshot ->
+                        for (document in querySnapshot.documents) {
+                            val friendId = document.id
+                            if (friendId != currentUser) {
+                                val friendName = document.getString("userName")!!
+                                val image = document.getString("image")!!
+
+                                val fr = FriendModel(friendId, friendName, friendEmail, image)
+
+                                docRef.update("friends", FieldValue.arrayUnion(fr))
+                                    .addOnSuccessListener {
+                                        Toast.makeText(context, "Friend added", Toast.LENGTH_SHORT)
+                                            .show()
+                                    }
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "You cannot add yourself as a friend",
+                                    Toast.LENGTH_SHORT,
+                                )
+                                    .show()
+                            }
+                        }
+                    }
+            } else {
+                Toast.makeText(
+                    context,
+                    "You are already friends with this user",
+                    Toast.LENGTH_SHORT,
+                )
+                    .show()
+            }
+        }
     }
 }
