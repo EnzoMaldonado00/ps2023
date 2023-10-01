@@ -1,4 +1,8 @@
 package com.maldEnz.ps.presentation.mvvm.model
 
-class UserModel {
-}
+data class UserModel(
+    val userId: String,
+    val userName: String,
+    val userEmail: String,
+    val userImage: String,
+)

@@ -26,11 +26,11 @@
         app:layout_constraintTop_toBottomOf="@id/title" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_add"
+        android:id="@+id/btn_send_friend_request"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:cornerRadius="10dp"
-        android:text="Add"
+        android:text="Send Friend Request"
         app:layout_constraintTop_toBottomOf="@id/mail"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

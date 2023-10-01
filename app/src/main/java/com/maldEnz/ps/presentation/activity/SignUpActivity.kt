@@ -96,6 +96,7 @@ class SignUpActivity : AppCompatActivity() {
                                     "image" to imageUri,
                                     "password" to password,
                                     "friends" to emptyList<Map<String, Any>>(),
+                                    "friendRequests" to emptyList<Map<String, Any>>(),
                                 )
 
                                 FirebaseFirestore.getInstance().collection("Users")

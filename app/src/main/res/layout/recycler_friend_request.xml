@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="123dp">
+    
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/friend_profile_picture"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="@dimen/profile_img_marginEnd"
+        android:layout_marginTop="@dimen/profile_img_marginTop"
+        android:clickable="true"
+        android:focusable="true"
+        android:importantForAccessibility="no"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/friend_profile_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/container_margin"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@id/friend_profile_picture"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:hint="Enzo Maldonado" />
+
+    <TextView
+        android:id="@+id/friend_profile_mail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@id/friend_profile_picture"
+        app:layout_constraintTop_toBottomOf="@id/friend_profile_name"
+        tools:hint="enzom@gmail.com" />
+
+    <ImageButton
+        android:id="@+id/btn_accept"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="9dp"
+        android:layout_marginEnd="9dp"
+        android:src="@drawable/baseline_check_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btn_reject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="9dp"
+        android:src="@drawable/baseline_clear_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_accept" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

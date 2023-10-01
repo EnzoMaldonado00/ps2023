@@ -30,8 +30,8 @@ class AddFriendFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val activity = requireActivity()
-        binding.btnAdd.setOnClickListener {
-            userViewModel.addFriend(getFriendMail(), activity)
+        binding.btnSendFriendRequest.setOnClickListener {
+            userViewModel.sendFriendRequest(getFriendMail(), activity)
         }
     }
 }

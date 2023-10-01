@@ -14,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.maldEnz.ps.R
 import com.maldEnz.ps.databinding.ActivityHomeBinding
 import com.maldEnz.ps.presentation.fragment.AddFriendFragment
+import com.maldEnz.ps.presentation.fragment.FriendRequestFragment
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
 import org.koin.android.ext.android.inject
 
@@ -28,8 +29,8 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         userViewModel.getUserData()
+        // userViewModel.getFriendRequest()
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
@@ -46,6 +47,9 @@ class HomeActivity : AppCompatActivity() {
         }
         binding.btnFab.setOnClickListener {
             deployFrag(AddFriendFragment())
+        }
+        binding.btnFabFriendReq.setOnClickListener {
+            deployFrag(FriendRequestFragment())
         }
     }
 
@@ -85,7 +89,6 @@ class HomeActivity : AppCompatActivity() {
         userViewModel.getUserData()
     }
 
-    // for test
     private fun deployFrag(fragment: Fragment) {
         val fragmentManager: FragmentManager = supportFragmentManager
 
@@ -93,16 +96,5 @@ class HomeActivity : AppCompatActivity() {
         transaction.replace(binding.frameContainer.id, fragment)
         transaction.addToBackStack(null)
         transaction.commit()
-    }
-
-    private fun closeFragment() {
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        //  val fragment = supportFragmentManager.findFragmentById(binding.frameContainer.id)
-
-        //  if (fragment != null) {
-        //     fragmentTransaction.remove(fragment)
-        //     fragmentTransaction.commit()
-        // }
     }
 }
