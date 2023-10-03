@@ -14,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.maldEnz.ps.R
 import com.maldEnz.ps.databinding.ActivityHomeBinding
 import com.maldEnz.ps.presentation.fragment.AddFriendFragment
+import com.maldEnz.ps.presentation.fragment.FriendListFragment
 import com.maldEnz.ps.presentation.fragment.FriendRequestFragment
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
 import org.koin.android.ext.android.inject
@@ -48,8 +49,8 @@ class HomeActivity : AppCompatActivity() {
         binding.btnFab.setOnClickListener {
             deployFrag(AddFriendFragment())
         }
-        binding.btnFabFriendReq.setOnClickListener {
-            deployFrag(FriendRequestFragment())
+        binding.btn.setOnClickListener {
+            deployFrag(FriendListFragment())
         }
     }
 
@@ -65,6 +66,11 @@ class HomeActivity : AppCompatActivity() {
                 when (item.itemId) {
                     R.id.profile_item -> {
                         startActivity(Intent(this, ProfileActivity::class.java))
+                        true
+                    }
+
+                    R.id.friend_request_item -> {
+                        deployFrag(FriendRequestFragment())
                         true
                     }
 
@@ -96,5 +102,21 @@ class HomeActivity : AppCompatActivity() {
         transaction.replace(binding.frameContainer.id, fragment)
         transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    fun enableComponents() {
+        binding.apply {
+            placeholder.isEnabled = true
+            profilePicture.isEnabled = true
+            btnFab.isEnabled = true
+        }
+    }
+
+    fun disableComponents() {
+        binding.apply {
+            placeholder.isEnabled = false
+            profilePicture.isEnabled = false
+            btnFab.isEnabled = false
+        }
     }
 }

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.maldEnz.ps.databinding.FragmentAddFriendBinding
+import com.maldEnz.ps.presentation.activity.HomeActivity
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
 import org.koin.android.ext.android.inject
 
@@ -20,6 +21,7 @@ class AddFriendFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentAddFriendBinding.inflate(inflater, container, false)
+        (activity as HomeActivity).disableComponents()
         return binding.root
     }
 
@@ -33,5 +35,10 @@ class AddFriendFragment : Fragment() {
         binding.btnSendFriendRequest.setOnClickListener {
             userViewModel.sendFriendRequest(getFriendMail(), activity)
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as HomeActivity).enableComponents()
     }
 }

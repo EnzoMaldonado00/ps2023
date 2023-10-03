@@ -14,7 +14,7 @@ import com.maldEnz.ps.presentation.mvvm.model.FriendModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
 
 class FriendRequestAdapter(context: Context) :
-    ListAdapter<FriendModel, FriendRequestAdapter.FriendViewHolder>(FriendDiffCallback()) {
+    ListAdapter<FriendModel, FriendRequestAdapter.FriendViewHolder>(FriendRequestsDiffCallback()) {
 
     private val userViewModel: UserViewModel by lazy {
         ViewModelProvider(context as AppCompatActivity)[UserViewModel::class.java]
@@ -62,7 +62,7 @@ class FriendRequestAdapter(context: Context) :
     }
 }
 
-class FriendDiffCallback : DiffUtil.ItemCallback<FriendModel>() {
+class FriendRequestsDiffCallback : DiffUtil.ItemCallback<FriendModel>() {
     override fun areItemsTheSame(oldItem: FriendModel, newItem: FriendModel): Boolean {
         return oldItem.friendId == newItem.friendId
     }

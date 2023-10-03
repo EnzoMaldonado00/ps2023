@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
-
     <application
         android:name=".presentation.ChatApp"
         android:allowBackup="true"
@@ -17,17 +16,20 @@
         android:theme="@style/Theme.Ps"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.activity.ChatActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.activity.ImagePickerActivity"
             android:exported="false"
-            android:theme="@style/Theme.NoNavBar"/>
+            android:theme="@style/Theme.NoNavBar" />
         <activity
             android:name=".presentation.activity.ProfileActivity"
             android:exported="false"
-            android:theme="@style/Theme.NoNavBar"/>
+            android:theme="@style/Theme.NoNavBar" />
         <activity
             android:name=".presentation.activity.SettingsActivity"
             android:exported="false"
-            android:theme="@style/Theme.NoNavBar"/>
+            android:theme="@style/Theme.NoNavBar" />
         <activity
             android:name=".presentation.activity.HomeActivity"
             android:exported="false"
