@@ -1,4 +1,7 @@
 package com.maldEnz.ps.presentation.mvvm.model
 
-class ChatModel {
-}
+data class ChatModel(
+    val chatId: String,
+    val lastMessage: String?,
+    val lastMessageTimestamp: Long?
+)

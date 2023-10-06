@@ -3,6 +3,7 @@ package com.maldEnz.ps.presentation.activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
@@ -14,8 +15,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.maldEnz.ps.R
 import com.maldEnz.ps.databinding.ActivityHomeBinding
 import com.maldEnz.ps.presentation.fragment.AddFriendFragment
+import com.maldEnz.ps.presentation.fragment.ChatsFragment
 import com.maldEnz.ps.presentation.fragment.FriendListFragment
 import com.maldEnz.ps.presentation.fragment.FriendRequestFragment
+import com.maldEnz.ps.presentation.mvvm.viewmodel.ChatViewModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
 import org.koin.android.ext.android.inject
 
@@ -25,13 +28,13 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
     private val userViewModel: UserViewModel by inject()
+    private val chatViewModel: ChatViewModel by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         userViewModel.getUserData()
-        // userViewModel.getFriendRequest()
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
@@ -40,7 +43,7 @@ class HomeActivity : AppCompatActivity() {
                 .load(String.format("%s", it))
                 .into(binding.profilePicture)
         }
-
+        deployFrag(ChatsFragment())
         profileOptions()
 
         binding.profilePicture.setOnClickListener {
@@ -49,9 +52,7 @@ class HomeActivity : AppCompatActivity() {
         binding.btnFab.setOnClickListener {
             deployFrag(AddFriendFragment())
         }
-        binding.btn.setOnClickListener {
-            deployFrag(FriendListFragment())
-        }
+        bottomNavMenu()
     }
 
     private fun profileOptions() {
@@ -100,8 +101,26 @@ class HomeActivity : AppCompatActivity() {
 
         val transaction: FragmentTransaction = fragmentManager.beginTransaction()
         transaction.replace(binding.frameContainer.id, fragment)
-        transaction.addToBackStack(null)
+        //transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    private fun bottomNavMenu() {
+        binding.bottomNav.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.bottom_nav_home -> {
+                    deployFrag(ChatsFragment())
+                    true
+                }
+
+                R.id.bottom_nav_friends -> {
+                    deployFrag(FriendListFragment())
+                    true
+                }
+
+                else -> false
+            }
+        }
     }
 
     fun enableComponents() {
@@ -109,6 +128,8 @@ class HomeActivity : AppCompatActivity() {
             placeholder.isEnabled = true
             profilePicture.isEnabled = true
             btnFab.isEnabled = true
+            bottomNav.isEnabled = true
+            bottomNav.visibility = View.VISIBLE
         }
     }
 
@@ -117,6 +138,7 @@ class HomeActivity : AppCompatActivity() {
             placeholder.isEnabled = false
             profilePicture.isEnabled = false
             btnFab.isEnabled = false
+            bottomNav.isEnabled = false
         }
     }
 }

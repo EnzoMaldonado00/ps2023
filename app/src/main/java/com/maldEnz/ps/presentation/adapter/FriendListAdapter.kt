@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.startActivity
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -40,7 +41,7 @@ class FriendListAdapter(context: Context) :
         val friendId = friendList.friendId
         val btnMsg = holder.binding.btnSendMsg
         val friendName = holder.binding.friendProfileName.text
-        val friendImageProfile = holder.binding.friendProfileName.text
+        val friendImageProfile = friendList.friendImage
 
         btnDelete.setOnClickListener {
             userViewModel.deleteFriend(friendId)

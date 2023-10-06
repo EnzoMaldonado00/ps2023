@@ -5,4 +5,5 @@ data class MessageModel(
     val senderUid: String = "",
     val timestamp: String = "",
     val sorterTime: Long = 0,
+    val participants: List<String> = emptyList(),
 )

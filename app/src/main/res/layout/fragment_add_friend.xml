@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:background="#40405C">
 
     <TextView
         android:id="@+id/title"
@@ -12,28 +12,41 @@
         android:layout_margin="10dp"
         android:text="Add a friend"
         android:textSize="25dp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:text="You can add a friend with his email!"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title" />
 
     <EditText
         android:id="@+id/mail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="15dp"
         android:hint="Enter a email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title" />
+        app:layout_constraintTop_toBottomOf="@id/description" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_send_friend_request"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cornerRadius="10dp"
+        android:layout_margin="15dp"
         android:text="Send Friend Request"
-        app:layout_constraintTop_toBottomOf="@id/mail"
+        app:cornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/mail" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

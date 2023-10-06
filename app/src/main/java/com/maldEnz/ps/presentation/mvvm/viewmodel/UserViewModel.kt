@@ -339,7 +339,13 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    fun sendMessage(conversationId: String, messageContent: String, senderUid: String) =
+    fun sendMessage(
+        conversationId: String,
+        messageContent: String,
+        senderUid: String,
+        user1: String,
+        user2: String,
+    ) =
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val message =
@@ -348,6 +354,7 @@ class UserViewModel : ViewModel() {
                         senderUid,
                         "00:00:00",
                         System.currentTimeMillis(),
+                        listOf(user1, user2),
                     )
                 val messageCollection = firestore.collection("Chats")
                     .document(conversationId)
