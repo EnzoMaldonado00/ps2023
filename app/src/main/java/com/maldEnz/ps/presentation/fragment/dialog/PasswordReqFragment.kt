@@ -1,4 +1,4 @@
-package com.maldEnz.ps.presentation.fragment
+package com.maldEnz.ps.presentation.fragment.dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -28,6 +28,9 @@ class ImagePickerActivity : AppCompatActivity() {
             userViewModel.updateProfilePicture(this)
             finish()
         }
+        binding.btnCancel.setOnClickListener {
+            finish()
+        }
     }
 
     private val imagePickerLauncher =

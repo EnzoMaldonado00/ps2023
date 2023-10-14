@@ -2,11 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/bottom_nav_home"
-        android:title="Home"
-        />
+        android:icon="@drawable/baseline_home_24"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/bottom_nav_post"
+        android:title="Upload Post"/>
 
     <item
         android:id="@+id/bottom_nav_friends"
-        android:title="Friends"
-        />
+        android:icon="@drawable/baseline_group_24"
+        android:title="Friends" />
 </menu>

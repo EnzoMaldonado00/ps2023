@@ -5,4 +5,5 @@ data class FriendModel(
     val friendName: String,
     val friendEmail: String,
     val friendImage: String,
+    val isTyping: Boolean,
 )

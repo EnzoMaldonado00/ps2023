@@ -1,17 +1,29 @@
 package com.maldEnz.ps.presentation.adapter
 
+import android.content.Context
+import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import com.maldEnz.ps.R
 import com.maldEnz.ps.databinding.ItemRecyclerReceiverMsgBinding
 import com.maldEnz.ps.databinding.ItemRecyclerSenderMsgBinding
 import com.maldEnz.ps.presentation.mvvm.model.MessageModel
+import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
 
-class MessageListAdapter() :
+class MessageListAdapter(context: Context) :
     ListAdapter<MessageModel, RecyclerView.ViewHolder>(MessageDiffCallback()) {
+
+    private val userViewModel: UserViewModel by lazy {
+        ViewModelProvider(context as AppCompatActivity)[UserViewModel::class.java]
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -60,6 +72,35 @@ class MessageListAdapter() :
         fun bind(message: MessageModel) {
             binding.msg.text = message.content
             binding.msgDateTime.text = message.timestamp
+            binding.msg.setOnLongClickListener {
+                showPopupMenu(it, message)
+                true
+            }
+        }
+
+        private fun showPopupMenu(view: View, message: MessageModel) {
+            val popupMenu = PopupMenu(view.context, view)
+            val inflater = popupMenu.menuInflater
+            inflater.inflate(R.menu.msg_opt_popup_menu, popupMenu.menu)
+
+            popupMenu.gravity = Gravity.CENTER
+
+            popupMenu.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.delete_for_everyone -> {
+                        userViewModel.deleteMessage(message.conversationId, message.messageId)
+                        true
+                    }
+
+                    R.id.delete_for_me -> {
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+
+            popupMenu.show()
         }
     }
 

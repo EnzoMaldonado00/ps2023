@@ -16,19 +16,20 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.maldEnz.ps.databinding.ActivitySignUpBinding
-import com.maldEnz.ps.presentation.fragment.ImageMethodFragment
+import com.maldEnz.ps.presentation.fragment.dialog.ImageMethodFragment
 
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignUpBinding
-    private var imageUri: Uri? = null
-
+    private lateinit var imageUri: Uri
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
         buttonListener()
         onBackHandler(this)
+        imageUri =
+            Uri.parse("android.resource://com.maldEnz.ps/drawable/ic_default_acc")
     }
 
     private fun buttonListener() {
@@ -60,7 +61,7 @@ class SignUpActivity : AppCompatActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 val data: Intent? = result.data
                 if (data != null) {
-                    imageUri = data.data
+                    imageUri = data.data!!
                     Glide.with(this)
                         .load(imageUri)
                         .into(binding.userIcon)
@@ -97,6 +98,8 @@ class SignUpActivity : AppCompatActivity() {
                                     "password" to password,
                                     "friends" to emptyList<Map<String, Any>>(),
                                     "friendRequests" to emptyList<Map<String, Any>>(),
+                                    "posts" to emptyList<Map<String, Any>>(),
+                                    "isTyping" to false,
                                 )
 
                                 FirebaseFirestore.getInstance().collection("Users")

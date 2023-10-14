@@ -1,4 +1,4 @@
-package com.maldEnz.ps.presentation.fragment
+package com.maldEnz.ps.presentation.fragment.dialog
 
 import android.app.Activity
 import android.content.Intent

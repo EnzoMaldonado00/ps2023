@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".presentation.fragment.SheetDialogProfileFragment">
+    tools:context=".presentation.fragment.dialog.SheetDialogProfileFragment">
 
     <TextView
         android:id="@+id/enter_name_text_view"

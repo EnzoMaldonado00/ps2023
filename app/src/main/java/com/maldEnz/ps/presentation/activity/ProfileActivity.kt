@@ -3,16 +3,19 @@ package com.maldEnz.ps.presentation.activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.maldEnz.ps.databinding.ActivityProfileBinding
-import com.maldEnz.ps.presentation.fragment.SheetDialogProfileFragment
+import com.maldEnz.ps.presentation.adapter.UserPostAdapter
+import com.maldEnz.ps.presentation.fragment.dialog.SheetDialogProfileFragment
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
 import org.koin.android.ext.android.inject
 
 class ProfileActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityProfileBinding
+    private lateinit var adapter: UserPostAdapter
     private lateinit var auth: FirebaseAuth
     private val userViewModel: UserViewModel by inject()
 
@@ -21,7 +24,7 @@ class ProfileActivity : AppCompatActivity() {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
         auth = FirebaseAuth.getInstance()
-        userViewModel.getUserData()
+
         observers()
 
         binding.profileName.setOnClickListener {
@@ -30,6 +33,15 @@ class ProfileActivity : AppCompatActivity() {
 
         binding.profilePicture.setOnClickListener {
             startActivity(Intent(this, ImagePickerActivity::class.java))
+        }
+
+        adapter = UserPostAdapter()
+        val gridLayoutManager = GridLayoutManager(this, 2)
+        binding.postRecyclerView.layoutManager = gridLayoutManager
+        binding.postRecyclerView.adapter = adapter
+
+        userViewModel.postList.observe(this) {
+            adapter.submitList(it)
         }
     }
 
@@ -49,8 +61,8 @@ class ProfileActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-
         userViewModel.getUserData()
+        userViewModel.updateUserStatusToOnline()
         observers()
     }
 }

@@ -34,7 +34,7 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        userViewModel.getUserData()
+        userViewModel.updateUserStatusToOnline()
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
@@ -92,8 +92,10 @@ class HomeActivity : AppCompatActivity() {
         if (FirebaseAuth.getInstance().currentUser == null) {
             startActivity(Intent(this, LogInActivity::class.java))
             finish()
+        } else {
+            userViewModel.getUserData()
+            userViewModel.updateUserStatusToOnline()
         }
-        userViewModel.getUserData()
     }
 
     private fun deployFrag(fragment: Fragment) {
@@ -101,7 +103,7 @@ class HomeActivity : AppCompatActivity() {
 
         val transaction: FragmentTransaction = fragmentManager.beginTransaction()
         transaction.replace(binding.frameContainer.id, fragment)
-        //transaction.addToBackStack(null)
+        // transaction.addToBackStack(null)
         transaction.commit()
     }
 
@@ -110,6 +112,11 @@ class HomeActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.bottom_nav_home -> {
                     deployFrag(ChatsFragment())
+                    true
+                }
+
+                R.id.bottom_nav_post -> {
+                    startActivity(Intent(this, UploadPostActivity::class.java))
                     true
                 }
 
@@ -140,5 +147,10 @@ class HomeActivity : AppCompatActivity() {
             btnFab.isEnabled = false
             bottomNav.isEnabled = false
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        userViewModel.updateUserStatusToDisconnected()
     }
 }

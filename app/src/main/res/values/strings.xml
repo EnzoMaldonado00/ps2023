@@ -41,6 +41,9 @@
     <string name="btn_save_sheet_dialog">SAVE</string>
     <string name="btn_cancel_sheet_dialog">CANCEL</string>
     <string name="friend_requests_item">Friend Requests</string>
+    <string name="post_caption_hint">Write a caption...</string>
+    <string name="upload_post">Post</string>
+    <string name="profile_title_posts">My Posts</string>
 
 
 </resources>

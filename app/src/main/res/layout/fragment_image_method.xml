@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="110dp"
 
-    tools:context=".presentation.fragment.ImageMethodFragment">
+    tools:context=".presentation.fragment.dialog.ImageMethodFragment">
 
 
     <TextView

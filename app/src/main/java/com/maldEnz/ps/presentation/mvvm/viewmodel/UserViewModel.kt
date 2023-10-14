@@ -2,7 +2,6 @@ package com.maldEnz.ps.presentation.mvvm.viewmodel
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,10 +13,13 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.maldEnz.ps.presentation.mvvm.model.FriendModel
 import com.maldEnz.ps.presentation.mvvm.model.MessageModel
+import com.maldEnz.ps.presentation.mvvm.model.PostModel
 import com.maldEnz.ps.presentation.mvvm.model.UserModel
+import com.maldEnz.ps.presentation.util.Util
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.UUID
 
 class UserViewModel : ViewModel() {
     // HANDLE POSSIBLE EXCEPTIONS
@@ -25,6 +27,7 @@ class UserViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
     private val storage = FirebaseStorage.getInstance()
+    private val currentUser = auth.currentUser!!.uid
     var name = MutableLiveData<String>()
     var email = MutableLiveData<String>()
     var imageUri = MutableLiveData<Uri?>()
@@ -33,20 +36,20 @@ class UserViewModel : ViewModel() {
     val friendRequest = MutableLiveData<List<FriendModel>>()
     var passwordAuth = MutableLiveData<String>()
     var messageList = MutableLiveData<List<MessageModel>>()
+    var postList = MutableLiveData<List<PostModel>>()
+    var isTyping = MutableLiveData<Boolean>()
+    var status = MutableLiveData<String>()
+    var friendStatus = MutableLiveData<String>()
 
     init {
         passwordAuth.value = ""
-    }
-
-    private fun getCurrentUser(): String {
-        return auth.currentUser!!.uid
     }
 
     fun updateProfileName(context: Context, newName: String) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             if (newName.isNotEmpty() || newName != "") {
                 val documentReference =
-                    firestore.collection("Users").document(getCurrentUser())
+                    firestore.collection("Users").document(currentUser)
                 val updatedName = hashMapOf(
                     "userName" to newName,
                 )
@@ -60,7 +63,6 @@ class UserViewModel : ViewModel() {
 
     fun updateProfilePicture(context: Context) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            val currentUser = getCurrentUser()
             val imageRef =
                 storage.reference.child("profileImages/$currentUser.jpg")
 
@@ -72,7 +74,7 @@ class UserViewModel : ViewModel() {
                     if (task.isSuccessful) {
                         val documentReference =
                             firestore.collection("Users")
-                                .document(getCurrentUser())
+                                .document(currentUser)
                         val updatedImage = hashMapOf(
                             "image" to imageUri,
                         )
@@ -96,7 +98,7 @@ class UserViewModel : ViewModel() {
     fun getUserData() = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             val docRefer = firestore.collection("Users")
-                .document(getCurrentUser())
+                .document(currentUser)
 
             docRefer.addSnapshotListener { snapshot, _ ->
                 if (snapshot != null && snapshot.exists()) {
@@ -110,6 +112,7 @@ class UserViewModel : ViewModel() {
                             friendName = friendData["userName"] as String,
                             friendEmail = friendData["userEmail"] as String,
                             friendImage = friendData["userImage"] as String,
+                            false,
                         )
                     } ?: emptyList()
 
@@ -120,6 +123,19 @@ class UserViewModel : ViewModel() {
                             friendName = friendData["friendName"] as String,
                             friendEmail = friendData["friendEmail"] as String,
                             friendImage = friendData["friendImage"] as String,
+                            false,
+                        )
+                    } ?: emptyList()
+
+                    val postListData = snapshot.get("posts") as? List<Map<String, Any>>
+                    val postsList = postListData?.map { postData ->
+                        PostModel(
+                            authorId = postData["authorId"] as String,
+                            authorName = postData["authorName"] as String,
+                            dateTime = postData["dateTime"] as String,
+                            description = postData["description"] as String,
+                            imageUrl = postData["imageUrl"] as String,
+                            timestamp = postData["timestamp"] as Long,
                         )
                     } ?: emptyList()
 
@@ -129,6 +145,7 @@ class UserViewModel : ViewModel() {
                         imageURL!!.value = imageUrl
                         friendRequest.value = friendReq
                         friends.value = friendList
+                        postList.value = postsList
                     }
                 }
             }
@@ -137,7 +154,6 @@ class UserViewModel : ViewModel() {
 
     fun addFriend(friendId: String) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            val currentUser = getCurrentUser()
             val colRef = firestore.collection("Users")
             val docRefer = colRef.document(currentUser)
 
@@ -160,7 +176,13 @@ class UserViewModel : ViewModel() {
                                     val friendEmail = document.getString("userEmail")!!
 
                                     val fr =
-                                        FriendModel(friendId, friendName, friendEmail, friendImage)
+                                        FriendModel(
+                                            friendId,
+                                            friendName,
+                                            friendEmail,
+                                            friendImage,
+                                            false,
+                                        )
 
                                     docRefer.update("friends", FieldValue.arrayUnion(fr))
                                         .addOnSuccessListener {
@@ -178,6 +200,7 @@ class UserViewModel : ViewModel() {
                                                         userName,
                                                         userEmail,
                                                         userImage,
+                                                        false,
                                                     )
 
                                                 val friendRef =
@@ -206,7 +229,6 @@ class UserViewModel : ViewModel() {
 
     fun sendFriendRequest(friendEmail: String, context: Context) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            val currentUser = getCurrentUser()
             val colRef = firestore.collection("Users")
             val docRefer = colRef.document(currentUser)
 
@@ -236,6 +258,7 @@ class UserViewModel : ViewModel() {
                                                 userName!!,
                                                 userEmail!!,
                                                 userImage!!,
+                                                false,
                                             )
 
                                         val friendRef =
@@ -278,7 +301,7 @@ class UserViewModel : ViewModel() {
 
     fun discardFriendRequest(friendId: String) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            val docRefer = firestore.collection("Users").document(getCurrentUser())
+            val docRefer = firestore.collection("Users").document(currentUser)
 
             docRefer.get().addOnSuccessListener { documentSnapshot ->
                 if (documentSnapshot.exists()) {
@@ -301,8 +324,7 @@ class UserViewModel : ViewModel() {
 
     fun deleteFriend(friendId: String) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            val user = getCurrentUser()
-            val docRefer = firestore.collection("Users").document(getCurrentUser())
+            val docRefer = firestore.collection("Users").document(currentUser)
 
             docRefer.get().addOnSuccessListener { documentSnapshot ->
 
@@ -326,7 +348,7 @@ class UserViewModel : ViewModel() {
 
                                         if (friendList != null) {
                                             val newFriendList = friendList.filter { friends ->
-                                                friends["friendId"] != user
+                                                friends["friendId"] != currentUser
                                             }
                                             friendDocRef.update("friends", newFriendList)
                                         }
@@ -350,40 +372,175 @@ class UserViewModel : ViewModel() {
             withContext(Dispatchers.IO) {
                 val message =
                     MessageModel(
+                        UUID.randomUUID().toString(),
+                        conversationId,
                         messageContent,
                         senderUid,
-                        "00:00:00",
+                        Util.getDateTime(),
                         System.currentTimeMillis(),
                         listOf(user1, user2),
+                        false,
                     )
                 val messageCollection = firestore.collection("Chats")
                     .document(conversationId)
                     .collection("Messages")
 
                 messageCollection.add(message)
-                    .addOnSuccessListener {
-                    }
             }
         }
 
-    fun loadMessages(conversationId: String) = viewModelScope.launch {
+    fun loadMessages(chatId: String) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            val messagesQuery = firestore.collection("Chats")
-                .document(conversationId)
+            val messageRef = firestore.collection("Chats")
+                .document(chatId)
                 .collection("Messages")
                 .orderBy("sorterTime")
 
-            messagesQuery.addSnapshotListener { querySnapshot, _ ->
+            messageRef.addSnapshotListener { querySnapshot, _ ->
 
                 val messages = mutableListOf<MessageModel>()
 
                 for (document in querySnapshot!!) {
-                    val msg = document.toObject(MessageModel::class.java)
-                    messages.add(msg)
+                    if (document.get("deleted") == false) {
+                        val msg = document.toObject(MessageModel::class.java)
+                        messages.add(msg)
+                    }
                 }
-                Log.e("", "")
-
                 messageList.value = messages
+            }
+        }
+    }
+
+    fun deleteMessage(conversationId: String, messageId: String) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val messageRefer = firestore.collection("Chats")
+                .document(conversationId)
+                .collection("Messages")
+
+            messageRefer.whereEqualTo("messageId", messageId).get()
+                .addOnSuccessListener { querySnapshot ->
+                    for (document in querySnapshot) {
+                        document.reference.update("content", "Message Deleted")
+                    }
+                }.addOnFailureListener {
+                    // error
+                }
+        }
+    }
+
+    fun uploadPost(description: String, imageUri: Uri) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val docRefer = firestore.collection("Users").document(currentUser)
+
+            val randomUUID = UUID.randomUUID().toString()
+            val imageName = "posts/$randomUUID.jpg"
+            val imageRef = FirebaseStorage.getInstance().reference.child(imageName)
+            val uploadTask: UploadTask = imageRef.putFile(imageUri)
+
+            uploadTask.addOnSuccessListener {
+                imageRef.downloadUrl.addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        val imageURL = it.result.toString()
+                        docRefer.get().addOnSuccessListener {
+                            val post = PostModel(
+                                randomUUID,
+                                currentUser,
+                                name.value.toString(),
+                                System.currentTimeMillis(),
+                                Util.getDateTime(),
+                                imageURL,
+                                description,
+                            )
+                            docRefer.update("posts", FieldValue.arrayUnion(post))
+                                .addOnSuccessListener {
+                                }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun userChatState(isTyping: Boolean, friendId: String) {
+        val docRefer = firestore.collection("Users")
+            .document(friendId)
+
+        docRefer.get().addOnSuccessListener { querySnapshot ->
+            if (querySnapshot != null) {
+                val friendsList = querySnapshot.get("friends") as? List<Map<String, Any>>
+
+                if (friendsList != null) {
+                    val updatedFriendsList = friendsList.map { friend ->
+                        if (friend["friendId"] == currentUser) {
+                            friend.toMutableMap().apply { put("typing", isTyping) }
+                        } else {
+                            friend
+                        }
+                    }
+                    docRefer.update("friends", updatedFriendsList)
+                }
+            }
+        }
+    }
+
+    fun getFriendChatState(friendId: String) {
+        val docRefer = firestore.collection("Users")
+            .document(currentUser)
+
+        docRefer.addSnapshotListener { querySnapshot, _ ->
+
+            if (querySnapshot != null) {
+                val friendsList = querySnapshot.get("friends") as? List<Map<String, Any>>
+
+                if (friendsList != null) {
+                    val friendTyping =
+                        friendsList.find { it["friendId"] == friendId }?.get("typing") as? Boolean
+                    isTyping.value = friendTyping!!
+                }
+            }
+        }
+    }
+
+    fun updateUserStatusToOnline() = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val statusOnline = "online"
+            val docRefer =
+                firestore.collection("Users").document(currentUser)
+            val updatedStatus = hashMapOf(
+                "status" to statusOnline,
+            )
+
+            docRefer.update(updatedStatus as Map<String, Any>).addOnSuccessListener {
+                status.value = statusOnline
+            }
+        }
+    }
+
+    fun updateUserStatusToDisconnected() = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val statusOnline = "last seen ${Util.getDateTime()}"
+            val docRefer =
+                firestore.collection("Users").document(currentUser)
+            val updatedStatus = hashMapOf(
+                "status" to statusOnline,
+            )
+
+            docRefer.update(updatedStatus as Map<String, Any>).addOnSuccessListener {
+                status.value = statusOnline
+            }
+        }
+    }
+
+    fun getFriendStatus(friendId: String) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val docRefer =
+                firestore.collection("Users").document(friendId)
+
+            docRefer.addSnapshotListener { querySnapshot, _ ->
+                if (querySnapshot != null && querySnapshot.exists()) {
+                    val frStatus = querySnapshot.get("status") as String
+                    friendStatus.value = frStatus
+                }
             }
         }
     }

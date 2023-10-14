@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.startActivity
-import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -14,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.maldEnz.ps.databinding.RecyclerFriendListBinding
 import com.maldEnz.ps.presentation.activity.ChatActivity
+import com.maldEnz.ps.presentation.activity.FriendProfileActivity
 import com.maldEnz.ps.presentation.mvvm.model.FriendModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
 
@@ -38,10 +38,13 @@ class FriendListAdapter(context: Context) :
         holder.bind(friendList)
 
         val btnDelete = holder.binding.btnDelete
-        val friendId = friendList.friendId
         val btnMsg = holder.binding.btnSendMsg
-        val friendName = holder.binding.friendProfileName.text
+        val friendImage = holder.binding.friendProfilePicture
+
+        val friendName = friendList.friendName
+        val friendId = friendList.friendId
         val friendImageProfile = friendList.friendImage
+        val friendEmail = friendList.friendEmail
 
         btnDelete.setOnClickListener {
             userViewModel.deleteFriend(friendId)
@@ -51,6 +54,14 @@ class FriendListAdapter(context: Context) :
             intent.putExtra("friendUid", friendId)
             intent.putExtra("friendName", friendName)
             intent.putExtra("friendImageProfile", friendImageProfile)
+            it.context.startActivity(intent)
+        }
+        friendImage.setOnClickListener {
+            val intent = Intent(it.context, FriendProfileActivity::class.java)
+            intent.putExtra("friendUid", friendId)
+            intent.putExtra("friendName", friendName)
+            intent.putExtra("friendImageProfile", friendImageProfile)
+            intent.putExtra("friendEmail", friendEmail)
             it.context.startActivity(intent)
         }
     }
