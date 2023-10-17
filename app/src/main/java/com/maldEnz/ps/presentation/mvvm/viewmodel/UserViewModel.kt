@@ -11,6 +11,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
+import com.maldEnz.ps.presentation.mvvm.model.ChatModel
 import com.maldEnz.ps.presentation.mvvm.model.FriendModel
 import com.maldEnz.ps.presentation.mvvm.model.MessageModel
 import com.maldEnz.ps.presentation.mvvm.model.PostModel
@@ -28,18 +29,18 @@ class UserViewModel : ViewModel() {
     private val firestore = FirebaseFirestore.getInstance()
     private val storage = FirebaseStorage.getInstance()
     private val currentUser = auth.currentUser!!.uid
-    var name = MutableLiveData<String>()
-    var email = MutableLiveData<String>()
-    var imageUri = MutableLiveData<Uri?>()
-    var imageURL = MutableLiveData<String>()
+    val name = MutableLiveData<String>()
+    val email = MutableLiveData<String>()
+    val imageUri = MutableLiveData<Uri?>()
+    val imageURL = MutableLiveData<String>()
     val friends = MutableLiveData<List<FriendModel>>()
     val friendRequest = MutableLiveData<List<FriendModel>>()
-    var passwordAuth = MutableLiveData<String>()
-    var messageList = MutableLiveData<List<MessageModel>>()
-    var postList = MutableLiveData<List<PostModel>>()
-    var isTyping = MutableLiveData<Boolean>()
-    var status = MutableLiveData<String>()
-    var friendStatus = MutableLiveData<String>()
+    val passwordAuth = MutableLiveData<String>()
+    val messageList = MutableLiveData<List<MessageModel>>()
+    val postList = MutableLiveData<List<PostModel>>()
+    val isTyping = MutableLiveData<Boolean>()
+    val status = MutableLiveData<String>()
+    val friendStatus = MutableLiveData<String>()
 
     init {
         passwordAuth.value = ""
@@ -258,7 +259,6 @@ class UserViewModel : ViewModel() {
                                                 userName!!,
                                                 userEmail!!,
                                                 userImage!!,
-                                                false,
                                             )
 
                                         val friendRef =
@@ -362,7 +362,7 @@ class UserViewModel : ViewModel() {
     }
 
     fun sendMessage(
-        conversationId: String,
+        chatId: String,
         messageContent: String,
         senderUid: String,
         user1: String,
@@ -373,7 +373,7 @@ class UserViewModel : ViewModel() {
                 val message =
                     MessageModel(
                         UUID.randomUUID().toString(),
-                        conversationId,
+                        chatId,
                         messageContent,
                         senderUid,
                         Util.getDateTime(),
@@ -382,12 +382,74 @@ class UserViewModel : ViewModel() {
                         false,
                     )
                 val messageCollection = firestore.collection("Chats")
-                    .document(conversationId)
+                    .document(chatId)
                     .collection("Messages")
 
-                messageCollection.add(message)
+                messageCollection.add(message).addOnSuccessListener {
+                    updateChatList(chatId, messageContent, user1, user2)
+                }
             }
         }
+
+    private fun updateChatList(
+        chatId: String,
+        messageContent: String,
+        user1: String,
+        user2: String,
+    ) {
+        val user1Refer = firestore.collection("Users").document(user1)
+        user1Refer.get().addOnSuccessListener {
+            val user1Data = it.data
+            val userChats =
+                user1Data!!["chats"] as? List<HashMap<String, Any>>
+
+            val chatExists = userChats?.any { friendData ->
+                friendData["chatId"] == chatId
+            } ?: false
+
+            if (!chatExists) {
+                val chat =
+                    ChatModel(chatId, messageContent, Util.getDateTime(), user1, user2)
+
+                user1Refer.update("chats", FieldValue.arrayUnion(chat))
+            } else {
+                val updatedChatList = userChats!!.map { chat ->
+                    if (chat["chatId"] == chatId) {
+                        chat.toMutableMap().apply { put("lastMessage", messageContent) }
+                    } else {
+                        chat
+                    }
+                }
+                user1Refer.update("chats", updatedChatList)
+            }
+        }
+        val user2Refer = firestore.collection("Users").document(user2)
+        user1Refer.get().addOnSuccessListener {
+            val user2Data = it.data
+            val userChats =
+                user2Data!!["chats"] as? List<HashMap<String, Any>>
+
+            val chatExists = userChats?.any { friendData ->
+                friendData["chatId"] == chatId
+            } ?: false
+
+            if (!chatExists) {
+                val chat =
+                    ChatModel(chatId, messageContent, Util.getDateTime(), user1, user2)
+
+                user2Refer.update("chats", FieldValue.arrayUnion(chat))
+            } else {
+                val updatedChatList = userChats!!.map { chat ->
+                    if (chat["chatId"] == chatId) {
+                        chat.toMutableMap().apply { put("lastMessage", messageContent) }
+                    } else {
+                        chat
+                    }
+                }
+                user2Refer.update("chats", updatedChatList)
+            }
+        }
+    }
 
     fun loadMessages(chatId: String) = viewModelScope.launch {
         withContext(Dispatchers.IO) {

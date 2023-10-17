@@ -71,6 +71,7 @@ class ChatActivity : AppCompatActivity() {
             .into(binding.profilePicture)
 
         binding.friendName.text = friendName
+
         friendIsTyping()
         userViewModel.getFriendChatState(friendUid)
         userViewModel.isTyping.observe(this) {

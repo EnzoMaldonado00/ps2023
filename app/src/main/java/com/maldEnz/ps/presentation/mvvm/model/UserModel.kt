@@ -5,5 +5,4 @@ data class UserModel(
     val userName: String,
     val userEmail: String,
     val userImage: String,
-    val isTyping: Boolean,
 )
