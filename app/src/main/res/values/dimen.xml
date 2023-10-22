@@ -11,8 +11,8 @@
     <dimen name="navbar_header_padding">16dp</dimen>
 
     <!--HomeActivity-->
-    <dimen name="profile_img_width">60dp</dimen>
-    <dimen name="profile_img_height">60dp</dimen>
+    <dimen name="profile_img_width">50dp</dimen>
+    <dimen name="profile_img_height">50dp</dimen>
     <dimen name="profile_img_marginEnd">10dp</dimen>
     <dimen name="profile_img_marginTop">10dp</dimen>
 </resources>

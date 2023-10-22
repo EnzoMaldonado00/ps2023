@@ -8,8 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.maldEnz.ps.databinding.ItemRecyclerPostBinding
 import com.maldEnz.ps.presentation.mvvm.model.PostModel
+import com.maldEnz.ps.presentation.mvvm.viewmodel.FriendViewModel
 
-class UserPostAdapter :
+class UserPostAdapter(private val friendViewModel: FriendViewModel) :
     ListAdapter<PostModel, UserPostAdapter.PostsViewHolder>(PostDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostsViewHolder {
@@ -31,10 +32,6 @@ class UserPostAdapter :
 
         fun bind(post: PostModel) {
             binding.apply {
-                authorName.text = post.authorName
-                postDescription.text = post.description
-                dateTime.text = post.dateTime
-
                 Glide.with(itemView.context)
                     .load(post.imageUrl)
                     .into(imagePost)

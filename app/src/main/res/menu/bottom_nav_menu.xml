@@ -6,11 +6,19 @@
         android:title="Home" />
 
     <item
+        android:id="@+id/bottom_nav_feed"
+        android:icon="@drawable/baseline_feed_24"
+        android:title="Feed" />
+
+    <item
         android:id="@+id/bottom_nav_post"
-        android:title="Upload Post"/>
+        android:icon="@drawable/baseline_add_a_photo_24"
+        android:title="Upload Post" />
 
     <item
         android:id="@+id/bottom_nav_friends"
         android:icon="@drawable/baseline_group_24"
         android:title="Friends" />
+
+
 </menu>

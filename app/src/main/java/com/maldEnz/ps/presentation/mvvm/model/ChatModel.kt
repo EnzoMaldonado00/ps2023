@@ -6,4 +6,5 @@ data class ChatModel(
     val lastMessageDateTime: String,
     val user1: String,
     val user2: String,
+    val lastMessageTimeStamp: Long,
 )

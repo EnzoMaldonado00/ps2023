@@ -18,5 +18,13 @@
         android:title="@string/popup_menu_settings"
         />
 
+    <item
+        android:id="@+id/admin_item"
+        android:icon="@drawable/baseline_settings_24"
+        android:visible="false"
+        android:title="Admin"
+        />
+
+
 
 </menu>

@@ -15,39 +15,51 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/profile_click"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
+
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profilePicture"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_gravity="start"
-                android:layout_marginStart="20dp"
+
                 android:clickable="true"
                 android:focusable="true"
-                android:importantForAccessibility="no" />
+                android:importantForAccessibility="no"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
             <TextView
                 android:id="@+id/friend_name"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
                 android:layout_marginEnd="10dp"
-                android:padding="5dp"
                 android:textColor="@color/white"
-                android:textSize="25sp"
-                tools:hint="coco" />
+                android:textSize="22sp"
+                android:layout_marginTop="5dp"
+                app:layout_constraintStart_toEndOf="@id/profilePicture"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="coco" />
 
             <TextView
                 android:id="@+id/status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="online"
-                android:textColor="@color/white" />
+                android:layout_marginStart="15dp"
+                tools:text="online"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/profilePicture"
+                app:layout_constraintTop_toBottomOf="@id/friend_name" />
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView

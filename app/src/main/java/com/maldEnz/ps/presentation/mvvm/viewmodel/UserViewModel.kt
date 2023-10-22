@@ -41,6 +41,8 @@ class UserViewModel : ViewModel() {
     val isTyping = MutableLiveData<Boolean>()
     val status = MutableLiveData<String>()
     val friendStatus = MutableLiveData<String>()
+    val feedPostList = MutableLiveData<List<PostModel>>()
+    val isAdmin = MutableLiveData<Boolean>()
 
     init {
         passwordAuth.value = ""
@@ -106,13 +108,12 @@ class UserViewModel : ViewModel() {
                     val fullName = snapshot.getString("userName")
                     val mail = snapshot.getString("userEmail")
                     val imageUrl = snapshot.getString("image")
+                    val admin = snapshot.getBoolean("isAdmin")
                     val friendReqData = snapshot.get("friendRequests") as? List<Map<String, Any>>
                     val friendReq = friendReqData?.map { friendData ->
                         FriendModel(
                             friendId = friendData["userId"] as String,
-                            friendName = friendData["userName"] as String,
                             friendEmail = friendData["userEmail"] as String,
-                            friendImage = friendData["userImage"] as String,
                             false,
                         )
                     } ?: emptyList()
@@ -121,9 +122,7 @@ class UserViewModel : ViewModel() {
                     val friendList = friendListData?.map { friendData ->
                         FriendModel(
                             friendId = friendData["friendId"] as String,
-                            friendName = friendData["friendName"] as String,
                             friendEmail = friendData["friendEmail"] as String,
-                            friendImage = friendData["friendImage"] as String,
                             false,
                         )
                     } ?: emptyList()
@@ -144,6 +143,7 @@ class UserViewModel : ViewModel() {
                         name!!.value = fullName
                         email!!.value = mail
                         imageURL!!.value = imageUrl
+                        isAdmin!!.value = admin
                         friendRequest.value = friendReq
                         friends.value = friendList
                         postList.value = postsList
@@ -152,81 +152,6 @@ class UserViewModel : ViewModel() {
             }
         }
     }
-
-    fun addFriend(friendId: String) = viewModelScope.launch {
-        withContext(Dispatchers.IO) {
-            val colRef = firestore.collection("Users")
-            val docRefer = colRef.document(currentUser)
-
-            docRefer.get().addOnSuccessListener { doc ->
-                val currentUserData = doc.data
-                val currentFriends = currentUserData!!["friends"] as? List<HashMap<String, Any>>
-
-                // Verify that the friend is already added
-                val isAlreadyFriend = currentFriends?.any { friendData ->
-                    friendData["friendId"] == friendId
-                } ?: false
-
-                if (!isAlreadyFriend) {
-                    colRef.whereEqualTo("userId", friendId).get()
-                        .addOnSuccessListener { querySnapshot ->
-                            for (document in querySnapshot.documents) {
-                                if (friendId != currentUser) {
-                                    val friendName = document.getString("userName")!!
-                                    val friendImage = document.getString("image")!!
-                                    val friendEmail = document.getString("userEmail")!!
-
-                                    val fr =
-                                        FriendModel(
-                                            friendId,
-                                            friendName,
-                                            friendEmail,
-                                            friendImage,
-                                            false,
-                                        )
-
-                                    docRefer.update("friends", FieldValue.arrayUnion(fr))
-                                        .addOnSuccessListener {
-                                            docRefer.get().addOnSuccessListener {
-                                                val userName = it.getString("userName")!!
-
-                                                val userEmail = it.getString("userEmail")!!
-
-                                                val userImage = it.getString("image")!!
-
-                                                // FriendModel is used instead of UserModel for data consistency on database
-                                                val user =
-                                                    FriendModel(
-                                                        currentUser,
-                                                        userName,
-                                                        userEmail,
-                                                        userImage,
-                                                        false,
-                                                    )
-
-                                                val friendRef =
-                                                    firestore.collection("Users").document(friendId)
-
-                                                friendRef.update(
-                                                    "friends",
-                                                    FieldValue.arrayUnion(user),
-                                                )
-                                                    .addOnSuccessListener {
-                                                    }
-                                            }
-                                        }
-                                } else {
-                                    // cannot add same user
-                                }
-                            }
-                        }
-                } else {
-                    // already friends
-                }
-            }
-        }
-    }
-    // verificar si se sigue necesitando el mail del amigo
 
     fun sendFriendRequest(friendEmail: String, context: Context) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
@@ -299,68 +224,6 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    fun discardFriendRequest(friendId: String) = viewModelScope.launch {
-        withContext(Dispatchers.IO) {
-            val docRefer = firestore.collection("Users").document(currentUser)
-
-            docRefer.get().addOnSuccessListener { documentSnapshot ->
-                if (documentSnapshot.exists()) {
-                    val friendRequests =
-                        documentSnapshot.get("friendRequests") as? List<Map<String, Any>>
-
-                    if (friendRequests != null) {
-                        val updatedFriendRequests = friendRequests.filter { friend ->
-                            friend["userId"] != friendId
-                        }
-
-                        docRefer.update("friendRequests", updatedFriendRequests)
-                            .addOnSuccessListener {
-                            }
-                    }
-                }
-            }
-        }
-    }
-
-    fun deleteFriend(friendId: String) = viewModelScope.launch {
-        withContext(Dispatchers.IO) {
-            val docRefer = firestore.collection("Users").document(currentUser)
-
-            docRefer.get().addOnSuccessListener { documentSnapshot ->
-
-                if (documentSnapshot.exists()) {
-                    val friendsList =
-                        documentSnapshot.get("friends") as? List<Map<String, Any>>
-
-                    if (friendsList != null) {
-                        val updatedFriendList = friendsList.filter { friend ->
-                            friend["friendId"] != friendId
-                        }
-
-                        docRefer.update("friends", updatedFriendList)
-                            .addOnSuccessListener {
-                                val friendDocRef = firestore.collection("Users").document(friendId)
-
-                                friendDocRef.get().addOnSuccessListener { friendSnapshot ->
-                                    if (friendSnapshot.exists()) {
-                                        val friendList =
-                                            friendSnapshot.get("friends") as? List<Map<String, Any>>
-
-                                        if (friendList != null) {
-                                            val newFriendList = friendList.filter { friends ->
-                                                friends["friendId"] != currentUser
-                                            }
-                                            friendDocRef.update("friends", newFriendList)
-                                        }
-                                    }
-                                }
-                            }
-                    }
-                }
-            }
-        }
-    }
-
     fun sendMessage(
         chatId: String,
         messageContent: String,
@@ -396,57 +259,82 @@ class UserViewModel : ViewModel() {
         messageContent: String,
         user1: String,
         user2: String,
-    ) {
-        val user1Refer = firestore.collection("Users").document(user1)
-        user1Refer.get().addOnSuccessListener {
-            val user1Data = it.data
-            val userChats =
-                user1Data!!["chats"] as? List<HashMap<String, Any>>
+    ) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val user1Refer = firestore.collection("Users").document(user1)
+            val user2Refer = firestore.collection("Users").document(user2)
 
-            val chatExists = userChats?.any { friendData ->
-                friendData["chatId"] == chatId
-            } ?: false
+            user1Refer.get().addOnSuccessListener {
+                val user1Data = it.data
+                val userChats =
+                    user1Data!!["chats"] as? List<HashMap<String, Any>>
 
-            if (!chatExists) {
-                val chat =
-                    ChatModel(chatId, messageContent, Util.getDateTime(), user1, user2)
+                val chatExists = userChats?.any { friendData ->
+                    friendData["chatId"] == chatId
+                } ?: false
 
-                user1Refer.update("chats", FieldValue.arrayUnion(chat))
-            } else {
-                val updatedChatList = userChats!!.map { chat ->
-                    if (chat["chatId"] == chatId) {
-                        chat.toMutableMap().apply { put("lastMessage", messageContent) }
-                    } else {
-                        chat
+                if (!chatExists) {
+                    val chat =
+                        ChatModel(
+                            chatId,
+                            messageContent,
+                            Util.getDateTime(),
+                            user1,
+                            user2,
+                            System.currentTimeMillis(),
+                        )
+
+                    user1Refer.update("chats", FieldValue.arrayUnion(chat))
+                } else {
+                    val updatedChatList = userChats!!.map { chat ->
+                        if (chat["chatId"] == chatId) {
+                            chat.toMutableMap().apply {
+                                put("lastMessage", messageContent)
+                                put("lastMessageDateTime", Util.getDateTime())
+                                put("lastMessageTimeStamp", System.currentTimeMillis())
+                            }
+                        } else {
+                            chat
+                        }
                     }
+                    user1Refer.update("chats", updatedChatList)
                 }
-                user1Refer.update("chats", updatedChatList)
             }
-        }
-        val user2Refer = firestore.collection("Users").document(user2)
-        user1Refer.get().addOnSuccessListener {
-            val user2Data = it.data
-            val userChats =
-                user2Data!!["chats"] as? List<HashMap<String, Any>>
+            user2Refer.get().addOnSuccessListener {
+                val user2Data = it.data
+                val userChats =
+                    user2Data!!["chats"] as? List<HashMap<String, Any>>
 
-            val chatExists = userChats?.any { friendData ->
-                friendData["chatId"] == chatId
-            } ?: false
+                val chatExists = userChats?.any { friendData ->
+                    friendData["chatId"] == chatId
+                } ?: false
 
-            if (!chatExists) {
-                val chat =
-                    ChatModel(chatId, messageContent, Util.getDateTime(), user1, user2)
+                if (!chatExists) {
+                    val chat =
+                        ChatModel(
+                            chatId,
+                            messageContent,
+                            Util.getDateTime(),
+                            user1,
+                            user2,
+                            System.currentTimeMillis(),
+                        )
 
-                user2Refer.update("chats", FieldValue.arrayUnion(chat))
-            } else {
-                val updatedChatList = userChats!!.map { chat ->
-                    if (chat["chatId"] == chatId) {
-                        chat.toMutableMap().apply { put("lastMessage", messageContent) }
-                    } else {
-                        chat
+                    user2Refer.update("chats", FieldValue.arrayUnion(chat))
+                } else {
+                    val updatedChatList = userChats!!.map { chat ->
+                        if (chat["chatId"] == chatId) {
+                            chat.toMutableMap().apply {
+                                put("lastMessage", messageContent)
+                                put("lastMessageDateTime", Util.getDateTime())
+                                put("lastMessageTimeStamp", System.currentTimeMillis())
+                            }
+                        } else {
+                            chat
+                        }
                     }
+                    user2Refer.update("chats", updatedChatList)
                 }
-                user2Refer.update("chats", updatedChatList)
             }
         }
     }
@@ -602,6 +490,59 @@ class UserViewModel : ViewModel() {
                 if (querySnapshot != null && querySnapshot.exists()) {
                     val frStatus = querySnapshot.get("status") as String
                     friendStatus.value = frStatus
+                }
+            }
+        }
+    }
+
+    fun getFeed() = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val docRefer = firestore.collection("Users").document(currentUser)
+
+            docRefer.addSnapshotListener { userSnapshot, _ ->
+                if (userSnapshot != null && userSnapshot.exists()) {
+                    val friendsList = userSnapshot.get("friends") as? List<Map<String, Any>>
+
+                    if (friendsList != null) {
+                        val allFriendPosts = mutableListOf<PostModel>()
+
+                        for (friendData in friendsList) {
+                            val friendId = friendData["friendId"] as String
+
+                            val friendDocRef = firestore.collection("Users").document(friendId)
+
+                            friendDocRef.addSnapshotListener { friendSnapshot, _ ->
+                                if (friendSnapshot != null && friendSnapshot.exists()) {
+                                    val friendPostsList =
+                                        friendSnapshot.get("posts") as? List<Map<String, Any>>
+
+                                    if (friendPostsList != null) {
+                                        for (postData in friendPostsList) {
+                                            val postId = postData["postId"] as String
+                                            val description = postData["description"] as String
+                                            val timestamp = postData["timestamp"] as Long
+                                            val dateTime = postData["dateTime"] as String
+                                            val authorName = postData["authorName"] as String
+                                            val imageUrl = postData["imageUrl"] as String
+
+                                            val post = PostModel(
+                                                postId,
+                                                friendId,
+                                                authorName,
+                                                timestamp,
+                                                dateTime,
+                                                imageUrl,
+                                                description,
+                                            )
+
+                                            allFriendPosts.add(post)
+                                            feedPostList.value = allFriendPosts
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

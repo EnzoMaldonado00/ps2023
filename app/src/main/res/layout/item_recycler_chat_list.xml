@@ -1,19 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/msg_click"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:clickable="true"
+    android:focusable="true"
+    android:padding="6dp">
 
     <TextView
-        android:id="@+id/chatNameTextView"
+        android:id="@+id/friend_name_chat_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:layout_marginStart="15dp"
         android:textColor="#000000"
+        android:textSize="18sp"
         android:textStyle="bold"
-        android:layout_marginBottom="8dp"/>
+        app:layout_constraintStart_toEndOf="@id/friend_image_chat_list"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:hint="Enzo Maldonado" />
 
-    <!-- Otros elementos de diseño para mostrar más información del chat si es necesario -->
-</LinearLayout>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/friend_image_chat_list"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_default_acc" />
+
+    <TextView
+        android:id="@+id/last_msg_chat_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toEndOf="@id/friend_image_chat_list"
+        app:layout_constraintTop_toBottomOf="@id/friend_name_chat_list"
+        tools:hint="hola como estas" />
+
+    <TextView
+        android:id="@+id/last_msg_date_chat_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:hint="20/05/2023" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

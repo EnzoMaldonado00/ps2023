@@ -1,13 +1,10 @@
 package com.maldEnz.ps.presentation.adapter
 
-import android.content.Context
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -18,12 +15,8 @@ import com.maldEnz.ps.databinding.ItemRecyclerSenderMsgBinding
 import com.maldEnz.ps.presentation.mvvm.model.MessageModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
 
-class MessageListAdapter(context: Context) :
+class MessageListAdapter(private val userViewModel: UserViewModel) :
     ListAdapter<MessageModel, RecyclerView.ViewHolder>(MessageDiffCallback()) {
-
-    private val userViewModel: UserViewModel by lazy {
-        ViewModelProvider(context as AppCompatActivity)[UserViewModel::class.java]
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {

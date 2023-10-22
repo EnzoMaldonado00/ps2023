@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.maldEnz.ps.databinding.ActivityProfileBinding
 import com.maldEnz.ps.presentation.adapter.UserPostAdapter
 import com.maldEnz.ps.presentation.fragment.dialog.SheetDialogProfileFragment
+import com.maldEnz.ps.presentation.mvvm.viewmodel.FriendViewModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
 import org.koin.android.ext.android.inject
 
@@ -18,6 +19,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var adapter: UserPostAdapter
     private lateinit var auth: FirebaseAuth
     private val userViewModel: UserViewModel by inject()
+    private val friendViewModel: FriendViewModel by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +37,7 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(Intent(this, ImagePickerActivity::class.java))
         }
 
-        adapter = UserPostAdapter()
+        adapter = UserPostAdapter(friendViewModel)
         val gridLayoutManager = GridLayoutManager(this, 2)
         binding.postRecyclerView.layoutManager = gridLayoutManager
         binding.postRecyclerView.adapter = adapter

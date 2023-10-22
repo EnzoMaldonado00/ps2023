@@ -1,27 +1,19 @@
 package com.maldEnz.ps.presentation.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.bumptech.glide.Glide
-import com.maldEnz.ps.databinding.RecyclerFriendRequestBinding
+import com.maldEnz.ps.databinding.ItemRecyclerFriendRequestBinding
 import com.maldEnz.ps.presentation.mvvm.model.FriendModel
-import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
+import com.maldEnz.ps.presentation.mvvm.viewmodel.FriendViewModel
 
-class FriendRequestAdapter(context: Context) :
+class FriendRequestAdapter(private val friendViewModel: FriendViewModel) :
     ListAdapter<FriendModel, FriendRequestAdapter.FriendViewHolder>(FriendRequestsDiffCallback()) {
 
-    private val userViewModel: UserViewModel by lazy {
-        ViewModelProvider(context as AppCompatActivity)[UserViewModel::class.java]
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FriendViewHolder {
-        val binding = RecyclerFriendRequestBinding.inflate(
+        val binding = ItemRecyclerFriendRequestBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false,
@@ -38,25 +30,25 @@ class FriendRequestAdapter(context: Context) :
         val friendId = friendRequests.friendId
 
         btnAccept.setOnClickListener {
-            userViewModel.discardFriendRequest(friendId)
-            userViewModel.addFriend(friendId)
+            friendViewModel.discardFriendRequest(friendId)
+            friendViewModel.addFriend(friendId)
         }
         btnReject.setOnClickListener {
-            userViewModel.discardFriendRequest(friendId)
+            friendViewModel.discardFriendRequest(friendId)
         }
     }
 
-    inner class FriendViewHolder(val binding: RecyclerFriendRequestBinding) :
+    inner class FriendViewHolder(val binding: ItemRecyclerFriendRequestBinding) :
         ViewHolder(binding.root) {
 
         fun bind(friend: FriendModel) {
             binding.apply {
-                friendProfileName.text = friend.friendName
-                friendProfileMail.text = friend.friendEmail
-
-                Glide.with(itemView.context)
-                    .load(friend.friendImage)
-                    .into(friendProfilePicture)
+                friendViewModel.loadFriendData(
+                    friend.friendId,
+                    binding.friendProfileName,
+                    friendProfileMail,
+                    binding.friendProfilePicture,
+                )
             }
         }
     }

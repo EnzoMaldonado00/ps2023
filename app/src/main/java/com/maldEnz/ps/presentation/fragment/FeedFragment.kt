@@ -6,45 +6,42 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.maldEnz.ps.databinding.FragmentFriendListBinding
+import com.maldEnz.ps.databinding.FragmentFeedBinding
 import com.maldEnz.ps.presentation.activity.HomeActivity
-import com.maldEnz.ps.presentation.adapter.FriendListAdapter
+import com.maldEnz.ps.presentation.adapter.FeedAdapter
 import com.maldEnz.ps.presentation.mvvm.viewmodel.FriendViewModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
 import org.koin.android.ext.android.inject
 
-class FriendListFragment : Fragment() {
-
-    private lateinit var binding: FragmentFriendListBinding
-    private lateinit var adapter: FriendListAdapter
+class FeedFragment : Fragment() {
+    private lateinit var binding: FragmentFeedBinding
+    private lateinit var adapter: FeedAdapter
     private val userViewModel: UserViewModel by inject()
     private val friendViewModel: FriendViewModel by inject()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        userViewModel.getUserData()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        binding = FragmentFriendListBinding.inflate(inflater, container, false)
+        binding = FragmentFeedBinding.inflate(inflater, container, false)
         (activity as HomeActivity).disableComponents()
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = FriendListAdapter(friendViewModel)
+        userViewModel.getFeed()
 
-        binding.recycler.layoutManager = LinearLayoutManager(requireContext())
+        val layoutManager = LinearLayoutManager(requireContext())
+        adapter = FeedAdapter(friendViewModel)
+        binding.recycler.layoutManager = layoutManager
         binding.recycler.adapter = adapter
+        layoutManager.stackFromEnd = true
+        layoutManager.reverseLayout = true
 
-        userViewModel.friends.observe(viewLifecycleOwner) { friendList ->
-            adapter.submitList(friendList)
+        userViewModel.feedPostList.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
         }
     }
 

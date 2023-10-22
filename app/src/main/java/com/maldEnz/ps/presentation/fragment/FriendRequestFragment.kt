@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.maldEnz.ps.databinding.FragmentFriendRequestBinding
 import com.maldEnz.ps.presentation.activity.HomeActivity
 import com.maldEnz.ps.presentation.adapter.FriendRequestAdapter
+import com.maldEnz.ps.presentation.mvvm.viewmodel.FriendViewModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
 import org.koin.android.ext.android.inject
 
@@ -17,6 +18,8 @@ class FriendRequestFragment : Fragment() {
     private lateinit var binding: FragmentFriendRequestBinding
     private lateinit var adapter: FriendRequestAdapter
     private val userViewModel: UserViewModel by inject()
+    private val friendViewModel: FriendViewModel by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userViewModel.getUserData()
@@ -34,8 +37,7 @@ class FriendRequestFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val activity = requireActivity()
-        adapter = FriendRequestAdapter(activity)
+        adapter = FriendRequestAdapter(friendViewModel)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
