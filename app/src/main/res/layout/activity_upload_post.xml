@@ -20,6 +20,7 @@
                 android:layout_width="400dp"
                 android:layout_height="400dp"
                 android:layout_margin="@dimen/container_margin"
+                android:background="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/btn_close"
@@ -39,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/container_margin"
                 android:text="@string/upload_post"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/desc_text" />
 
             <ImageButton

@@ -1,5 +1,6 @@
 package com.maldEnz.ps.presentation.di
 
+import com.maldEnz.ps.presentation.mvvm.viewmodel.AdminViewModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.ChatViewModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.FriendViewModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
@@ -11,5 +12,6 @@ object ViewModelModule {
         viewModel { UserViewModel() }
         viewModel { ChatViewModel() }
         viewModel { FriendViewModel() }
+        viewModel { AdminViewModel() }
     }
 }

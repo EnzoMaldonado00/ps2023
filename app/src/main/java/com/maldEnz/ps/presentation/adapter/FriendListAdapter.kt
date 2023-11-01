@@ -27,26 +27,6 @@ class FriendListAdapter(private val friendViewModel: FriendViewModel) :
     override fun onBindViewHolder(holder: FriendListViewHolder, position: Int) {
         val friendList = getItem(position)
         holder.bind(friendList)
-
-        val btnDelete = holder.binding.btnDelete
-        val btnMsg = holder.binding.btnSendMsg
-        val friendImage = holder.binding.friendProfilePicture
-
-        val friendId = friendList.friendId
-
-        btnDelete.setOnClickListener {
-            friendViewModel.deleteFriend(friendId)
-        }
-        btnMsg.setOnClickListener {
-            val intent = Intent(it.context, ChatActivity::class.java)
-            intent.putExtra("friendUid", friendId)
-            it.context.startActivity(intent)
-        }
-        friendImage.setOnClickListener {
-            val intent = Intent(it.context, FriendProfileActivity::class.java)
-            intent.putExtra("friendUid", friendId)
-            it.context.startActivity(intent)
-        }
     }
 
     inner class FriendListViewHolder(val binding: ItemRecyclerFriendListBinding) :
@@ -60,6 +40,19 @@ class FriendListAdapter(private val friendViewModel: FriendViewModel) :
                     null,
                     binding.friendProfilePicture,
                 )
+                btnDelete.setOnClickListener {
+                    friendViewModel.deleteFriend(friend.friendId)
+                }
+                btnSendMsg.setOnClickListener {
+                    val intent = Intent(it.context, ChatActivity::class.java)
+                    intent.putExtra("friendUid", friend.friendId)
+                    it.context.startActivity(intent)
+                }
+                friendProfilePicture.setOnClickListener {
+                    val intent = Intent(it.context, FriendProfileActivity::class.java)
+                    intent.putExtra("friendUid", friend.friendId)
+                    it.context.startActivity(intent)
+                }
             }
         }
     }

@@ -38,7 +38,7 @@ class ChatActivity : AppCompatActivity() {
         friendEmail = intent.getStringExtra("friendEmail") ?: ""
 
         userViewModel.getFriendStatus(friendUid)
-        friendViewModel.loadFriendData(friendUid, binding.friendName, null, binding.profilePicture)
+
         userViewModel.getFriendChatState(friendUid)
 
         val adapter = MessageListAdapter(userViewModel)
@@ -84,8 +84,6 @@ class ChatActivity : AppCompatActivity() {
         userViewModel.isTyping.observe(this) {
             if (it) {
                 binding.status.text = "typing..."
-            } else {
-                binding.status.text = "online"
             }
         }
     }
@@ -136,6 +134,7 @@ class ChatActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         userViewModel.updateUserStatusToOnline()
+        friendViewModel.loadFriendData(friendUid, binding.friendName, null, binding.profilePicture)
     }
 
     override fun onPause() {

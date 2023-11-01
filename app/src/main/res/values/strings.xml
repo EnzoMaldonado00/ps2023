@@ -44,6 +44,8 @@
     <string name="post_caption_hint">Write a caption...</string>
     <string name="upload_post">Post</string>
     <string name="profile_title_posts">My Posts</string>
+    <string name="admin_statistics_text">Statistics</string>
+    <string name="total_registered_users_text">Total registered users:</string>
 
 
 </resources>

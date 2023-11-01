@@ -30,20 +30,6 @@ class RecentChatsAdapter(private val chatViewModel: ChatViewModel) :
     override fun onBindViewHolder(holder: ChatListViewHolder, position: Int) {
         val chatList = getItem(position)
         holder.bind(chatList)
-
-        val chatClick = holder.binding.msgClick
-
-        chatClick.setOnClickListener {
-            if (chatList.user1 != FirebaseAuth.getInstance().currentUser!!.uid) {
-                val intent = Intent(it.context, ChatActivity::class.java)
-                intent.putExtra("friendUid", chatList.user1)
-                it.context.startActivity(intent)
-            } else {
-                val intent = Intent(it.context, ChatActivity::class.java)
-                intent.putExtra("friendUid", chatList.user2)
-                it.context.startActivity(intent)
-            }
-        }
     }
 
     inner class ChatListViewHolder(val binding: ItemRecyclerChatListBinding) :
@@ -81,6 +67,18 @@ class RecentChatsAdapter(private val chatViewModel: ChatViewModel) :
                     friendNameChatList,
                     friendImageChatList,
                 )
+
+                binding.msgClick.setOnClickListener {
+                    if (chat.user1 != FirebaseAuth.getInstance().currentUser!!.uid) {
+                        val intent = Intent(it.context, ChatActivity::class.java)
+                        intent.putExtra("friendUid", chat.user1)
+                        it.context.startActivity(intent)
+                    } else {
+                        val intent = Intent(it.context, ChatActivity::class.java)
+                        intent.putExtra("friendUid", chat.user2)
+                        it.context.startActivity(intent)
+                    }
+                }
             }
         }
     }

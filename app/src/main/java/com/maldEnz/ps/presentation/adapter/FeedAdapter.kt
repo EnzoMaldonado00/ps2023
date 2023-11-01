@@ -29,15 +29,6 @@ class FeedAdapter(
     override fun onBindViewHolder(holder: FeedViewHolder, position: Int) {
         val postList = getItem(position)
         holder.bind(postList)
-
-        val profileImage = holder.binding.profilePicture
-        val authorId = postList.authorId
-
-        profileImage.setOnClickListener {
-            val intent = Intent(it.context, FriendProfileActivity::class.java)
-            intent.putExtra("friendUid", authorId)
-            it.context.startActivity(intent)
-        }
     }
 
     inner class FeedViewHolder(val binding: ItemRecyclerFeedPostsBinding) :
@@ -51,6 +42,12 @@ class FeedAdapter(
                 Glide.with(itemView.context)
                     .load(post.imageUrl)
                     .into(imagePost)
+
+                profilePicture.setOnClickListener {
+                    val intent = Intent(it.context, FriendProfileActivity::class.java)
+                    intent.putExtra("friendUid", post.authorId)
+                    it.context.startActivity(intent)
+                }
             }
         }
     }

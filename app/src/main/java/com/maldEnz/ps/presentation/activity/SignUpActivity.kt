@@ -81,7 +81,7 @@ class SignUpActivity : AppCompatActivity() {
                     val user = FirebaseAuth.getInstance().currentUser
                     val uid = user!!.uid
 
-                    val imageName = "profileImages/$uid.jpg"
+                    val imageName = "profileImages/$uid.webp"
                     val imageRef = FirebaseStorage.getInstance().reference.child(imageName)
                     val uploadTask: UploadTask = imageRef.putFile(imageUri!!)
 

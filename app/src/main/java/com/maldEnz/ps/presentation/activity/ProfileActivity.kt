@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.maldEnz.ps.databinding.ActivityProfileBinding
-import com.maldEnz.ps.presentation.adapter.UserPostAdapter
+import com.maldEnz.ps.presentation.adapter.PostAdapter
 import com.maldEnz.ps.presentation.fragment.dialog.SheetDialogProfileFragment
 import com.maldEnz.ps.presentation.mvvm.viewmodel.FriendViewModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
@@ -16,7 +16,7 @@ import org.koin.android.ext.android.inject
 class ProfileActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityProfileBinding
-    private lateinit var adapter: UserPostAdapter
+    private lateinit var adapter: PostAdapter
     private lateinit var auth: FirebaseAuth
     private val userViewModel: UserViewModel by inject()
     private val friendViewModel: FriendViewModel by inject()
@@ -37,8 +37,8 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(Intent(this, ImagePickerActivity::class.java))
         }
 
-        adapter = UserPostAdapter(friendViewModel)
-        val gridLayoutManager = GridLayoutManager(this, 2)
+        adapter = PostAdapter(friendViewModel)
+        val gridLayoutManager = GridLayoutManager(this, 3)
         binding.postRecyclerView.layoutManager = gridLayoutManager
         binding.postRecyclerView.adapter = adapter
 

@@ -1,5 +1,6 @@
 package com.maldEnz.ps.presentation.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -7,11 +8,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.maldEnz.ps.databinding.ItemRecyclerPostBinding
+import com.maldEnz.ps.presentation.activity.PostDetailsActivity
 import com.maldEnz.ps.presentation.mvvm.model.PostModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.FriendViewModel
 
-class UserPostAdapter(private val friendViewModel: FriendViewModel) :
-    ListAdapter<PostModel, UserPostAdapter.PostsViewHolder>(PostDiffCallback()) {
+class PostAdapter(private val friendViewModel: FriendViewModel) :
+    ListAdapter<PostModel, PostAdapter.PostsViewHolder>(PostDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostsViewHolder {
         val binding = ItemRecyclerPostBinding.inflate(
@@ -35,6 +37,17 @@ class UserPostAdapter(private val friendViewModel: FriendViewModel) :
                 Glide.with(itemView.context)
                     .load(post.imageUrl)
                     .into(imagePost)
+
+
+                imagePost.setOnClickListener {
+                    val intent = Intent(it.context, PostDetailsActivity::class.java)
+                    intent.putExtra("authorId",post.authorId)
+                    intent.putExtra("imagePost",post.imageUrl)
+                    intent.putExtra("dateTime",post.dateTime)
+                    intent.putExtra("description",post.description)
+                    intent.putExtra("postId",post.postId)
+                    it.context.startActivity(intent)
+                }
             }
         }
     }

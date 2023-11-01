@@ -31,15 +31,18 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (FirebaseAuth.getInstance().currentUser == null) {
+            startActivity(Intent(this, LogInActivity::class.java))
+            finish()
+        }
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        userViewModel.updateUserStatusToOnline()
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
         userViewModel.imageURL.observe(this) {
             Glide.with(this)
-                .load(String.format("%s", it))
+                .load(it)
                 .into(binding.profilePicture)
         }
 
@@ -85,6 +88,7 @@ class HomeActivity : AppCompatActivity() {
                     }
 
                     R.id.admin_item -> {
+                        startActivity(Intent(this, AdminActivity::class.java))
                         true
                     }
 

@@ -38,7 +38,6 @@ class LogInActivity : AppCompatActivity() {
                 ).addOnCompleteListener {
                     if (it.isSuccessful) {
                         finish()
-
                         val intent = Intent(this, HomeActivity::class.java)
                         startActivity(intent)
                     } else {

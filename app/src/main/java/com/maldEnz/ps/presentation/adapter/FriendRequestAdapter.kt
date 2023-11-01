@@ -24,18 +24,6 @@ class FriendRequestAdapter(private val friendViewModel: FriendViewModel) :
     override fun onBindViewHolder(holder: FriendViewHolder, position: Int) {
         val friendRequests = getItem(position)
         holder.bind(friendRequests)
-
-        val btnAccept = holder.binding.btnAccept
-        val btnReject = holder.binding.btnReject
-        val friendId = friendRequests.friendId
-
-        btnAccept.setOnClickListener {
-            friendViewModel.discardFriendRequest(friendId)
-            friendViewModel.addFriend(friendId)
-        }
-        btnReject.setOnClickListener {
-            friendViewModel.discardFriendRequest(friendId)
-        }
     }
 
     inner class FriendViewHolder(val binding: ItemRecyclerFriendRequestBinding) :
@@ -49,6 +37,14 @@ class FriendRequestAdapter(private val friendViewModel: FriendViewModel) :
                     friendProfileMail,
                     binding.friendProfilePicture,
                 )
+
+                btnAccept.setOnClickListener {
+                    friendViewModel.discardFriendRequest(friend.friendId)
+                    friendViewModel.addFriend(friend.friendId)
+                }
+                btnReject.setOnClickListener {
+                    friendViewModel.discardFriendRequest(friend.friendId)
+                }
             }
         }
     }

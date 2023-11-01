@@ -40,6 +40,7 @@ class FriendViewModel : ViewModel() {
                 } ?: emptyList()
 
                 friendPostList.value = postsList
+
             }
         }
     }
