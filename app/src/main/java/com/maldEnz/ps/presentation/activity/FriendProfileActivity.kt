@@ -22,9 +22,7 @@ class FriendProfileActivity : AppCompatActivity() {
 
         friendUid = intent.getStringExtra("friendUid") ?: ""
 
-
-
-        adapter = PostAdapter(friendViewModel)
+        adapter = PostAdapter()
         val gridLayoutManager = GridLayoutManager(this, 3)
         binding.recycler.layoutManager = gridLayoutManager
         binding.recycler.adapter = adapter

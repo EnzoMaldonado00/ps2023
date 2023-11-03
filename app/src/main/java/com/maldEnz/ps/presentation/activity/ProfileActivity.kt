@@ -37,7 +37,7 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(Intent(this, ImagePickerActivity::class.java))
         }
 
-        adapter = PostAdapter(friendViewModel)
+        adapter = PostAdapter()
         val gridLayoutManager = GridLayoutManager(this, 3)
         binding.postRecyclerView.layoutManager = gridLayoutManager
         binding.postRecyclerView.adapter = adapter
