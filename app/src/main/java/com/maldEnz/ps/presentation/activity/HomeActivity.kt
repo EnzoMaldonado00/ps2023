@@ -147,6 +147,11 @@ class HomeActivity : AppCompatActivity() {
                     true
                 }
 
+                R.id.bottom_nav_game -> {
+                    startActivity(Intent(this, GameActivity::class.java))
+                    true
+                }
+
                 R.id.bottom_nav_friends -> {
                     deployFrag(FriendListFragment())
                     true

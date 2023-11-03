@@ -10,9 +10,8 @@ import com.bumptech.glide.Glide
 import com.maldEnz.ps.databinding.ItemRecyclerPostBinding
 import com.maldEnz.ps.presentation.activity.PostDetailsActivity
 import com.maldEnz.ps.presentation.mvvm.model.PostModel
-import com.maldEnz.ps.presentation.mvvm.viewmodel.FriendViewModel
 
-class PostAdapter(private val friendViewModel: FriendViewModel) :
+class PostAdapter :
     ListAdapter<PostModel, PostAdapter.PostsViewHolder>(PostDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostsViewHolder {
@@ -38,14 +37,13 @@ class PostAdapter(private val friendViewModel: FriendViewModel) :
                     .load(post.imageUrl)
                     .into(imagePost)
 
-
                 imagePost.setOnClickListener {
                     val intent = Intent(it.context, PostDetailsActivity::class.java)
-                    intent.putExtra("authorId",post.authorId)
-                    intent.putExtra("imagePost",post.imageUrl)
-                    intent.putExtra("dateTime",post.dateTime)
-                    intent.putExtra("description",post.description)
-                    intent.putExtra("postId",post.postId)
+                    intent.putExtra("authorId", post.authorId)
+                    intent.putExtra("imagePost", post.imageUrl)
+                    intent.putExtra("dateTime", post.dateTime)
+                    intent.putExtra("description", post.description)
+                    intent.putExtra("postId", post.postId)
                     it.context.startActivity(intent)
                 }
             }

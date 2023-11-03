@@ -3,22 +3,27 @@
     <item
         android:id="@+id/bottom_nav_home"
         android:icon="@drawable/baseline_home_24"
-        android:title="Home" />
+        android:title="@string/home_text_bottom_menu" />
 
     <item
         android:id="@+id/bottom_nav_feed"
         android:icon="@drawable/baseline_feed_24"
-        android:title="Feed" />
+        android:title="@string/feed_text_bottom_menu" />
 
     <item
         android:id="@+id/bottom_nav_post"
         android:icon="@drawable/baseline_add_a_photo_24"
-        android:title="Upload Post" />
+        android:title="@string/upload_post_text_bottom_menu" />
+
+    <item
+        android:id="@+id/bottom_nav_game"
+        android:icon="@drawable/baseline_videogame_asset_24"
+        android:title="@string/play_text_bottom_menu" />
 
     <item
         android:id="@+id/bottom_nav_friends"
         android:icon="@drawable/baseline_group_24"
-        android:title="Friends" />
+        android:title="@string/friends_text_bottom_menu" />
 
 
 </menu>

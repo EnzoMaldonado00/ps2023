@@ -46,6 +46,17 @@
     <string name="profile_title_posts">My Posts</string>
     <string name="admin_statistics_text">Statistics</string>
     <string name="total_registered_users_text">Total registered users:</string>
+    <string name="score_text">Score:</string>
+    <string name="highest_score_text">Highest Score:</string>
+    <string name="btn_start_game">Start</string>
+    <string name="new_highscore_text">New Highscore!</string>
+    <string name="btn_restart_text">restart</string>
+    <string name="btn_exit_text">exit</string>
+    <string name="home_text_bottom_menu">Home</string>
+    <string name="feed_text_bottom_menu">Feed</string>
+    <string name="upload_post_text_bottom_menu">Upload Post</string>
+    <string name="play_text_bottom_menu">Play!</string>
+    <string name="friends_text_bottom_menu">Friends</string>
 
 
 </resources>

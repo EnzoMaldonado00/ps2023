@@ -15,6 +15,7 @@ import com.maldEnz.ps.presentation.mvvm.model.ChatModel
 import com.maldEnz.ps.presentation.mvvm.model.FriendModel
 import com.maldEnz.ps.presentation.mvvm.model.MessageModel
 import com.maldEnz.ps.presentation.mvvm.model.PostModel
+import com.maldEnz.ps.presentation.mvvm.model.ScoreModel
 import com.maldEnz.ps.presentation.mvvm.model.UserModel
 import com.maldEnz.ps.presentation.util.Util
 import kotlinx.coroutines.Dispatchers
@@ -43,6 +44,8 @@ class UserViewModel : ViewModel() {
     val friendStatus = MutableLiveData<String>()
     val feedPostList = MutableLiveData<List<PostModel>>()
     val isAdmin = MutableLiveData<Boolean>()
+    val highestScore = MutableLiveData<String>()
+    val friendsScoreList = MutableLiveData<List<ScoreModel>>()
 
     init {
         passwordAuth.value = ""
@@ -162,7 +165,6 @@ class UserViewModel : ViewModel() {
                 val currentUserData = doc.data
                 val currentFriends = currentUserData!!["friends"] as? List<HashMap<String, Any>>
 
-                // Verify that the friend is already added
                 val isAlreadyFriend = currentFriends?.any { friendData ->
                     friendData["friendEmail"] == friendEmail
                 } ?: false
@@ -539,6 +541,74 @@ class UserViewModel : ViewModel() {
                                             feedPostList.value = allFriendPosts
                                         }
                                     }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun getHighestScore() = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val docRefer = firestore.collection("Users").document(currentUser)
+
+            docRefer.get().addOnSuccessListener {
+                val highScore = it.getString("highestScore") as String
+                highestScore.value = highScore
+            }
+        }
+    }
+
+    fun updateHighestScore(score: String) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val docRefer = firestore.collection("Users").document(currentUser)
+
+            docRefer.get().addOnSuccessListener {
+                val updatedScore = hashMapOf(
+                    "highestScore" to score,
+                )
+                docRefer.update(updatedScore as Map<String, Any>)
+            }
+        }
+    }
+
+    fun getFriendsHighestScore() {
+        viewModelScope.launch {
+            val docRefer = firestore.collection("Users").document(currentUser)
+
+            docRefer.addSnapshotListener { userSnapshot, _ ->
+                if (userSnapshot != null && userSnapshot.exists()) {
+                    val friendsList = userSnapshot.get("friends") as? List<Map<String, Any>>
+                    val userScore = userSnapshot.get("highestScore") as String
+                    val userName = userSnapshot.get("userName") as String
+                    val userScoreModel = ScoreModel(
+                        userScore,
+                        userName,
+                    )
+
+                    if (friendsList != null) {
+                        val friendsDataList = mutableListOf<ScoreModel>()
+                        friendsDataList.add(userScoreModel)
+                        for (friendData in friendsList) {
+                            val friendId = friendData["friendId"] as String
+
+                            val friendDocRef = firestore.collection("Users").document(friendId)
+
+                            friendDocRef.addSnapshotListener { friendSnapshot, _ ->
+                                if (friendSnapshot != null && friendSnapshot.exists()) {
+                                    val friendName = friendSnapshot.get("userName") as String
+                                    val score = friendSnapshot.get("highestScore") as String
+
+                                    val scoreModel = ScoreModel(
+                                        score,
+                                        friendName,
+                                    )
+
+                                    friendsDataList.add(scoreModel)
+                                    friendsDataList.sortByDescending { it.score }
+                                    friendsScoreList.postValue(friendsDataList)
                                 }
                             }
                         }
