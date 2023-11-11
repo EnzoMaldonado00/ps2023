@@ -9,4 +9,5 @@ data class MessageModel(
     val sorterTime: Long = 0,
     val participants: List<String> = emptyList(),
     val deleted: Boolean = false,
+    val imageUrl: String? = null
 )

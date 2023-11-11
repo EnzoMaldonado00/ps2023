@@ -22,7 +22,7 @@ class FriendRequestFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        userViewModel.getUserData()
+
     }
 
     override fun onCreateView(
@@ -38,7 +38,7 @@ class FriendRequestFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter = FriendRequestAdapter(friendViewModel)
-
+        userViewModel.getFriendRequests()
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 

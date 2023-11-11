@@ -19,12 +19,12 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_picture"
                 android:layout_width="45dp"
-                android:clickable="true"
                 android:layout_height="45dp"
+                android:clickable="true"
+                android:focusable="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/baseline_group_add_24"
-                android:focusable="true" />
+                tools:src="@drawable/baseline_group_add_24" />
 
             <TextView
                 android:id="@+id/profile_name"
@@ -71,9 +71,69 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
-                android:text="Posted on:"
+                android:text="@string/posted_on_text"
                 app:layout_constraintEnd_toStartOf="@id/date_posted"
                 app:layout_constraintTop_toBottomOf="@id/profile_name" />
+
+            <ImageButton
+                android:id="@+id/btn_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/baseline_thumb_up_alt_24"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/description" />
+
+            <TextView
+                android:id="@+id/likes_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="@id/btn_like"
+                app:layout_constraintStart_toEndOf="@id/btn_like"
+                app:layout_constraintTop_toBottomOf="@id/description"
+                tools:hint="0" />
+
+            <TextView
+                android:id="@+id/btn_comments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="@string/comments_text"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@id/btn_like"
+                app:layout_constraintEnd_toStartOf="@id/comments_count"
+                app:layout_constraintTop_toBottomOf="@id/description" />
+
+            <TextView
+                android:id="@+id/comments_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@id/btn_comments"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/btn_comments"
+                tools:hint="(0)" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#DEDEDE"
+                app:layout_constraintTop_toBottomOf="@id/btn_like" />
+
+            <TextView
+                android:id="@+id/btn_see_comments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:text="@string/see_all_comments_text"
+                app:layout_constraintTop_toBottomOf="@id/recycler_comment"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

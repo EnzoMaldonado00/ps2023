@@ -12,7 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.maldEnz.ps.presentation.mvvm.model.ChatModel
-import com.maldEnz.ps.presentation.mvvm.model.FriendModel
+import com.maldEnz.ps.presentation.mvvm.model.FeedModel
 import com.maldEnz.ps.presentation.mvvm.model.MessageModel
 import com.maldEnz.ps.presentation.mvvm.model.PostModel
 import com.maldEnz.ps.presentation.mvvm.model.ScoreModel
@@ -34,18 +34,18 @@ class UserViewModel : ViewModel() {
     val email = MutableLiveData<String>()
     val imageUri = MutableLiveData<Uri?>()
     val imageURL = MutableLiveData<String>()
-    val friends = MutableLiveData<List<FriendModel>>()
-    val friendRequest = MutableLiveData<List<FriendModel>>()
+    val friends = MutableLiveData<List<UserModel>>()
+    val friendRequest = MutableLiveData<List<UserModel>>()
     val passwordAuth = MutableLiveData<String>()
     val messageList = MutableLiveData<List<MessageModel>>()
     val postList = MutableLiveData<List<PostModel>>()
     val isTyping = MutableLiveData<Boolean>()
     val status = MutableLiveData<String>()
     val friendStatus = MutableLiveData<String>()
-    val feedPostList = MutableLiveData<List<PostModel>>()
+    val feedPostList = MutableLiveData<List<FeedModel>>()
     val isAdmin = MutableLiveData<Boolean>()
     val highestScore = MutableLiveData<String>()
-    val friendsScoreList = MutableLiveData<List<ScoreModel>>()
+    val scoreList = MutableLiveData<List<ScoreModel>>()
 
     init {
         passwordAuth.value = ""
@@ -94,7 +94,6 @@ class UserViewModel : ViewModel() {
                                 )
                                     .show()
                             }
-                        // progressDialog.dismiss()
                     }
                 }
             }
@@ -112,23 +111,6 @@ class UserViewModel : ViewModel() {
                     val mail = snapshot.getString("userEmail")
                     val imageUrl = snapshot.getString("image")
                     val admin = snapshot.getBoolean("isAdmin")
-                    val friendReqData = snapshot.get("friendRequests") as? List<Map<String, Any>>
-                    val friendReq = friendReqData?.map { friendData ->
-                        FriendModel(
-                            friendId = friendData["userId"] as String,
-                            friendEmail = friendData["userEmail"] as String,
-                            false,
-                        )
-                    } ?: emptyList()
-
-                    val friendListData = snapshot.get("friends") as? List<Map<String, Any>>
-                    val friendList = friendListData?.map { friendData ->
-                        FriendModel(
-                            friendId = friendData["friendId"] as String,
-                            friendEmail = friendData["friendEmail"] as String,
-                            false,
-                        )
-                    } ?: emptyList()
 
                     val postListData = snapshot.get("posts") as? List<Map<String, Any>>
                     val postsList = postListData?.map { postData ->
@@ -139,17 +121,49 @@ class UserViewModel : ViewModel() {
                             description = postData["description"] as String,
                             imageUrl = postData["imageUrl"] as String,
                             timestamp = postData["timestamp"] as Long,
+                            postId = postData["postId"] as String,
+                            likes = postData["likes"] as List<Map<String, Any>>,
+                            comments = postData["comments"] as List<Map<String, Any>>,
                         )
                     } ?: emptyList()
+                    val sortedList = postsList.sortedByDescending { it.timestamp }
 
                     if (fullName != null && mail != null && imageUrl != null) {
                         name!!.value = fullName
                         email!!.value = mail
                         imageURL!!.value = imageUrl
                         isAdmin!!.value = admin
-                        friendRequest.value = friendReq
-                        friends.value = friendList
-                        postList.value = postsList
+                        postList.value = sortedList
+                    }
+                }
+            }
+        }
+    }
+
+    fun getFriendRequests() = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val docRefer = firestore.collection("Users")
+                .document(currentUser)
+
+            docRefer.get().addOnSuccessListener {
+                val friendReqList = it.get("friendRequests") as? List<Map<String, Any>>
+
+                if (friendReqList != null) {
+                    val friendReqData = mutableListOf<UserModel>()
+                    for (friend in friendReqList) {
+                        val friendId = friend["userId"] as String
+
+                        val friendDoc = firestore.collection("Users").document(friendId)
+
+                        friendDoc.get().addOnSuccessListener { friendSnapshot ->
+                            val friendName = friendSnapshot.get("userName") as String
+                            val friendEmail = friendSnapshot.get("userEmail") as String
+                            val friendImage = friendSnapshot.get("image") as String
+
+                            val user = UserModel(friendId, friendName, friendEmail, friendImage)
+                            friendReqData.add(user)
+                            friendRequest.value = friendReqData
+                        }
                     }
                 }
             }
@@ -232,6 +246,7 @@ class UserViewModel : ViewModel() {
         senderUid: String,
         user1: String,
         user2: String,
+        imageUrl: String?,
     ) =
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -245,6 +260,7 @@ class UserViewModel : ViewModel() {
                         System.currentTimeMillis(),
                         listOf(user1, user2),
                         false,
+                        imageUrl,
                     )
                 val messageCollection = firestore.collection("Chats")
                     .document(chatId)
@@ -271,8 +287,8 @@ class UserViewModel : ViewModel() {
                 val userChats =
                     user1Data!!["chats"] as? List<HashMap<String, Any>>
 
-                val chatExists = userChats?.any { friendData ->
-                    friendData["chatId"] == chatId
+                val chatExists = userChats?.any { chatData ->
+                    chatData["chatId"] == chatId
                 } ?: false
 
                 if (!chatExists) {
@@ -307,8 +323,8 @@ class UserViewModel : ViewModel() {
                 val userChats =
                     user2Data!!["chats"] as? List<HashMap<String, Any>>
 
-                val chatExists = userChats?.any { friendData ->
-                    friendData["chatId"] == chatId
+                val chatExists = userChats?.any { chatData ->
+                    chatData["chatId"] == chatId
                 } ?: false
 
                 if (!chatExists) {
@@ -373,6 +389,7 @@ class UserViewModel : ViewModel() {
                 .addOnSuccessListener { querySnapshot ->
                     for (document in querySnapshot) {
                         document.reference.update("content", "Message Deleted")
+                        document.reference.update("imageUrl", null)
                     }
                 }.addOnFailureListener {
                     // error
@@ -402,6 +419,8 @@ class UserViewModel : ViewModel() {
                                 Util.getDateTime(),
                                 imageURL,
                                 description,
+                                emptyList(),
+                                emptyList(),
                             )
                             docRefer.update("posts", FieldValue.arrayUnion(post))
                                 .addOnSuccessListener {
@@ -413,6 +432,8 @@ class UserViewModel : ViewModel() {
         }
     }
 
+    // sobrepasa los limites de lectura y escritura de firebase
+    // posible solucion: ponerlo en corrutina
     fun userChatState(isTyping: Boolean, friendId: String) {
         val docRefer = firestore.collection("Users")
             .document(friendId)
@@ -501,24 +522,35 @@ class UserViewModel : ViewModel() {
         withContext(Dispatchers.IO) {
             val docRefer = firestore.collection("Users").document(currentUser)
 
-            docRefer.addSnapshotListener { userSnapshot, _ ->
+            docRefer.get().addOnSuccessListener { userSnapshot ->
                 if (userSnapshot != null && userSnapshot.exists()) {
                     val friendsList = userSnapshot.get("friends") as? List<Map<String, Any>>
 
                     if (friendsList != null) {
-                        val allFriendPosts = mutableListOf<PostModel>()
+                        val allFriendPosts = mutableListOf<FeedModel>()
 
                         for (friendData in friendsList) {
                             val friendId = friendData["friendId"] as String
 
                             val friendDocRef = firestore.collection("Users").document(friendId)
 
-                            friendDocRef.addSnapshotListener { friendSnapshot, _ ->
+                            friendDocRef.get().addOnSuccessListener { friendSnapshot ->
                                 if (friendSnapshot != null && friendSnapshot.exists()) {
                                     val friendPostsList =
                                         friendSnapshot.get("posts") as? List<Map<String, Any>>
 
                                     if (friendPostsList != null) {
+                                        val friendName = friendSnapshot.get("userName") as String
+                                        val friendImage = friendSnapshot.get("image") as String
+                                        val friendEmail = friendSnapshot.get("userEmail") as String
+
+                                        val friend = UserModel(
+                                            friendId,
+                                            friendName,
+                                            friendEmail,
+                                            friendImage,
+                                        )
+
                                         for (postData in friendPostsList) {
                                             val postId = postData["postId"] as String
                                             val description = postData["description"] as String
@@ -526,6 +558,8 @@ class UserViewModel : ViewModel() {
                                             val dateTime = postData["dateTime"] as String
                                             val authorName = postData["authorName"] as String
                                             val imageUrl = postData["imageUrl"] as String
+                                            val likes = postData["likes"] as List<Map<String, Any>>
+                                            val comments = postData["comments"] as List<Map<String, Any>>
 
                                             val post = PostModel(
                                                 postId,
@@ -535,9 +569,13 @@ class UserViewModel : ViewModel() {
                                                 dateTime,
                                                 imageUrl,
                                                 description,
+                                                likes,
+                                                comments,
                                             )
 
-                                            allFriendPosts.add(post)
+                                            val feed = FeedModel(friend, post)
+
+                                            allFriendPosts.add(feed)
                                             feedPostList.value = allFriendPosts
                                         }
                                     }
@@ -589,8 +627,8 @@ class UserViewModel : ViewModel() {
                     )
 
                     if (friendsList != null) {
-                        val friendsDataList = mutableListOf<ScoreModel>()
-                        friendsDataList.add(userScoreModel)
+                        val friendsScoreList = mutableListOf<ScoreModel>()
+                        friendsScoreList.add(userScoreModel)
                         for (friendData in friendsList) {
                             val friendId = friendData["friendId"] as String
 
@@ -606,11 +644,40 @@ class UserViewModel : ViewModel() {
                                         friendName,
                                     )
 
-                                    friendsDataList.add(scoreModel)
-                                    friendsDataList.sortByDescending { it.score }
-                                    friendsScoreList.postValue(friendsDataList)
+                                    friendsScoreList.add(scoreModel)
+                                    friendsScoreList.sortByDescending { it.score }
+                                    scoreList.postValue(friendsScoreList)
                                 }
                             }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun loadUserFriends() = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val docRefer = firestore.collection("Users").document(currentUser)
+
+            docRefer.get().addOnSuccessListener {
+                val friendList = it.get("friends") as? List<Map<String, Any>>
+
+                if (friendList != null) {
+                    val friendData = mutableListOf<UserModel>()
+                    for (friend in friendList) {
+                        val friendId = friend["friendId"] as String
+
+                        val friendDoc = firestore.collection("Users").document(friendId)
+
+                        friendDoc.get().addOnSuccessListener { friendSnapshot ->
+                            val friendName = friendSnapshot.get("userName") as String
+                            val friendEmail = friendSnapshot.get("userEmail") as String
+                            val friendImage = friendSnapshot.get("image") as String
+
+                            val user = UserModel(friendId, friendName, friendEmail, friendImage)
+                            friendData.add(user)
+                            friends.value = friendData
                         }
                     }
                 }

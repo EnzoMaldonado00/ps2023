@@ -6,17 +6,19 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
+import com.maldEnz.ps.R
 import com.maldEnz.ps.databinding.ItemRecyclerChatListBinding
 import com.maldEnz.ps.presentation.activity.ChatActivity
-import com.maldEnz.ps.presentation.mvvm.model.ChatModel
+import com.maldEnz.ps.presentation.mvvm.model.RecentChatModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.ChatViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
 class RecentChatsAdapter(private val chatViewModel: ChatViewModel) :
-    ListAdapter<ChatModel, RecentChatsAdapter.ChatListViewHolder>(ChatListDiffCallback()) {
+    ListAdapter<RecentChatModel, RecentChatsAdapter.ChatListViewHolder>(ChatListDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatListViewHolder {
         val binding = ItemRecyclerChatListBinding.inflate(
@@ -35,11 +37,21 @@ class RecentChatsAdapter(private val chatViewModel: ChatViewModel) :
     inner class ChatListViewHolder(val binding: ItemRecyclerChatListBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(chat: ChatModel) {
+        fun bind(recentChat: RecentChatModel) {
             binding.apply {
-                lastMsgChatList.text = chat.lastMessage
+                if (recentChat.chatModel.lastMessage.isEmpty()) {
+                    lastMsgChatList.text = lastMsgChatList.context.getString(R.string.image_text)
+                } else {
+                    lastMsgChatList.text = recentChat.chatModel.lastMessage
+                }
 
-                val messageDateTime = chat.lastMessageDateTime
+                friendNameChatList.text = recentChat.userModel.userName
+
+                Glide.with(itemView.context)
+                    .load(recentChat.userModel.userImage)
+                    .into(friendImageChatList)
+
+                val messageDateTime = recentChat.chatModel.lastMessageDateTime
                 val today = Calendar.getInstance()
                 val messageDate = Calendar.getInstance()
                 messageDate.time = SimpleDateFormat(
@@ -61,21 +73,16 @@ class RecentChatsAdapter(private val chatViewModel: ChatViewModel) :
                         SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(messageDate.time)
                 }
 
-                chatViewModel.loadUserData(
-                    chat.user1,
-                    chat.user2,
-                    friendNameChatList,
-                    friendImageChatList,
-                )
-
-                binding.msgClick.setOnClickListener {
-                    if (chat.user1 != FirebaseAuth.getInstance().currentUser!!.uid) {
+                msgClick.setOnClickListener {
+                    if (recentChat.chatModel.user1 != FirebaseAuth.getInstance().currentUser!!.uid) {
                         val intent = Intent(it.context, ChatActivity::class.java)
-                        intent.putExtra("friendUid", chat.user1)
+                        intent.putExtra("friendUid", recentChat.chatModel.user1)
+                        intent.putExtra("friendName", friendNameChatList.text.toString())
                         it.context.startActivity(intent)
                     } else {
                         val intent = Intent(it.context, ChatActivity::class.java)
-                        intent.putExtra("friendUid", chat.user2)
+                        intent.putExtra("friendUid", recentChat.chatModel.user2)
+                        intent.putExtra("friendName", friendNameChatList.text.toString())
                         it.context.startActivity(intent)
                     }
                 }
@@ -84,12 +91,12 @@ class RecentChatsAdapter(private val chatViewModel: ChatViewModel) :
     }
 }
 
-class ChatListDiffCallback : DiffUtil.ItemCallback<ChatModel>() {
-    override fun areItemsTheSame(oldItem: ChatModel, newItem: ChatModel): Boolean {
-        return oldItem.chatId == newItem.chatId
+class ChatListDiffCallback : DiffUtil.ItemCallback<RecentChatModel>() {
+    override fun areItemsTheSame(oldItem: RecentChatModel, newItem: RecentChatModel): Boolean {
+        return oldItem.chatModel.chatId == newItem.chatModel.chatId
     }
 
-    override fun areContentsTheSame(oldItem: ChatModel, newItem: ChatModel): Boolean {
+    override fun areContentsTheSame(oldItem: RecentChatModel, newItem: RecentChatModel): Boolean {
         return oldItem == newItem
     }
 }

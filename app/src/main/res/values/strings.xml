@@ -39,9 +39,9 @@
     <string name="sheet_dialog_title">Enter your name</string>
     <string name="sheet_dialog_name">Name</string>
     <string name="btn_save_sheet_dialog">SAVE</string>
-    <string name="btn_cancel_sheet_dialog">CANCEL</string>
+    <string name="btn_cancel_sheet_dialog">Cancel</string>
     <string name="friend_requests_item">Friend Requests</string>
-    <string name="post_caption_hint">Write a caption...</string>
+    <string name="post_caption_hint">Write a caption…</string>
     <string name="upload_post">Post</string>
     <string name="profile_title_posts">My Posts</string>
     <string name="admin_statistics_text">Statistics</string>
@@ -57,6 +57,15 @@
     <string name="upload_post_text_bottom_menu">Upload Post</string>
     <string name="play_text_bottom_menu">Play!</string>
     <string name="friends_text_bottom_menu">Friends</string>
+    <string name="message_hint_text">Message</string>
+    <string name="typing_chat_text">typing…</string>
+    <string name="to_text">to:</string>
+    <string name="image_text">📷Image</string>
+    <string name="comments_text">Comments</string>
+    <string name="posted_on_text">Posted on:</string>
+    <string name="comment_text">Comment</string>
+    <string name="see_all_comments_text">See all comments</string>
+    <string name="be_the_first_comment_text">Be the first comment!</string>
 
 
 </resources>

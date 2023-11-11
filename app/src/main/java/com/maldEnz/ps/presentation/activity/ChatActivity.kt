@@ -5,9 +5,10 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
+import com.maldEnz.ps.R
 import com.maldEnz.ps.databinding.ActivityChatBinding
 import com.maldEnz.ps.presentation.adapter.MessageListAdapter
 import com.maldEnz.ps.presentation.mvvm.viewmodel.FriendViewModel
@@ -21,7 +22,6 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChatBinding
     private lateinit var currentUserUid: String
     private lateinit var friendUid: String
-    private lateinit var friendEmail: String
     private lateinit var chatId: String
     private lateinit var auth: FirebaseAuth
     private val userViewModel: UserViewModel by inject()
@@ -35,10 +35,8 @@ class ChatActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         currentUserUid = auth.currentUser!!.uid
         friendUid = intent.getStringExtra("friendUid") ?: ""
-        friendEmail = intent.getStringExtra("friendEmail") ?: ""
 
         userViewModel.getFriendStatus(friendUid)
-
         userViewModel.getFriendChatState(friendUid)
 
         val adapter = MessageListAdapter(userViewModel)
@@ -47,12 +45,26 @@ class ChatActivity : AppCompatActivity() {
         binding.recyclerViewMsg.adapter = adapter
         binding.recyclerViewMsg.itemAnimator = null
         layoutManager.stackFromEnd = true
-
+        friendViewModel.loadFriendData(friendUid)
         chatId = generateConversationId(currentUserUid, friendUid)
         userViewModel.loadMessages(chatId)
 
+        friendViewModel.friend.observe(this) {
+            binding.friendName.text = it.userName
+            Glide.with(this)
+                .load(it.userImage)
+                .into(binding.profilePicture)
+        }
+
         userViewModel.messageList.observe(this) {
             adapter.submitList(it)
+        }
+
+        binding.btnSendImage.setOnClickListener {
+            val intent = Intent(this, SendImageMsgActivity::class.java)
+            intent.putExtra("friendUid", friendUid)
+            intent.putExtra("chatId", chatId)
+            startActivity(intent)
         }
 
         binding.btnSend.setOnClickListener {
@@ -65,6 +77,7 @@ class ChatActivity : AppCompatActivity() {
                     senderId,
                     currentUserUid,
                     friendUid,
+                    null,
                 )
                 binding.msgInput.text.clear()
             }
@@ -76,14 +89,14 @@ class ChatActivity : AppCompatActivity() {
             it.context.startActivity(intent)
         }
 
-        friendIsTyping()
+        // friendIsTyping()
         userViewModel.friendStatus.observe(this) { status ->
             binding.status.text = status
         }
 
         userViewModel.isTyping.observe(this) {
             if (it) {
-                binding.status.text = "typing..."
+                binding.status.text = getString(R.string.typing_chat_text)
             }
         }
     }
@@ -97,7 +110,7 @@ class ChatActivity : AppCompatActivity() {
     private fun friendIsTyping() {
         var isTyping = false
         var typingTimer: Timer? = null
-        val TYPING_TIMER_DELAY: Long = 4000
+        val typingTimerDelay = 4000L
 
         binding.msgInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -106,22 +119,21 @@ class ChatActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (count > 0 && !isTyping) {
                     isTyping = true
-                    userViewModel.userChatState(isTyping, friendUid)
-
+                    // userViewModel.userChatState(isTyping, friendUid)
                     typingTimer?.cancel()
                     typingTimer = Timer()
                     typingTimer?.schedule(
                         object : TimerTask() {
                             override fun run() {
                                 isTyping = false
-                                userViewModel.userChatState(isTyping, friendUid)
+                                //  userViewModel.userChatState(isTyping, friendUid)
                             }
                         },
-                        TYPING_TIMER_DELAY,
+                        typingTimerDelay,
                     )
                 } else if (count == 0 && isTyping) {
                     isTyping = false
-                    userViewModel.userChatState(isTyping, friendUid)
+                    // userViewModel.userChatState(isTyping, friendUid)
                     typingTimer?.cancel()
                 }
             }
@@ -134,12 +146,10 @@ class ChatActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         userViewModel.updateUserStatusToOnline()
-        friendViewModel.loadFriendData(friendUid, binding.friendName, null, binding.profilePicture)
     }
 
     override fun onPause() {
         super.onPause()
-        userViewModel.userChatState(false, friendUid)
     }
 
     override fun onDestroy() {

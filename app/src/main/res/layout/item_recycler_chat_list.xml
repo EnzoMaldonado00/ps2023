@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    android:padding="6dp">
+    android:padding="15dp">
 
     <TextView
         android:id="@+id/friend_name_chat_list"

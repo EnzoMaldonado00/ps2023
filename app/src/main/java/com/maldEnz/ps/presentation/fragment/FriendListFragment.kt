@@ -38,8 +38,8 @@ class FriendListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = FriendListAdapter(friendViewModel)
-
+        userViewModel.loadUserFriends()
+        adapter = FriendListAdapter(friendViewModel, viewLifecycleOwner)
         binding.recycler.layoutManager = LinearLayoutManager(requireContext())
         binding.recycler.adapter = adapter
 

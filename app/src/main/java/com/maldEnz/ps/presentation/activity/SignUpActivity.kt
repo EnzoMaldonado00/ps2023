@@ -99,8 +99,9 @@ class SignUpActivity : AppCompatActivity() {
                                     "friends" to emptyList<Map<String, Any>>(),
                                     "friendRequests" to emptyList<Map<String, Any>>(),
                                     "posts" to emptyList<Map<String, Any>>(),
-                                    "isTyping" to false,
                                     "isAdmin" to false,
+                                    "highestScore" to "0",
+                                    "chats" to emptyList<Map<String, Any>>(),
                                 )
 
                                 FirebaseFirestore.getInstance().collection("Users")

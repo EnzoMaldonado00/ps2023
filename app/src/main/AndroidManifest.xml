@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Ps"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.activity.SendImageMsgActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.activity.GameOverActivity"
             android:exported="false" />
         <activity

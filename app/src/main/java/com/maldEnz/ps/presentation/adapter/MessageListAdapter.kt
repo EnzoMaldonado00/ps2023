@@ -8,6 +8,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.maldEnz.ps.R
 import com.maldEnz.ps.databinding.ItemRecyclerReceiverMsgBinding
@@ -63,11 +64,31 @@ class MessageListAdapter(private val userViewModel: UserViewModel) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(message: MessageModel) {
-            binding.msg.text = message.content
-            binding.msgDateTime.text = message.timestamp
-            binding.msg.setOnLongClickListener {
-                showPopupMenu(it, message)
-                true
+            binding.apply {
+                msg.text = message.content
+                msgDateTime.text = message.timestamp
+                if (message.imageUrl != null) {
+                    Glide.with(itemView.context)
+                        .load(message.imageUrl)
+                        .into(msgImage)
+                    imageContainer.visibility = View.VISIBLE
+                    imgDateContainer.visibility = View.VISIBLE
+                    imgDateTime.text = message.timestamp
+                    imageContainer.setOnLongClickListener {
+                        showPopupMenu(it, message)
+                        true
+                    }
+                } else {
+                    imageContainer.visibility = View.GONE
+                    imgDateContainer.visibility = View.GONE
+                }
+
+                if (message.content != "" && message.content != "Message Deleted") {
+                    msg.setOnLongClickListener {
+                        showPopupMenu(it, message)
+                        true
+                    }
+                }
             }
         }
 
@@ -81,6 +102,7 @@ class MessageListAdapter(private val userViewModel: UserViewModel) :
             popupMenu.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.delete_for_everyone -> {
+                        binding.imageContainer.visibility = View.GONE
                         userViewModel.deleteMessage(message.conversationId, message.messageId)
                         true
                     }
@@ -101,8 +123,20 @@ class MessageListAdapter(private val userViewModel: UserViewModel) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(message: MessageModel) {
-            binding.msgReceiver.text = message.content
-            binding.msgDateTime.text = message.timestamp
+            binding.apply {
+                msgReceiver.text = message.content
+                msgDateTime.text = message.timestamp
+                if (message.imageUrl != null) {
+                    Glide.with(itemView.context)
+                        .load(message.imageUrl)
+                        .into(msgImage)
+                    imageContainer.visibility = View.VISIBLE
+                    imgDateContainer.visibility = View.VISIBLE
+                    imgDateTime.text = message.timestamp
+                } else {
+                    imageContainer.visibility = View.GONE
+                }
+            }
         }
     }
 

@@ -36,7 +36,7 @@ class RecentChatsFragment : Fragment() {
         binding.chatsRecyclerView.adapter = adapter
         binding.chatsRecyclerView.itemAnimator = null
 
-        chatViewModel.recentChatList.observe(viewLifecycleOwner) {
+        chatViewModel.chatList.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
     }

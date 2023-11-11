@@ -1,16 +1,14 @@
 package com.maldEnz.ps.presentation.mvvm.viewmodel
 
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.maldEnz.ps.presentation.mvvm.model.FriendModel
 import com.maldEnz.ps.presentation.mvvm.model.PostModel
+import com.maldEnz.ps.presentation.mvvm.model.UserModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,6 +19,7 @@ class FriendViewModel : ViewModel() {
     private val currentUser = auth.currentUser!!.uid
     private val firestore = FirebaseFirestore.getInstance()
     val friendPostList = MutableLiveData<List<PostModel>>()
+    val friend = MutableLiveData<UserModel>()
 
     fun getFriendPost(friendId: String) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
@@ -36,21 +35,22 @@ class FriendViewModel : ViewModel() {
                         description = postData["description"] as String,
                         imageUrl = postData["imageUrl"] as String,
                         timestamp = postData["timestamp"] as Long,
+                        likes = postData["likes"] as List<Map<String, Any>>,
+                        comments = postData["comments"] as List<Map<String, Any>>,
                     )
                 } ?: emptyList()
-
-                friendPostList.value = postsList
-
+                val sortedList = postsList.sortedByDescending { postModel ->  postModel.timestamp }
+                friendPostList.value = sortedList
             }
         }
     }
 
-    fun loadFriendData(friendId: String, nameTextView: TextView, emailTextView: TextView?, imageView: ImageView) =
+    fun loadFriendData(friendId: String) =
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val docRefer = firestore.collection("Users").document(friendId)
 
-                docRefer.addSnapshotListener { documentSnapshot, _ ->
+                docRefer.get().addOnSuccessListener { documentSnapshot ->
                     if (documentSnapshot != null && documentSnapshot.exists()) {
                         val userData = documentSnapshot.data
 
@@ -58,12 +58,15 @@ class FriendViewModel : ViewModel() {
                             val userName = userData["userName"] as String
                             val userImage = userData["image"] as String
                             val userEmail = userData["userEmail"] as String
-                            nameTextView.text = userName
-                            emailTextView?.text = userEmail
 
-                            Glide.with(imageView.context)
-                                .load(userImage)
-                                .into(imageView)
+                            friend.postValue(
+                                UserModel(
+                                    friendId,
+                                    userName,
+                                    userEmail,
+                                    userImage,
+                                ),
+                            )
                         }
                     }
                 }
@@ -118,7 +121,6 @@ class FriendViewModel : ViewModel() {
                 val currentUserData = doc.data
                 val currentFriends = currentUserData!!["friends"] as? List<HashMap<String, Any>>
 
-                // Verify that the friend is already added
                 val isAlreadyFriend = currentFriends?.any { friendData ->
                     friendData["friendId"] == friendId
                 } ?: false

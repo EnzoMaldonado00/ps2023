@@ -10,6 +10,7 @@ import com.maldEnz.ps.databinding.FragmentFeedBinding
 import com.maldEnz.ps.presentation.activity.HomeActivity
 import com.maldEnz.ps.presentation.adapter.FeedAdapter
 import com.maldEnz.ps.presentation.mvvm.viewmodel.FriendViewModel
+import com.maldEnz.ps.presentation.mvvm.viewmodel.PostViewModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
 import org.koin.android.ext.android.inject
 
@@ -18,6 +19,11 @@ class FeedFragment : Fragment() {
     private lateinit var adapter: FeedAdapter
     private val userViewModel: UserViewModel by inject()
     private val friendViewModel: FriendViewModel by inject()
+    private val postViewModel: PostViewModel by inject()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,11 +38,11 @@ class FeedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         userViewModel.getFeed()
-
         val layoutManager = LinearLayoutManager(requireContext())
-        adapter = FeedAdapter(friendViewModel)
+        adapter = FeedAdapter(postViewModel, viewLifecycleOwner)
         binding.recycler.layoutManager = layoutManager
         binding.recycler.adapter = adapter
+        binding.recycler.itemAnimator = null
         layoutManager.stackFromEnd = true
         layoutManager.reverseLayout = true
 

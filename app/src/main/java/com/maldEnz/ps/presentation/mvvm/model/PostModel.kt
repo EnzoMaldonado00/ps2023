@@ -8,4 +8,6 @@ data class PostModel(
     val dateTime: String = "",
     val imageUrl: String = "",
     val description: String = "",
+    val likes: List<Map<String, Any>>,
+    val comments: List<Map<String, Any>>,
 )

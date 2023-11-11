@@ -27,7 +27,7 @@ class GameActivity : AppCompatActivity() {
         binding.recycler.layoutManager = LinearLayoutManager(this)
         binding.recycler.adapter = adapter
 
-        userViewModel.friendsScoreList.observe(this) {
+        userViewModel.scoreList.observe(this) {
             adapter.submitList(it)
         }
 

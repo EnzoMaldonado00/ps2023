@@ -61,10 +61,10 @@ class HomeActivity : AppCompatActivity() {
         binding.placeholder.setOnClickListener {
             val popupMenu = PopupMenu(this, it)
             popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
-            val item = popupMenu.menu.findItem(R.id.admin_item)
+            val adminItem = popupMenu.menu.findItem(R.id.admin_item)
 
             userViewModel.isAdmin.observe(this) { admin ->
-                item.isVisible = admin
+                adminItem.isVisible = admin
             }
 
             popupMenu.setForceShowIcon(true)
