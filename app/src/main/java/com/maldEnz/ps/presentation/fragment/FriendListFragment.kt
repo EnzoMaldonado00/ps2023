@@ -9,21 +9,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.maldEnz.ps.databinding.FragmentFriendListBinding
 import com.maldEnz.ps.presentation.activity.HomeActivity
 import com.maldEnz.ps.presentation.adapter.FriendListAdapter
+import com.maldEnz.ps.presentation.mvvm.model.UserModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.FriendViewModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
 import org.koin.android.ext.android.inject
 
-class FriendListFragment : Fragment() {
+class FriendListFragment(private val list: List<UserModel>) : Fragment() {
 
     private lateinit var binding: FragmentFriendListBinding
     private lateinit var adapter: FriendListAdapter
     private val userViewModel: UserViewModel by inject()
     private val friendViewModel: FriendViewModel by inject()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        userViewModel.getUserData()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,20 +28,17 @@ class FriendListFragment : Fragment() {
     ): View {
         binding = FragmentFriendListBinding.inflate(inflater, container, false)
         (activity as HomeActivity).disableComponents()
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         userViewModel.loadUserFriends()
-        adapter = FriendListAdapter(friendViewModel, viewLifecycleOwner)
         binding.recycler.layoutManager = LinearLayoutManager(requireContext())
+        adapter = FriendListAdapter(friendViewModel)
         binding.recycler.adapter = adapter
 
-        userViewModel.friends.observe(viewLifecycleOwner) { friendList ->
-            adapter.submitList(friendList)
-        }
+        adapter.submitList(list)
     }
 
     override fun onStop() {

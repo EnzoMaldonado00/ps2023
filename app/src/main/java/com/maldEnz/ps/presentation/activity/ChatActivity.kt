@@ -8,11 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
-import com.maldEnz.ps.R
 import com.maldEnz.ps.databinding.ActivityChatBinding
 import com.maldEnz.ps.presentation.adapter.MessageListAdapter
 import com.maldEnz.ps.presentation.mvvm.viewmodel.FriendViewModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
+import com.maldEnz.ps.presentation.util.FunUtils
 import org.koin.android.ext.android.inject
 import java.util.Timer
 import java.util.TimerTask
@@ -29,6 +29,8 @@ class ChatActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FunUtils.setAppTheme(this)
+
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -37,7 +39,7 @@ class ChatActivity : AppCompatActivity() {
         friendUid = intent.getStringExtra("friendUid") ?: ""
 
         userViewModel.getFriendStatus(friendUid)
-        userViewModel.getFriendChatState(friendUid)
+        // userViewModel.getFriendChatState(friendUid)
 
         val adapter = MessageListAdapter(userViewModel)
         val layoutManager = LinearLayoutManager(this)
@@ -45,8 +47,10 @@ class ChatActivity : AppCompatActivity() {
         binding.recyclerViewMsg.adapter = adapter
         binding.recyclerViewMsg.itemAnimator = null
         layoutManager.stackFromEnd = true
+
         friendViewModel.loadFriendData(friendUid)
         chatId = generateConversationId(currentUserUid, friendUid)
+
         userViewModel.loadMessages(chatId)
 
         friendViewModel.friend.observe(this) {
@@ -91,14 +95,21 @@ class ChatActivity : AppCompatActivity() {
 
         // friendIsTyping()
         userViewModel.friendStatus.observe(this) { status ->
-            binding.status.text = status
+            userViewModel.friendStatusTimeZone.observe(this) { timeZone ->
+                if (status != "online") {
+                    binding.status.text =
+                        String.format("last seen: %s ", FunUtils.unifyDateTime(status, timeZone))
+                } else {
+                    binding.status.text = status
+                }
+            }
         }
 
-        userViewModel.isTyping.observe(this) {
+        /*userViewModel.isTyping.observe(this) {
             if (it) {
                 binding.status.text = getString(R.string.typing_chat_text)
             }
-        }
+        }*/
     }
 
     private fun generateConversationId(uid1: String, uid2: String): String {

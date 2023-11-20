@@ -2,6 +2,7 @@ package com.maldEnz.ps.presentation.mvvm.viewmodel
 
 import android.content.Context
 import android.net.Uri
+import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,11 +17,13 @@ import com.maldEnz.ps.presentation.mvvm.model.FeedModel
 import com.maldEnz.ps.presentation.mvvm.model.MessageModel
 import com.maldEnz.ps.presentation.mvvm.model.PostModel
 import com.maldEnz.ps.presentation.mvvm.model.ScoreModel
+import com.maldEnz.ps.presentation.mvvm.model.ThemeModel
 import com.maldEnz.ps.presentation.mvvm.model.UserModel
-import com.maldEnz.ps.presentation.util.Util
+import com.maldEnz.ps.presentation.util.FunUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.TimeZone
 import java.util.UUID
 
 class UserViewModel : ViewModel() {
@@ -42,10 +45,15 @@ class UserViewModel : ViewModel() {
     val isTyping = MutableLiveData<Boolean>()
     val status = MutableLiveData<String>()
     val friendStatus = MutableLiveData<String>()
+    val friendStatusTimeZone = MutableLiveData<String>()
     val feedPostList = MutableLiveData<List<FeedModel>>()
     val isAdmin = MutableLiveData<Boolean>()
     val highestScore = MutableLiveData<String>()
     val scoreList = MutableLiveData<List<ScoreModel>>()
+    val coins = MutableLiveData<Long>()
+    val themesList = MutableLiveData<List<ThemeModel>>()
+    val unlockedThemes = MutableLiveData<List<ThemeModel>>()
+    val theme = MutableLiveData<Int>()
 
     init {
         passwordAuth.value = ""
@@ -111,19 +119,25 @@ class UserViewModel : ViewModel() {
                     val mail = snapshot.getString("userEmail")
                     val imageUrl = snapshot.getString("image")
                     val admin = snapshot.getBoolean("isAdmin")
+                    val userCoins = snapshot.getLong("coins")
 
                     val postListData = snapshot.get("posts") as? List<Map<String, Any>>
                     val postsList = postListData?.map { postData ->
+
+                        val dateTime = postData["dateTime"] as String
+                        val dateTimeZone = postData["dateTimeZone"] as String
+
                         PostModel(
                             authorId = postData["authorId"] as String,
                             authorName = postData["authorName"] as String,
-                            dateTime = postData["dateTime"] as String,
+                            dateTime = FunUtils.unifyDateTime(dateTime, dateTimeZone),
                             description = postData["description"] as String,
                             imageUrl = postData["imageUrl"] as String,
                             timestamp = postData["timestamp"] as Long,
                             postId = postData["postId"] as String,
                             likes = postData["likes"] as List<Map<String, Any>>,
                             comments = postData["comments"] as List<Map<String, Any>>,
+                            dateTimeZone = postData["dateTimeZone"] as String,
                         )
                     } ?: emptyList()
                     val sortedList = postsList.sortedByDescending { it.timestamp }
@@ -134,6 +148,7 @@ class UserViewModel : ViewModel() {
                         imageURL!!.value = imageUrl
                         isAdmin!!.value = admin
                         postList.value = sortedList
+                        coins!!.value = userCoins
                     }
                 }
             }
@@ -256,7 +271,7 @@ class UserViewModel : ViewModel() {
                         chatId,
                         messageContent,
                         senderUid,
-                        Util.getDateTime(),
+                        FunUtils.getDateTime(),
                         System.currentTimeMillis(),
                         listOf(user1, user2),
                         false,
@@ -282,57 +297,62 @@ class UserViewModel : ViewModel() {
             val user1Refer = firestore.collection("Users").document(user1)
             val user2Refer = firestore.collection("Users").document(user2)
 
-            user1Refer.get().addOnSuccessListener {
-                val user1Data = it.data
+            user1Refer.get().addOnSuccessListener { user1Snapshot ->
+                val user1Data = user1Snapshot.data
                 val userChats =
-                    user1Data!!["chats"] as? List<HashMap<String, Any>>
+                    user1Data?.get("chats") as? List<HashMap<String, Any>>
 
-                val chatExists = userChats?.any { chatData ->
+                val chatIndex = userChats?.indexOfFirst { chatData ->
                     chatData["chatId"] == chatId
-                } ?: false
+                } ?: -1
 
-                if (!chatExists) {
+                if (chatIndex == -1) {
                     val chat =
                         ChatModel(
                             chatId,
                             messageContent,
-                            Util.getDateTime(),
+                            FunUtils.getDateTime(),
                             user1,
                             user2,
                             System.currentTimeMillis(),
+                            TimeZone.getDefault().id.toString(),
                         )
 
                     user1Refer.update("chats", FieldValue.arrayUnion(chat))
                 } else {
-                    val updatedChatList = userChats!!.map { chat ->
-                        if (chat["chatId"] == chatId) {
+                    val updatedChatList = userChats?.mapIndexed { index, chat ->
+                        if (index == chatIndex) {
                             chat.toMutableMap().apply {
                                 put("lastMessage", messageContent)
-                                put("lastMessageDateTime", Util.getDateTime())
+                                put("lastMessageDateTime", FunUtils.getDateTime())
                                 put("lastMessageTimeStamp", System.currentTimeMillis())
+                                put("dateTimeZone", TimeZone.getDefault().id.toString())
                             }
                         } else {
                             chat
                         }
                     }
-                    user1Refer.update("chats", updatedChatList)
+                    updatedChatList?.let {
+                        user1Refer.update("chats", it)
+                    }
                 }
             }
-            user2Refer.get().addOnSuccessListener {
-                val user2Data = it.data
+
+            user2Refer.get().addOnSuccessListener { user2Snapshot ->
+                val user2Data = user2Snapshot.data
                 val userChats =
-                    user2Data!!["chats"] as? List<HashMap<String, Any>>
+                    user2Data?.get("chats") as? List<HashMap<String, Any>>
 
-                val chatExists = userChats?.any { chatData ->
+                val chatIndex = userChats?.indexOfFirst { chatData ->
                     chatData["chatId"] == chatId
-                } ?: false
+                } ?: -1
 
-                if (!chatExists) {
+                if (chatIndex == -1) {
                     val chat =
                         ChatModel(
                             chatId,
                             messageContent,
-                            Util.getDateTime(),
+                            FunUtils.getDateTime(),
                             user1,
                             user2,
                             System.currentTimeMillis(),
@@ -340,18 +360,21 @@ class UserViewModel : ViewModel() {
 
                     user2Refer.update("chats", FieldValue.arrayUnion(chat))
                 } else {
-                    val updatedChatList = userChats!!.map { chat ->
-                        if (chat["chatId"] == chatId) {
+                    val updatedChatList = userChats?.mapIndexed { index, chat ->
+                        if (index == chatIndex) {
                             chat.toMutableMap().apply {
                                 put("lastMessage", messageContent)
-                                put("lastMessageDateTime", Util.getDateTime())
+                                put("lastMessageDateTime", FunUtils.getDateTime())
                                 put("lastMessageTimeStamp", System.currentTimeMillis())
+                                put("dateTimeZone", TimeZone.getDefault().id.toString())
                             }
                         } else {
                             chat
                         }
                     }
-                    user2Refer.update("chats", updatedChatList)
+                    updatedChatList?.let {
+                        user2Refer.update("chats", it)
+                    }
                 }
             }
         }
@@ -416,7 +439,7 @@ class UserViewModel : ViewModel() {
                                 currentUser,
                                 name.value.toString(),
                                 System.currentTimeMillis(),
-                                Util.getDateTime(),
+                                FunUtils.getDateTime(),
                                 imageURL,
                                 description,
                                 emptyList(),
@@ -491,7 +514,7 @@ class UserViewModel : ViewModel() {
 
     fun updateUserStatusToDisconnected() = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            val statusOnline = "last seen ${Util.getDateTime()}"
+            val statusOnline = FunUtils.getDateTime()
             val docRefer =
                 firestore.collection("Users").document(currentUser)
             val updatedStatus = hashMapOf(
@@ -512,7 +535,9 @@ class UserViewModel : ViewModel() {
             docRefer.addSnapshotListener { querySnapshot, _ ->
                 if (querySnapshot != null && querySnapshot.exists()) {
                     val frStatus = querySnapshot.get("status") as String
+                    val frStatusTimeZone = querySnapshot.get("statusTimeZone") as String
                     friendStatus.value = frStatus
+                    friendStatusTimeZone.value = frStatusTimeZone
                 }
             }
         }
@@ -559,14 +584,17 @@ class UserViewModel : ViewModel() {
                                             val authorName = postData["authorName"] as String
                                             val imageUrl = postData["imageUrl"] as String
                                             val likes = postData["likes"] as List<Map<String, Any>>
-                                            val comments = postData["comments"] as List<Map<String, Any>>
+                                            val comments =
+                                                postData["comments"] as List<Map<String, Any>>
+
+                                            val dateTimeZone = postData["dateTimeZone"] as String
 
                                             val post = PostModel(
                                                 postId,
                                                 friendId,
                                                 authorName,
                                                 timestamp,
-                                                dateTime,
+                                                FunUtils.unifyDateTime(dateTime, dateTimeZone),
                                                 imageUrl,
                                                 description,
                                                 likes,
@@ -680,6 +708,113 @@ class UserViewModel : ViewModel() {
                             friends.value = friendData
                         }
                     }
+                }
+            }
+        }
+    }
+
+    fun convertScoreToCoins(score: Int) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val docRefer = firestore.collection("Users").document(currentUser)
+
+            val coinsEarned = score / 500 * 10
+
+            docRefer.update("coins", coinsEarned)
+        }
+    }
+
+    fun getThemes() = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val docRefer = firestore.collection("Themes")
+
+            docRefer.get().addOnSuccessListener { snapshot ->
+                val themes = snapshot.map { map ->
+                    ThemeModel(
+                        themeName = map.get("themeName") as String,
+                        description = map.get("description") as String,
+                        price = map.get("price") as Long,
+                        timesUnlocked = map.get("timesUnlocked") as Long,
+                    )
+                }
+                themesList.value = themes
+            }
+        }
+    }
+
+    fun buyTheme(themeName: String, view: View) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val userRefer = firestore.collection("Users").document(currentUser)
+            val themeRefer = firestore.collection("Themes")
+
+            userRefer.get().addOnSuccessListener { userSnapshot ->
+                val coins = userSnapshot.get("coins") as Long
+                val userThemes =
+                    userSnapshot.get("themesUnlocked") as? List<Map<String, Any>> ?: emptyList()
+
+                unlockedThemes.value
+
+                val isThemeUnlocked = userThemes.any { it["themeName"] == themeName }
+
+                if (isThemeUnlocked) {
+                    Toast.makeText(view.context, "Theme already unlocked", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    themeRefer.whereEqualTo("themeName", themeName).get()
+                        .addOnSuccessListener { themeSnapshot ->
+
+                            val price = themeSnapshot.documents[0].get("price") as Long
+
+                            if (coins >= price) {
+                                val themeId = themeSnapshot.documents[0].id
+                                val timesUnlocked =
+                                    themeSnapshot.documents[0].get("timesUnlocked") as Long
+                                themeSnapshot.documents.map { map ->
+                                    val theme = hashMapOf(
+                                        "themeName" to map.get("themeName") as String,
+                                        "description" to map.get("description") as String,
+                                        "price" to map.get("price") as Long,
+                                    )
+
+                                    themeRefer.document(themeId)
+                                        .update("timesUnlocked", timesUnlocked + 1)
+                                    userRefer.update("themesUnlocked", FieldValue.arrayUnion(theme))
+                                    userRefer.update("coins", coins - price).addOnSuccessListener {
+                                        Toast.makeText(
+                                            view.context,
+                                            "Unlocked!",
+                                            Toast.LENGTH_SHORT,
+                                        )
+                                            .show()
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(view.context, "No enough coins", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
+                }
+            }
+        }
+    }
+
+    fun getUserThemes() = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val docRefer = firestore.collection("Users")
+                .document(currentUser)
+
+            docRefer.addSnapshotListener { snapshot, _ ->
+                if (snapshot != null && snapshot.exists()) {
+                    val userThemes = snapshot.get("themesUnlocked") as? List<Map<String, Any>>
+                    val themesList = userThemes?.map { themeData ->
+                        ThemeModel(
+                            themeName = themeData["themeName"] as String,
+                            description = themeData["description"] as String,
+                            price = 0,
+                            timesUnlocked = 0,
+                        )
+                    } ?: emptyList()
+
+                    unlockedThemes.value = themesList
                 }
             }
         }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.fragment.FriendRequestFragment"
-    android:background="#40405C">
+    >
 
     <TextView
         android:id="@+id/title"
@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="Friend Requests"
+        android:text="@string/friend_requests_text"
         android:textStyle="bold"
         android:textSize="20sp"
         android:layout_marginTop="15dp"

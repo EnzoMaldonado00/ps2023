@@ -12,12 +12,12 @@ import com.maldEnz.ps.R
 import com.maldEnz.ps.databinding.ItemRecyclerChatListBinding
 import com.maldEnz.ps.presentation.activity.ChatActivity
 import com.maldEnz.ps.presentation.mvvm.model.RecentChatModel
-import com.maldEnz.ps.presentation.mvvm.viewmodel.ChatViewModel
+import com.maldEnz.ps.presentation.util.FunUtils
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class RecentChatsAdapter(private val chatViewModel: ChatViewModel) :
+class RecentChatsAdapter :
     ListAdapter<RecentChatModel, RecentChatsAdapter.ChatListViewHolder>(ChatListDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatListViewHolder {
@@ -51,7 +51,11 @@ class RecentChatsAdapter(private val chatViewModel: ChatViewModel) :
                     .load(recentChat.userModel.userImage)
                     .into(friendImageChatList)
 
-                val messageDateTime = recentChat.chatModel.lastMessageDateTime
+                val messageDateTime = FunUtils.unifyDateTime(
+                    recentChat.chatModel.lastMessageDateTime,
+                    recentChat.chatModel.dateTimeZone,
+                )
+
                 val today = Calendar.getInstance()
                 val messageDate = Calendar.getInstance()
                 messageDate.time = SimpleDateFormat(
@@ -64,10 +68,6 @@ class RecentChatsAdapter(private val chatViewModel: ChatViewModel) :
                 ) {
                     lastMsgDateChatList.text =
                         SimpleDateFormat("HH:mm", Locale.getDefault()).format(messageDate.time)
-                } else if (today.get(Calendar.YEAR) == messageDate.get(Calendar.YEAR) &&
-                    today.get(Calendar.DAY_OF_YEAR) == messageDate.get(Calendar.DAY_OF_YEAR) - 1
-                ) {
-                    lastMsgDateChatList.text = "Yesterday"
                 } else {
                     lastMsgDateChatList.text =
                         SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(messageDate.time)

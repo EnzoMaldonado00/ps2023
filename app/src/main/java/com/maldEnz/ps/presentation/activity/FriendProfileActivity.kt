@@ -7,6 +7,7 @@ import com.bumptech.glide.Glide
 import com.maldEnz.ps.databinding.ActivityFriendProfileBinding
 import com.maldEnz.ps.presentation.adapter.PostAdapter
 import com.maldEnz.ps.presentation.mvvm.viewmodel.FriendViewModel
+import com.maldEnz.ps.presentation.util.FunUtils
 import org.koin.android.ext.android.inject
 
 class FriendProfileActivity : AppCompatActivity() {
@@ -18,6 +19,8 @@ class FriendProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFriendProfileBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FunUtils.setAppTheme(this)
+
         binding = ActivityFriendProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
         friendUid = intent.getStringExtra("friendUid") ?: ""

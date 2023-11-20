@@ -7,10 +7,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.maldEnz.ps.presentation.mvvm.model.CommentModel
-import com.maldEnz.ps.presentation.util.Util
+import com.maldEnz.ps.presentation.util.FunUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.TimeZone
 import java.util.UUID
 
 class PostViewModel : ViewModel() {
@@ -128,10 +129,11 @@ class PostViewModel : ViewModel() {
                                     hashMapOf(
                                         "userName" to userName,
                                         "userImage" to userImage,
-                                        "commentDate" to Util.getDateTime(),
+                                        "commentDate" to FunUtils.getDateTime(),
                                         "comment" to commentContent,
                                         "commentId" to commentId,
                                         "timeStamp" to System.currentTimeMillis(),
+                                        "dateZone" to TimeZone.getDefault().id.toString(),
                                     ),
                                 )
 
@@ -165,10 +167,17 @@ class PostViewModel : ViewModel() {
 
                             if (commentsList != null) {
                                 val commentsModels = commentsList.map { comment ->
+
+                                    val commentDate = comment["commentDate"] as String
+                                    val commentDateZone = comment["dateZone"] as String
+
                                     CommentModel(
                                         userName = comment["userName"] as String,
                                         userImage = comment["userImage"] as String,
-                                        commentDate = comment["commentDate"] as String,
+                                        commentDate = FunUtils.unifyDateTime(
+                                            commentDate,
+                                            commentDateZone,
+                                        ),
                                         commentContent = comment["comment"] as String,
                                         commentId = comment["commentId"] as String,
                                         timestamp = comment["timeStamp"] as Long,

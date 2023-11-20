@@ -20,6 +20,7 @@ import com.maldEnz.ps.presentation.fragment.FriendListFragment
 import com.maldEnz.ps.presentation.fragment.FriendRequestFragment
 import com.maldEnz.ps.presentation.fragment.RecentChatsFragment
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
+import com.maldEnz.ps.presentation.util.FunUtils
 import org.koin.android.ext.android.inject
 
 class HomeActivity : AppCompatActivity() {
@@ -35,6 +36,8 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, LogInActivity::class.java))
             finish()
         }
+        FunUtils.setAppTheme(this)
+
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         firestore = FirebaseFirestore.getInstance()
@@ -46,6 +49,10 @@ class HomeActivity : AppCompatActivity() {
                 .into(binding.profilePicture)
         }
 
+        userViewModel.coins.observe(this) {
+            binding.coins.text = it.toString()
+        }
+
         profileOptions()
 
         binding.profilePicture.setOnClickListener {
@@ -55,6 +62,12 @@ class HomeActivity : AppCompatActivity() {
             deployFrag(AddFriendFragment())
         }
         bottomNavMenu()
+
+        binding.coinContainer.setOnClickListener {
+            startActivity(Intent(this, ShopActivity::class.java))
+        }
+
+        userViewModel.loadUserFriends()
     }
 
     private fun profileOptions() {
@@ -153,7 +166,9 @@ class HomeActivity : AppCompatActivity() {
                 }
 
                 R.id.bottom_nav_friends -> {
-                    deployFrag(FriendListFragment())
+                    userViewModel.friends.observe(this) { list ->
+                        deployFrag(FriendListFragment(list))
+                    }
                     true
                 }
 

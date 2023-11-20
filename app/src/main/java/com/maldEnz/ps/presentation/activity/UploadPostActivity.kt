@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.maldEnz.ps.databinding.ActivityUploadPostBinding
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
+import com.maldEnz.ps.presentation.util.FunUtils
 import org.koin.android.ext.android.inject
 
 class UploadPostActivity : AppCompatActivity() {
@@ -21,6 +22,8 @@ class UploadPostActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FunUtils.setAppTheme(this)
+
         binding = ActivityUploadPostBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

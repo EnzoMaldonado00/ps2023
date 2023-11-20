@@ -10,6 +10,7 @@ import com.maldEnz.ps.databinding.ActivityProfileBinding
 import com.maldEnz.ps.presentation.adapter.PostAdapter
 import com.maldEnz.ps.presentation.fragment.dialog.SheetDialogProfileFragment
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
+import com.maldEnz.ps.presentation.util.FunUtils
 import org.koin.android.ext.android.inject
 
 class ProfileActivity : AppCompatActivity() {
@@ -21,6 +22,8 @@ class ProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FunUtils.setAppTheme(this)
+
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
         auth = FirebaseAuth.getInstance()

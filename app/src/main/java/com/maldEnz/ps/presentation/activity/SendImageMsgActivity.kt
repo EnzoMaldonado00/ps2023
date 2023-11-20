@@ -14,6 +14,7 @@ import com.google.firebase.storage.UploadTask
 import com.maldEnz.ps.databinding.ActivitySendImageMsgBinding
 import com.maldEnz.ps.presentation.mvvm.viewmodel.FriendViewModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
+import com.maldEnz.ps.presentation.util.FunUtils
 import org.koin.android.ext.android.inject
 import java.util.UUID
 
@@ -30,6 +31,8 @@ class SendImageMsgActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FunUtils.setAppTheme(this)
+
         binding = ActivitySendImageMsgBinding.inflate(layoutInflater)
         setContentView(binding.root)
         auth = FirebaseAuth.getInstance()
@@ -58,7 +61,7 @@ class SendImageMsgActivity : AppCompatActivity() {
                             val imageURL = it.result.toString()
                             userViewModel.sendMessage(
                                 chatId,
-                                "",
+                                binding.msgInput.text.toString(),
                                 senderId,
                                 currentUserUid,
                                 friendUid,

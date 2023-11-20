@@ -13,8 +13,17 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Ps"
+        android:theme="@style/DefaultTheme"
         tools:targetApi="31">
+        <activity
+            android:name=".presentation.activity.UserThemesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.activity.AddThemeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.activity.ShopActivity"
+            android:exported="false" />
         <activity
             android:name=".presentation.activity.SendImageMsgActivity"
             android:exported="false" />
@@ -38,24 +47,19 @@
             android:exported="false" />
         <activity
             android:name=".presentation.activity.ChatActivity"
-            android:exported="false"
-            android:theme="@style/Theme.NoNavBar" />
+            android:exported="false" />
         <activity
             android:name=".presentation.activity.ImagePickerActivity"
-            android:exported="false"
-            android:theme="@style/Theme.NoNavBar" />
+            android:exported="false" />
         <activity
             android:name=".presentation.activity.ProfileActivity"
-            android:exported="false"
-            android:theme="@style/Theme.NoNavBar" />
+            android:exported="false" />
         <activity
             android:name=".presentation.activity.SettingsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.NoNavBar" />
+            android:exported="false" />
         <activity
             android:name=".presentation.activity.HomeActivity"
-            android:exported="false"
-            android:theme="@style/Theme.NoNavBar" />
+            android:exported="false" />
         <activity
             android:name=".presentation.activity.SignUpActivity"
             android:exported="false" />

@@ -17,6 +17,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.maldEnz.ps.databinding.ActivitySignUpBinding
 import com.maldEnz.ps.presentation.fragment.dialog.ImageMethodFragment
+import java.util.TimeZone
 
 class SignUpActivity : AppCompatActivity() {
 
@@ -81,7 +82,7 @@ class SignUpActivity : AppCompatActivity() {
                     val user = FirebaseAuth.getInstance().currentUser
                     val uid = user!!.uid
 
-                    val imageName = "profileImages/$uid.webp"
+                    val imageName = "profileImages/$uid.jpg"
                     val imageRef = FirebaseStorage.getInstance().reference.child(imageName)
                     val uploadTask: UploadTask = imageRef.putFile(imageUri!!)
 
@@ -94,6 +95,7 @@ class SignUpActivity : AppCompatActivity() {
                                     "userName" to fullName,
                                     "userEmail" to email,
                                     "status" to "default",
+                                    "statusTimeZone" to TimeZone.getDefault().id.toString(),
                                     "image" to imageUri,
                                     "password" to password,
                                     "friends" to emptyList<Map<String, Any>>(),
@@ -102,6 +104,14 @@ class SignUpActivity : AppCompatActivity() {
                                     "isAdmin" to false,
                                     "highestScore" to "0",
                                     "chats" to emptyList<Map<String, Any>>(),
+                                    "coins" to 0,
+                                    "themesUnlocked" to listOf(
+                                        hashMapOf(
+                                            "description" to "Default",
+                                            "price" to 0,
+                                            "themeName" to "DefaultTheme",
+                                        ),
+                                    ),
                                 )
 
                                 FirebaseFirestore.getInstance().collection("Users")

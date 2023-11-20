@@ -20,11 +20,6 @@ class FriendRequestFragment : Fragment() {
     private val userViewModel: UserViewModel by inject()
     private val friendViewModel: FriendViewModel by inject()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

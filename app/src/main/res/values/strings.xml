@@ -66,6 +66,22 @@
     <string name="comment_text">Comment</string>
     <string name="see_all_comments_text">See all comments</string>
     <string name="be_the_first_comment_text">Be the first comment!</string>
+    <string name="add_theme_text">Add Theme</string>
+    <string name="themes_text">Themes</string>
+    <string name="btn_apply_text">Apply</string>
+    <string name="admin_text">Admin</string>
+    <string name="btn_add_text">Add</string>
+    <string name="btn_cancel_text">Cancel</string>
+    <string name="price_text">Price</string>
+    <string name="description_text">Description</string>
+    <string name="theme_name_text">Theme name</string>
+    <string name="add_a_custom_theme_text">Add a custom theme</string>
+    <string name="my_themes_text">My themes</string>
+    <string name="theme_shop_text">Theme shop</string>
+    <string name="admin_panel_text">Admin Panel</string>
+    <string name="friend_requests_text">Friend Requests</string>
+    <string name="friends_text">Friends</string>
+    <string name="send_message_text">send message</string>
 
 
 </resources>

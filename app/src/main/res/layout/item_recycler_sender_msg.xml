@@ -13,6 +13,7 @@
         android:layout_marginEnd="4dp"
         android:background="@color/colorPrimary"
         android:padding="12dp"
+        android:textColor="@color/black"
         android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -24,56 +25,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="4dp"
-        android:textColor="@color/black"
         android:textSize="11sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/msg"
         tools:hint="02 september, 00:00hs" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/image_container"
-        android:layout_width="190dp"
-        android:layout_height="190dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="4dp"
-        android:background="@color/colorPrimary"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/msg_image"
-            android:layout_width="185dp"
-            android:layout_height="185dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/baseline_image_24" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/img_date_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="4dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/image_container">
-
-        <TextView
-            android:id="@+id/img_date_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textColor="@color/black"
-            android:textSize="11sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="02 september, 00:00hs" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

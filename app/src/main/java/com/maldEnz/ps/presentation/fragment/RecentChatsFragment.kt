@@ -17,13 +17,16 @@ class RecentChatsFragment : Fragment() {
 
     private val chatViewModel: ChatViewModel by inject()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentChatsBinding.inflate(inflater, container, false)
-        chatViewModel.loadRecentChats()
 
         return binding.root
     }
@@ -31,13 +34,13 @@ class RecentChatsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = RecentChatsAdapter(chatViewModel)
+        adapter = RecentChatsAdapter()
         binding.chatsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.chatsRecyclerView.adapter = adapter
         binding.chatsRecyclerView.itemAnimator = null
-
-        chatViewModel.chatList.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+        chatViewModel.loadRecentChats()
+        chatViewModel.chatList.observe(viewLifecycleOwner) { list ->
+            adapter.submitList(list)
         }
     }
 }

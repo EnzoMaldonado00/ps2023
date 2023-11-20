@@ -20,7 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="56dp"
-        android:background="#40405C"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +34,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                app:cardBackgroundColor="@color/alert_dialog_dark"
                 app:cardElevation="4dp"
                 app:cardUseCompatPadding="true">
 
@@ -43,12 +41,11 @@
                     android:id="@+id/delete_account"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/alert_dialog_dark"
                     android:clickable="true"
                     android:focusable="true"
                     android:padding="5dp"
-                    android:textColor="@color/error_red"
                     android:text="@string/delete_account_text"
+                    android:textColor="@color/error_red"
                     android:textColorHighlight="@color/white"
                     android:textSize="25sp"
                     app:drawableLeftCompat="@drawable/baseline_delete_24" />
@@ -59,7 +56,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                app:cardBackgroundColor="@color/alert_dialog_dark"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
+
+                <TextView
+                    android:id="@+id/themes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="5dp"
+                    android:text="@string/themes_text"
+                    android:textColor="@color/black"
+                    android:textSize="25sp"
+                    app:drawableLeftCompat="@drawable/baseline_colorize_24" />
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
                 app:cardElevation="4dp"
                 app:cardUseCompatPadding="true">
 
@@ -67,7 +84,6 @@
                     android:id="@+id/log_out"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/alert_dialog_dark"
                     android:clickable="true"
                     android:focusable="true"
                     android:padding="5dp"

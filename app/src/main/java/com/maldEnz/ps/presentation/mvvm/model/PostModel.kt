@@ -1,5 +1,7 @@
 package com.maldEnz.ps.presentation.mvvm.model
 
+import java.util.TimeZone
+
 data class PostModel(
     val postId: String = "",
     val authorId: String = "",
@@ -10,4 +12,5 @@ data class PostModel(
     val description: String = "",
     val likes: List<Map<String, Any>>,
     val comments: List<Map<String, Any>>,
+    val dateTimeZone: String = TimeZone.getDefault().id.toString(),
 )

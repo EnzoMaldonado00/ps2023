@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.maldEnz.ps.databinding.ActivityImagePickerBinding
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
+import com.maldEnz.ps.presentation.util.FunUtils
 import org.koin.android.ext.android.inject
 
 class ImagePickerActivity : AppCompatActivity() {
@@ -17,6 +18,8 @@ class ImagePickerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FunUtils.setAppTheme(this)
+
         binding = ActivityImagePickerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         openImagePicker()

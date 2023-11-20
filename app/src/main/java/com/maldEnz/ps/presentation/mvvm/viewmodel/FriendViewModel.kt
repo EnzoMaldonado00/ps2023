@@ -9,6 +9,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.maldEnz.ps.presentation.mvvm.model.FriendModel
 import com.maldEnz.ps.presentation.mvvm.model.PostModel
 import com.maldEnz.ps.presentation.mvvm.model.UserModel
+import com.maldEnz.ps.presentation.util.FunUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -28,18 +29,23 @@ class FriendViewModel : ViewModel() {
             docRefer.get().addOnSuccessListener {
                 val postListData = it.get("posts") as? List<Map<String, Any>>
                 val postsList = postListData?.map { postData ->
+
+                    val dateTimeZone = postData["dateTimeZone"] as String
+                    val dateTime = postData["dateTime"] as String
+
                     PostModel(
                         authorId = postData["authorId"] as String,
                         authorName = postData["authorName"] as String,
-                        dateTime = postData["dateTime"] as String,
+                        dateTime = FunUtils.unifyDateTime(dateTime, dateTimeZone),
                         description = postData["description"] as String,
                         imageUrl = postData["imageUrl"] as String,
                         timestamp = postData["timestamp"] as Long,
                         likes = postData["likes"] as List<Map<String, Any>>,
                         comments = postData["comments"] as List<Map<String, Any>>,
+                        dateTimeZone = postData["dateTimeZone"] as String,
                     )
                 } ?: emptyList()
-                val sortedList = postsList.sortedByDescending { postModel ->  postModel.timestamp }
+                val sortedList = postsList.sortedByDescending { postModel -> postModel.timestamp }
                 friendPostList.value = sortedList
             }
         }

@@ -10,6 +10,7 @@ import com.maldEnz.ps.databinding.ActivityPostDetailsBinding
 import com.maldEnz.ps.presentation.adapter.CommentAdapter
 import com.maldEnz.ps.presentation.mvvm.viewmodel.FriendViewModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.PostViewModel
+import com.maldEnz.ps.presentation.util.FunUtils
 import org.koin.android.ext.android.inject
 
 class PostDetailsActivity : AppCompatActivity() {
@@ -27,6 +28,8 @@ class PostDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FunUtils.setAppTheme(this)
+
         binding = ActivityPostDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         auth = FirebaseAuth.getInstance()
@@ -75,6 +78,10 @@ class PostDetailsActivity : AppCompatActivity() {
             postViewModel.uploadPostComment(postId, authorId, commentContent)
             binding.commentContent.text.clear()
             binding.commentContent.clearFocus()
+        }
+
+        binding.btnLike.setOnClickListener {
+            postViewModel.setPostLike(postId, authorId)
         }
     }
 }

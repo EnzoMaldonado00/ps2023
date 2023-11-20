@@ -4,7 +4,6 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -16,8 +15,9 @@ import com.maldEnz.ps.presentation.activity.PostDetailsActivity
 import com.maldEnz.ps.presentation.mvvm.model.CommentModel
 import com.maldEnz.ps.presentation.mvvm.model.FeedModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.PostViewModel
+import com.maldEnz.ps.presentation.util.FunUtils
 
-class FeedAdapter(private val postViewModel: PostViewModel, private val owner: LifecycleOwner) :
+class FeedAdapter(private val postViewModel: PostViewModel) :
     ListAdapter<FeedModel, FeedAdapter.FeedViewHolder>(FeedDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedViewHolder {
@@ -52,7 +52,8 @@ class FeedAdapter(private val postViewModel: PostViewModel, private val owner: L
                     .load(feed.userModel.userImage)
                     .into(profilePicture)
 
-                datePosted.text = feed.postModel.dateTime
+                datePosted.text =
+                    FunUtils.unifyDateTime(feed.postModel.dateTime, feed.postModel.dateTimeZone)
                 Glide.with(itemView.context)
                     .load(feed.postModel.imageUrl)
                     .into(imagePost)
@@ -90,13 +91,18 @@ class FeedAdapter(private val postViewModel: PostViewModel, private val owner: L
                 }
 
                 val formattedList = feed.postModel.comments.map { comment ->
+
+                    val dateTime = comment["commentDate"] as String
+                    val timeZone = comment["dateZone"] as String
+
                     CommentModel(
                         userName = comment["userName"] as String,
                         userImage = comment["userImage"] as String,
-                        commentDate = comment["commentDate"] as String,
+                        commentDate = FunUtils.unifyDateTime(dateTime, timeZone),
                         commentContent = comment["comment"] as String,
                         commentId = comment["commentId"] as String,
                         timestamp = comment["timeStamp"] as Long,
+                        dateZone = comment["dateZone"] as String,
                     )
                 }
 

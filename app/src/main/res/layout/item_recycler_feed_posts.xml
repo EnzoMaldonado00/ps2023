@@ -32,6 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@id/profile_picture"
@@ -54,6 +55,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/image_post"
                 tools:hint="Hoy es un dia soleado!" />
@@ -103,6 +107,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:text="@string/comments_text"
+                android:textColor="@color/black"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="@id/btn_like"
                 app:layout_constraintEnd_toStartOf="@id/comments_count"
@@ -112,6 +117,7 @@
                 android:id="@+id/comments_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="@id/btn_comments"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -131,8 +137,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:text="@string/see_all_comments_text"
-                app:layout_constraintTop_toBottomOf="@id/recycler_comment"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recycler_comment" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

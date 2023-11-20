@@ -41,14 +41,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/to_text" />
 
+    <EditText
+        android:id="@+id/msg_input"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_margin="@dimen/container_margin"
+        android:layout_marginStart="10dp"
+        android:background="#333333"
+        android:hint="@string/message_hint_text"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_send"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <ImageButton
         android:id="@+id/btn_send"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_margin="@dimen/container_margin"
         android:src="@drawable/baseline_send_24"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/msg_input"
         app:layout_constraintEnd_toEndOf="parent"
-         />
+        app:layout_constraintTop_toTopOf="@id/msg_input" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

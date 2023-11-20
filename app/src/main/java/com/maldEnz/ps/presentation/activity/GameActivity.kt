@@ -8,6 +8,7 @@ import com.maldEnz.ps.databinding.ActivityGameBinding
 import com.maldEnz.ps.presentation.adapter.FriendHighScoreAdapter
 import com.maldEnz.ps.presentation.gamecontroller.GameView
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
+import com.maldEnz.ps.presentation.util.FunUtils
 import org.koin.android.ext.android.inject
 
 class GameActivity : AppCompatActivity() {
@@ -18,6 +19,8 @@ class GameActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FunUtils.setAppTheme(this)
+
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)

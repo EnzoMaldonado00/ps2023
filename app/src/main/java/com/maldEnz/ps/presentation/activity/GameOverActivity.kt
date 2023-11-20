@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.maldEnz.ps.databinding.ActivityGameOverBinding
 import com.maldEnz.ps.presentation.gamecontroller.GameView
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
+import com.maldEnz.ps.presentation.util.FunUtils
 import org.koin.android.ext.android.inject
 
 class GameOverActivity : AppCompatActivity() {
@@ -15,6 +16,8 @@ class GameOverActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FunUtils.setAppTheme(this)
+
         binding = ActivityGameOverBinding.inflate(layoutInflater)
         setContentView(binding.root)
         userViewModel.getHighestScore()
@@ -28,6 +31,11 @@ class GameOverActivity : AppCompatActivity() {
                 binding.highestScore.text = it
             }
         }
+
+        if (score >= 500) {
+            userViewModel.convertScoreToCoins(score)
+        }
+
         binding.score.text = score.toString()
 
         binding.btnRestart.setOnClickListener {

@@ -18,7 +18,6 @@ class ChatViewModel : ViewModel() {
     private val currentUser = auth.currentUser?.uid
     private val firestore = FirebaseFirestore.getInstance()
     val chatList = MutableLiveData<List<RecentChatModel>>()
-
     fun loadRecentChats() = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             val docRefer = firestore.collection("Users").document(currentUser!!)
@@ -28,13 +27,14 @@ class ChatViewModel : ViewModel() {
                     val chats = documentSnapshot.get("chats") as List<Map<String, Any>>?
                     if (chats != null) {
                         val recentChatList = mutableListOf<RecentChatModel>()
-                        for (chatData in chats) {
-                            val chatId = chatData["chatId"] as String
-                            val lastMessage = chatData["lastMessage"] as String
-                            val lastMessageDateTime = chatData["lastMessageDateTime"] as String
-                            val user1 = chatData["user1"] as String
-                            val user2 = chatData["user2"] as String
-                            val lastMessageTimeStamp = chatData["lastMessageTimeStamp"] as Long
+                        chats.map { map ->
+                            val chatId = map["chatId"] as String
+                            val lastMessage = map["lastMessage"] as String
+                            val lastMessageDateTime = map["lastMessageDateTime"] as String
+                            val user1 = map["user1"] as String
+                            val user2 = map["user2"] as String
+                            val lastMessageTimeStamp = map["lastMessageTimeStamp"] as Long
+                            val lastMessageDateTimeZone = map["dateTimeZone"] as String
 
                             val chat = ChatModel(
                                 chatId,
@@ -43,41 +43,28 @@ class ChatViewModel : ViewModel() {
                                 user1,
                                 user2,
                                 lastMessageTimeStamp,
+                                lastMessageDateTimeZone,
                             )
 
-                            if (user1 != currentUser) {
-                                val user1Refer = firestore.collection("Users").document(user1)
-
-                                user1Refer.addSnapshotListener { user1Snapshot, _ ->
-                                    if (user1Snapshot != null && user1Snapshot.exists()) {
-                                        val userName = user1Snapshot["userName"] as String
-                                        val userImage = user1Snapshot["image"] as String
-                                        val userEmail = user1Snapshot["userEmail"] as String
-
-                                        val user = UserModel(user1, userName, userEmail, userImage)
-                                        val recentChatModel = RecentChatModel(user, chat)
-
-                                        recentChatList.add(recentChatModel)
-                                        chatList.value = recentChatList
-                                    }
-                                }
+                            val userDoc = if (user1 != currentUser) {
+                                firestore.collection("Users").document(user1)
                             } else {
-                                val user2Refer = firestore.collection("Users").document(user2)
+                                firestore.collection("Users").document(user2)
+                            }
 
-                                user2Refer.addSnapshotListener { user2Snapshot, _ ->
-                                    if (user2Snapshot != null && user2Snapshot.exists()) {
-                                        val userName = user2Snapshot["userName"] as String
-                                        val userImage = user2Snapshot["image"] as String
-                                        val userEmail = user2Snapshot["userEmail"] as String
+                            userDoc.get().addOnSuccessListener { userSnapshot ->
+                                if (userSnapshot != null && userSnapshot.exists()) {
+                                    val userName = userSnapshot["userName"] as String
+                                    val userImage = userSnapshot["image"] as String
+                                    val userEmail = userSnapshot["userEmail"] as String
 
-                                        val user = UserModel(user2, userName, userEmail, userImage)
-                                        val recentChatModel = RecentChatModel(user, chat)
+                                    val user = UserModel(user1, userName, userEmail, userImage)
+                                    val recentChatModel = RecentChatModel(user, chat)
 
-                                        recentChatList.add(recentChatModel)
-                                        val sortedChats =
-                                            recentChatList.sortedByDescending { it.chatModel.lastMessageTimeStamp }
-                                        chatList.value = sortedChats
-                                    }
+                                    recentChatList.add(recentChatModel)
+                                    val sortedChats =
+                                        recentChatList.sortedByDescending { it.chatModel.lastMessageTimeStamp }
+                                    chatList.value = sortedChats
                                 }
                             }
                         }
