@@ -39,7 +39,7 @@ class FeedFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         userViewModel.getFeed()
         val layoutManager = LinearLayoutManager(requireContext())
-        adapter = FeedAdapter(postViewModel, viewLifecycleOwner)
+        adapter = FeedAdapter(postViewModel)
         binding.recycler.layoutManager = layoutManager
         binding.recycler.adapter = adapter
         binding.recycler.itemAnimator = null
