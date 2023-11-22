@@ -755,25 +755,27 @@ class UserViewModel : ViewModel() {
         withContext(Dispatchers.IO) {
             val docRefer = firestore.collection("Users").document(currentUser)
 
-            docRefer.get().addOnSuccessListener {
-                val friendList = it.get("friends") as? List<Map<String, Any>>
+            docRefer.addSnapshotListener { it, _ ->
+                if (it != null && it.exists()) {
+                    val friendList = it.get("friends") as? List<Map<String, Any>>
 
-                if (friendList != null) {
-                    val friendData = mutableListOf<UserModel>()
-                    for (friend in friendList) {
-                        val friendId = friend["friendId"] as String
+                    if (friendList != null) {
+                        val friendData = mutableListOf<UserModel>()
+                        for (friend in friendList) {
+                            val friendId = friend["friendId"] as String
+                            val friendDoc = firestore.collection("Users").document(friendId)
 
-                        val friendDoc = firestore.collection("Users").document(friendId)
+                            friendDoc.get().addOnSuccessListener { friendSnapshot ->
+                                val friendName = friendSnapshot.get("userName") as String
+                                val friendEmail = friendSnapshot.get("userEmail") as String
+                                val friendImage = friendSnapshot.get("image") as String
 
-                        friendDoc.get().addOnSuccessListener { friendSnapshot ->
-                            val friendName = friendSnapshot.get("userName") as String
-                            val friendEmail = friendSnapshot.get("userEmail") as String
-                            val friendImage = friendSnapshot.get("image") as String
-
-                            val user = UserModel(friendId, friendName, friendEmail, friendImage)
-                            friendData.add(user)
-                            friends.value = friendData
+                                val user = UserModel(friendId, friendName, friendEmail, friendImage)
+                                friendData.add(user)
+                                friends.value = friendData
+                            }
                         }
+
                     }
                 }
             }

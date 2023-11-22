@@ -14,7 +14,7 @@ import com.maldEnz.ps.presentation.mvvm.viewmodel.FriendViewModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
 import org.koin.android.ext.android.inject
 
-class FriendListFragment(private val list: List<UserModel>) : Fragment() {
+class FriendListFragment : Fragment() {
 
     private lateinit var binding: FragmentFriendListBinding
     private lateinit var adapter: FriendListAdapter
@@ -37,8 +37,9 @@ class FriendListFragment(private val list: List<UserModel>) : Fragment() {
         binding.recycler.layoutManager = LinearLayoutManager(requireContext())
         adapter = FriendListAdapter(friendViewModel)
         binding.recycler.adapter = adapter
-
-        adapter.submitList(list)
+        userViewModel.friends.observe(viewLifecycleOwner){
+            adapter.submitList(it)
+        }
     }
 
     override fun onStop() {

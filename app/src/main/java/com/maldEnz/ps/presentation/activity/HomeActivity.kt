@@ -66,8 +66,6 @@ class HomeActivity : AppCompatActivity() {
         binding.coinContainer.setOnClickListener {
             startActivity(Intent(this, ShopActivity::class.java))
         }
-
-        userViewModel.loadUserFriends()
     }
 
     private fun profileOptions() {
@@ -166,9 +164,8 @@ class HomeActivity : AppCompatActivity() {
                 }
 
                 R.id.bottom_nav_friends -> {
-                    userViewModel.friends.observe(this) { list ->
-                        deployFrag(FriendListFragment(list))
-                    }
+                    deployFrag(FriendListFragment())
+
                     true
                 }
 
