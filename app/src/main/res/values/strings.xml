@@ -92,6 +92,11 @@
     <string name="you_haven_t_uploaded_any_post_text">You haven\'t uploaded any post</string>
     <string name="score_empty_state_text">Add a friend to see their high score!</string>
     <string name="empty_state_feed_text">Add a friend to see their posts!</string>
+    <string name="btn_ok">OK</string>
+    <string name="error_dialog">The account doesn\'t exists.</string>
+    <string name="error_text">Error</string>
+    <string name="email_exists_dialog">The email is already on use.</string>
+    <string name="field_error_dialog">Empty fields.</string>
 
 
 </resources>

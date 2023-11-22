@@ -4,8 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.maldEnz.ps.R
 import com.maldEnz.ps.databinding.ActivityLogInBinding
+import com.maldEnz.ps.presentation.fragment.dialog.ErrorDialogFragment
 
 class LogInActivity : AppCompatActivity() {
 
@@ -42,15 +43,14 @@ class LogInActivity : AppCompatActivity() {
                         val intent = Intent(this, HomeActivity::class.java)
                         startActivity(intent)
                     } else {
-                        // TODO
-                        // handle invalid account error
+                        val dialogFragment =
+                            ErrorDialogFragment.newInstance(getString(R.string.error_dialog))
+                        dialogFragment.show(supportFragmentManager, "dialog")
                     }
                 }.addOnFailureListener {
-                    when (it) {
-                        is FirebaseAuthInvalidCredentialsException -> {
-                            // handle invalid account
-                        }
-                    }
+                    val dialogFragment =
+                        ErrorDialogFragment.newInstance(getString(R.string.error_dialog))
+                    dialogFragment.show(supportFragmentManager, "dialog")
                 }
             }
         }

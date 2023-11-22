@@ -15,7 +15,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
+import com.maldEnz.ps.R
 import com.maldEnz.ps.databinding.ActivitySignUpBinding
+import com.maldEnz.ps.presentation.fragment.dialog.ErrorDialogFragment
 import com.maldEnz.ps.presentation.fragment.dialog.ImageMethodFragment
 import java.util.TimeZone
 
@@ -53,6 +55,10 @@ class SignUpActivity : AppCompatActivity() {
 
             if (fullName.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
                 registerUser(fullName, email, password)
+            } else {
+                val dialogFragment =
+                    ErrorDialogFragment.newInstance(getString(R.string.field_error_dialog))
+                dialogFragment.show(supportFragmentManager, "dialog")
             }
         }
     }
@@ -128,6 +134,11 @@ class SignUpActivity : AppCompatActivity() {
                         }
                     }
                 }
+            }.addOnFailureListener {
+                progressDialog.dismiss()
+                val dialogFragment =
+                    ErrorDialogFragment.newInstance(getString(R.string.email_exists_dialog))
+                dialogFragment.show(supportFragmentManager, "dialog")
             }
     }
 
