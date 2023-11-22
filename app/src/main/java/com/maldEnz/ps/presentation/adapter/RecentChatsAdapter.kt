@@ -78,11 +78,13 @@ class RecentChatsAdapter :
                         val intent = Intent(it.context, ChatActivity::class.java)
                         intent.putExtra("friendUid", recentChat.chatModel.user1)
                         intent.putExtra("friendName", friendNameChatList.text.toString())
+                        intent.putExtra("imageUrl", recentChat.userModel.userImage)
                         it.context.startActivity(intent)
                     } else {
                         val intent = Intent(it.context, ChatActivity::class.java)
                         intent.putExtra("friendUid", recentChat.chatModel.user2)
                         intent.putExtra("friendName", friendNameChatList.text.toString())
+                        intent.putExtra("imageUrl", recentChat.userModel.userImage)
                         it.context.startActivity(intent)
                     }
                 }

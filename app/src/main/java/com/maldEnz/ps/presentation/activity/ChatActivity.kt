@@ -23,6 +23,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var currentUserUid: String
     private lateinit var friendUid: String
     private lateinit var chatId: String
+    private lateinit var friendImage: String
     private lateinit var auth: FirebaseAuth
     private val userViewModel: UserViewModel by inject()
     private val friendViewModel: FriendViewModel by inject()
@@ -37,8 +38,11 @@ class ChatActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         currentUserUid = auth.currentUser!!.uid
         friendUid = intent.getStringExtra("friendUid") ?: ""
+        friendImage = intent.getStringExtra("imageUrl") ?: ""
 
         userViewModel.getFriendStatus(friendUid)
+        userViewModel.getUserToken(friendUid)
+        userViewModel.getUserData()
         // userViewModel.getFriendChatState(friendUid)
 
         val adapter = MessageListAdapter(userViewModel)
@@ -74,15 +78,18 @@ class ChatActivity : AppCompatActivity() {
         binding.btnSend.setOnClickListener {
             val messageContent = binding.msgInput.text.toString()
             val senderId = currentUserUid
-            if (messageContent != "" && messageContent.isNotEmpty()) {
-                userViewModel.sendMessage(
-                    chatId,
-                    messageContent,
-                    senderId,
-                    currentUserUid,
-                    friendUid,
-                    null,
-                )
+            userViewModel.friendToken.observe(this) { friendToken ->
+                if (messageContent != "" && messageContent.isNotEmpty()) {
+                    userViewModel.sendMessage(
+                        chatId,
+                        messageContent,
+                        senderId,
+                        currentUserUid,
+                        friendUid,
+                        null,
+                        friendToken,
+                    )
+                }
                 binding.msgInput.text.clear()
             }
         }
@@ -157,10 +164,6 @@ class ChatActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         userViewModel.updateUserStatusToOnline()
-    }
-
-    override fun onPause() {
-        super.onPause()
     }
 
     override fun onDestroy() {

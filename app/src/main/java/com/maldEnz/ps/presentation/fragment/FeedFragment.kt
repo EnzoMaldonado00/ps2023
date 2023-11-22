@@ -47,7 +47,8 @@ class FeedFragment : Fragment() {
         layoutManager.reverseLayout = true
 
         userViewModel.feedPostList.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+            adapter.submitList(it.sortedBy { xd -> xd.postModel.timestamp })
+            binding.recycler.scrollToPosition(it.lastIndex)
         }
     }
 

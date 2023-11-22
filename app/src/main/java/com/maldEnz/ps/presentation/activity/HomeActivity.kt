@@ -37,12 +37,12 @@ class HomeActivity : AppCompatActivity() {
             finish()
         }
         FunUtils.setAppTheme(this)
-
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
-
+        userViewModel.setUserToken()
         userViewModel.imageURL.observe(this) {
             Glide.with(this)
                 .load(it)

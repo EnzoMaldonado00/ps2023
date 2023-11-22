@@ -39,4 +39,22 @@ class AdminViewModel : ViewModel() {
                 docRefer.add(hashMap)
             }
         }
+
+    fun getAllUsersRegisterDate() {
+        val usersCollection = firestore.collection("Users")
+
+        usersCollection.get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    val documentId = document.id
+                    val userRef = firestore.collection("Users").document(documentId)
+                    userRef.get()
+                        .addOnSuccessListener { userDocument ->
+                            if (userDocument != null && userDocument.exists()) {
+                                val registerDate = userDocument.getString("registerDate")
+                            }
+                        }
+                }
+            }
+    }
 }

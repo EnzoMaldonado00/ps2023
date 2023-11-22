@@ -38,7 +38,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sheet_dialog_title">Enter your name</string>
     <string name="sheet_dialog_name">Name</string>
-    <string name="btn_save_sheet_dialog">SAVE</string>
+    <string name="btn_save_sheet_dialog">CONFIRM</string>
     <string name="btn_cancel_sheet_dialog">Cancel</string>
     <string name="friend_requests_item">Friend Requests</string>
     <string name="post_caption_hint">Write a caption…</string>
@@ -82,6 +82,11 @@
     <string name="friend_requests_text">Friend Requests</string>
     <string name="friends_text">Friends</string>
     <string name="send_message_text">send message</string>
+    <string name="themes_statistics_text">Number of times the themes have been unlocked:</string>
+    <string name="faq_text">F.A.Q</string>
+    <string name="f_a_q_title">F.A.Q</string>
+    <string name="how_do_i_add_friends_qs">How do I add friends?</string>
+    <string name="manage_fr_req_Text">How can i manage incoming friend requests?</string>
 
 
 </resources>

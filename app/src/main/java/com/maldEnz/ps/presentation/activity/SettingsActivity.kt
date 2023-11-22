@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 import com.maldEnz.ps.databinding.ActivitySettingsBinding
 import com.maldEnz.ps.presentation.fragment.dialog.PasswordReqFragment
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
@@ -32,9 +33,14 @@ class SettingsActivity : AppCompatActivity() {
         binding.themes.setOnClickListener {
             startActivity(Intent(this, UserThemesActivity::class.java))
         }
+
+        binding.faq.setOnClickListener {
+            startActivity(Intent(this, QuestionsActivity::class.java))
+        }
     }
 
     private fun logOut() {
+        FirebaseMessaging.getInstance().deleteToken()
         FirebaseAuth.getInstance().signOut()
         val intent = Intent(this, LogInActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

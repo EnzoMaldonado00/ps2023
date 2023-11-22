@@ -15,6 +15,10 @@ class LogInActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (FirebaseAuth.getInstance().currentUser != null) {
+            startActivity(Intent(this, HomeActivity::class.java))
+            finish()
+        }
         binding = ActivityLogInBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.notAccount.setOnClickListener {
@@ -22,10 +26,7 @@ class LogInActivity : AppCompatActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
-        if (FirebaseAuth.getInstance().currentUser != null) {
-            startActivity(Intent(this, HomeActivity::class.java))
-            finish()
-        }
+
         signInAction()
     }
 

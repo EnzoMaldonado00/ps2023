@@ -1,6 +1,12 @@
 package com.maldEnz.ps.presentation.util
 
+import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.os.Build
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.maldEnz.ps.R
 import org.threeten.bp.ZoneId
 import java.text.SimpleDateFormat
@@ -37,5 +43,41 @@ object FunUtils {
 
             else -> context.setTheme(R.style.DefaultTheme)
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    fun createNotification(
+        messageContent: String,
+        context: Context,
+        senderName: String,
+    ) {
+        /*val futureTarget = Glide.with(context)
+            .asBitmap()
+            .load(image)
+            .submit()
+
+        val senderIcon: Bitmap = futureTarget.get()*/
+
+        val notificationBuilder = NotificationCompat.Builder(context, "YOUR_CHANNEL_ID")
+            .setSmallIcon(R.drawable.baseline_camera_alt_24)
+            .setContentTitle(senderName)
+            .setContentText(messageContent)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+        val notificationManager = NotificationManagerCompat.from(context)
+
+        // Crear un canal de notificación para versiones >= Oreo
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                "YOUR_CHANNEL_ID",
+                "Your_Channel_Name",
+                NotificationManager.IMPORTANCE_DEFAULT,
+            )
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        // Mostrar la notificación
+        val notificationId = 1 // Identificador único para la notificación
+        notificationManager.notify(notificationId, notificationBuilder.build())
     }
 }

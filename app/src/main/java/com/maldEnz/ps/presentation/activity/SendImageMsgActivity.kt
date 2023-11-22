@@ -25,6 +25,7 @@ class SendImageMsgActivity : AppCompatActivity() {
     private lateinit var chatId: String
     private lateinit var auth: FirebaseAuth
     private lateinit var currentUserUid: String
+    private lateinit var friendToken: String
     private var imageUri: Uri? = null
     private val friendViewModel: FriendViewModel by inject()
     private val userViewModel: UserViewModel by inject()
@@ -39,13 +40,20 @@ class SendImageMsgActivity : AppCompatActivity() {
         currentUserUid = auth.currentUser!!.uid
         friendUid = intent.getStringExtra("friendUid") ?: ""
         chatId = intent.getStringExtra("chatId") ?: ""
+        userViewModel.getUserData()
         friendViewModel.loadFriendData(friendUid)
+
         friendViewModel.friend.observe(this) {
             binding.friendName.text = it.userName
         }
         val intent =
             Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         imagePickerLauncher.launch(intent)
+        userViewModel.getUserToken(friendUid)
+
+        userViewModel.friendToken.observe(this) {
+            friendToken = it
+        }
 
         binding.btnSend.setOnClickListener {
             val senderId = currentUserUid
@@ -66,6 +74,7 @@ class SendImageMsgActivity : AppCompatActivity() {
                                 currentUserUid,
                                 friendUid,
                                 imageURL,
+                                friendToken,
                             )
                         }
                     }

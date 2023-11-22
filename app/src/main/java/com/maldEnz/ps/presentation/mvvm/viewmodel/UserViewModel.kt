@@ -2,6 +2,7 @@ package com.maldEnz.ps.presentation.mvvm.viewmodel
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
@@ -10,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.maldEnz.ps.presentation.mvvm.model.ChatModel
@@ -23,6 +25,14 @@ import com.maldEnz.ps.presentation.util.FunUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
+import java.io.IOException
 import java.util.TimeZone
 import java.util.UUID
 
@@ -54,6 +64,7 @@ class UserViewModel : ViewModel() {
     val themesList = MutableLiveData<List<ThemeModel>>()
     val unlockedThemes = MutableLiveData<List<ThemeModel>>()
     val theme = MutableLiveData<Int>()
+    val friendToken = MutableLiveData<String>()
 
     init {
         passwordAuth.value = ""
@@ -262,6 +273,7 @@ class UserViewModel : ViewModel() {
         user1: String,
         user2: String,
         imageUrl: String?,
+        friendToken: String,
     ) =
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -283,6 +295,13 @@ class UserViewModel : ViewModel() {
 
                 messageCollection.add(message).addOnSuccessListener {
                     updateChatList(chatId, messageContent, user1, user2)
+                    sendNotification(
+                        messageContent,
+                        friendToken,
+                        name.value!!,
+                        currentUser,
+                        imageURL.value!!,
+                    )
                 }
             }
         }
@@ -551,60 +570,108 @@ class UserViewModel : ViewModel() {
                 if (userSnapshot != null && userSnapshot.exists()) {
                     val friendsList = userSnapshot.get("friends") as? List<Map<String, Any>>
 
-                    if (friendsList != null) {
-                        val allFriendPosts = mutableListOf<FeedModel>()
+                    val feedPosts = mutableListOf<FeedModel>()
 
-                        for (friendData in friendsList) {
-                            val friendId = friendData["friendId"] as String
+                    val userPostsList =
+                        userSnapshot.get("posts") as? List<Map<String, Any>>
+                    if (userPostsList != null) {
+                        val userName = userSnapshot.get("userName") as String
+                        val userImage = userSnapshot.get("image") as String
+                        val userEmail = userSnapshot.get("userEmail") as String
 
-                            val friendDocRef = firestore.collection("Users").document(friendId)
+                        val user = UserModel(
+                            currentUser,
+                            userName,
+                            userEmail,
+                            userImage,
+                        )
 
-                            friendDocRef.get().addOnSuccessListener { friendSnapshot ->
-                                if (friendSnapshot != null && friendSnapshot.exists()) {
-                                    val friendPostsList =
-                                        friendSnapshot.get("posts") as? List<Map<String, Any>>
+                        for (postData in userPostsList) {
+                            val postId = postData["postId"] as String
+                            val description = postData["description"] as String
+                            val timestamp = postData["timestamp"] as Long
+                            val dateTime = postData["dateTime"] as String
+                            val authorName = postData["authorName"] as String
+                            val imageUrl = postData["imageUrl"] as String
+                            val likes = postData["likes"] as List<Map<String, Any>>
+                            val comments =
+                                postData["comments"] as List<Map<String, Any>>
 
-                                    if (friendPostsList != null) {
-                                        val friendName = friendSnapshot.get("userName") as String
-                                        val friendImage = friendSnapshot.get("image") as String
-                                        val friendEmail = friendSnapshot.get("userEmail") as String
+                            val dateTimeZone = postData["dateTimeZone"] as String
 
-                                        val friend = UserModel(
-                                            friendId,
-                                            friendName,
-                                            friendEmail,
-                                            friendImage,
-                                        )
+                            val post = PostModel(
+                                postId,
+                                currentUser,
+                                authorName,
+                                timestamp,
+                                FunUtils.unifyDateTime(dateTime, dateTimeZone),
+                                imageUrl,
+                                description,
+                                likes,
+                                comments,
+                            )
 
-                                        for (postData in friendPostsList) {
-                                            val postId = postData["postId"] as String
-                                            val description = postData["description"] as String
-                                            val timestamp = postData["timestamp"] as Long
-                                            val dateTime = postData["dateTime"] as String
-                                            val authorName = postData["authorName"] as String
-                                            val imageUrl = postData["imageUrl"] as String
-                                            val likes = postData["likes"] as List<Map<String, Any>>
-                                            val comments =
-                                                postData["comments"] as List<Map<String, Any>>
+                            val feed = FeedModel(user, post)
+                            feedPosts.add(feed)
+                        }
 
-                                            val dateTimeZone = postData["dateTimeZone"] as String
+                        if (friendsList != null) {
+                            for (friendData in friendsList) {
+                                val friendId = friendData["friendId"] as String
 
-                                            val post = PostModel(
-                                                postId,
+                                val friendDocRef = firestore.collection("Users").document(friendId)
+
+                                friendDocRef.get().addOnSuccessListener { friendSnapshot ->
+                                    if (friendSnapshot != null && friendSnapshot.exists()) {
+                                        val friendPostsList =
+                                            friendSnapshot.get("posts") as? List<Map<String, Any>>
+
+                                        if (friendPostsList != null) {
+                                            val friendName =
+                                                friendSnapshot.get("userName") as String
+                                            val friendImage = friendSnapshot.get("image") as String
+                                            val friendEmail =
+                                                friendSnapshot.get("userEmail") as String
+
+                                            val friend = UserModel(
                                                 friendId,
-                                                authorName,
-                                                timestamp,
-                                                FunUtils.unifyDateTime(dateTime, dateTimeZone),
-                                                imageUrl,
-                                                description,
-                                                likes,
-                                                comments,
+                                                friendName,
+                                                friendEmail,
+                                                friendImage,
                                             )
 
-                                            val feed = FeedModel(friend, post)
+                                            for (postData in friendPostsList) {
+                                                val postId = postData["postId"] as String
+                                                val description = postData["description"] as String
+                                                val timestamp = postData["timestamp"] as Long
+                                                val dateTime = postData["dateTime"] as String
+                                                val authorName = postData["authorName"] as String
+                                                val imageUrl = postData["imageUrl"] as String
+                                                val likes =
+                                                    postData["likes"] as List<Map<String, Any>>
+                                                val comments =
+                                                    postData["comments"] as List<Map<String, Any>>
 
-                                            allFriendPosts.add(feed)
-                                            feedPostList.value = allFriendPosts
+                                                val dateTimeZone =
+                                                    postData["dateTimeZone"] as String
+
+                                                val post = PostModel(
+                                                    postId,
+                                                    friendId,
+                                                    authorName,
+                                                    timestamp,
+                                                    FunUtils.unifyDateTime(dateTime, dateTimeZone),
+                                                    imageUrl,
+                                                    description,
+                                                    likes,
+                                                    comments,
+                                                )
+
+                                                val feed = FeedModel(friend, post)
+
+                                                feedPosts.add(feed)
+                                                feedPostList.value = feedPosts
+                                            }
                                         }
                                     }
                                 }
@@ -777,18 +844,26 @@ class UserViewModel : ViewModel() {
 
                                     themeRefer.document(themeId)
                                         .update("timesUnlocked", timesUnlocked + 1)
-                                    userRefer.update("themesUnlocked", FieldValue.arrayUnion(theme))
-                                    userRefer.update("coins", coins - price).addOnSuccessListener {
-                                        Toast.makeText(
-                                            view.context,
-                                            "Unlocked!",
-                                            Toast.LENGTH_SHORT,
-                                        )
-                                            .show()
-                                    }
+                                    userRefer.update(
+                                        "themesUnlocked",
+                                        FieldValue.arrayUnion(theme),
+                                    )
+                                    userRefer.update("coins", coins - price)
+                                        .addOnSuccessListener {
+                                            Toast.makeText(
+                                                view.context,
+                                                "Unlocked!",
+                                                Toast.LENGTH_SHORT,
+                                            )
+                                                .show()
+                                        }
                                 }
                             } else {
-                                Toast.makeText(view.context, "No enough coins", Toast.LENGTH_SHORT)
+                                Toast.makeText(
+                                    view.context,
+                                    "No enough coins",
+                                    Toast.LENGTH_SHORT,
+                                )
                                     .show()
                             }
                         }
@@ -818,5 +893,77 @@ class UserViewModel : ViewModel() {
                 }
             }
         }
+    }
+
+    fun setUserToken() = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val token = task.result
+                    val docRef = firestore.collection("Users")
+                        .document(currentUser)
+                    Log.d("token", token)
+                    docRef.update("fcmToken", token)
+                }
+            }
+        }
+    }
+
+    fun getUserToken(friendId: String) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val docRef = firestore.collection("Users").document(friendId)
+
+            docRef.get().addOnSuccessListener {
+                val frToken = it.getString("fcmToken") as String
+                friendToken.value = frToken
+            }
+        }
+    }
+
+    private fun sendNotification(
+        message: String,
+        friendToken: String,
+        userName: String,
+        currentUser: String,
+        profileImage: String,
+    ) {
+        val jsonObject = JSONObject()
+
+        val notificationObj = JSONObject()
+        notificationObj.put("title", userName)
+        notificationObj.put("body", message)
+        notificationObj.put("profilePicture", profileImage)
+
+        val dataObj = JSONObject()
+        dataObj.put("userId", currentUser)
+
+        jsonObject.put("notification", notificationObj)
+        jsonObject.put("data", dataObj)
+        jsonObject.put("to", friendToken)
+
+        callApi(jsonObject)
+    }
+
+    private fun callApi(jsonObject: JSONObject) {
+        val json = "application/json; charset=utf-8".toMediaTypeOrNull()
+        val client = OkHttpClient()
+        val url = "https://fcm.googleapis.com/fcm/send"
+        val body = jsonObject.toString().toRequestBody(json)
+        val request = Request.Builder()
+            .url(url)
+            .post(body)
+            .header(
+                "Authorization",
+                "Bearer AAAAHLJzbs4:APA91bH_ao81CL7Rz-9788oiSJxkkar3pLJy5gXmN42-H0jHZ1MDxJShUWUnhRHJCxmAVZA3_ETR9Rg8FHjuB4wP3eNPkhFoED-Cu2JHJY8P2R_uq3dYJtrMew74eHW3A-lQabPBNmCR",
+            )
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+            }
+
+            override fun onResponse(call: Call, response: okhttp3.Response) {
+            }
+        })
     }
 }

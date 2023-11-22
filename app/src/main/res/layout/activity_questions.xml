@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.activity.QuestionsActivity">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/black"
+        android:elevation="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="F.A.Q"
+        app:titleTextColor="@color/white" />
+
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/container_margin">
+
+
+            <TextView
+                android:id="@+id/section_title_friends"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FRIENDS"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/add_fr_qs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="How do I add friends?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/section_title_friends" />
+
+            <TextView
+                android:id="@+id/add_fr_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Press home and then the floating button at the bottom right\n2. A screen with a blank field will appear where you will have to enter your friend's email address.\n3. Once you have filled in the field, press the send friend request button.
+Your friend will decide whether or not to accept your friend request."
+                app:layout_constraintTop_toBottomOf="@id/add_fr_qs" />
+
+            <TextView
+                android:id="@+id/manage_fr_req_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="How can i manage incoming friend requests?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/add_fr_as" />
+
+            <TextView
+                android:id="@+id/manage_fr_req_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Click on your profile picture, a menu with 4 options will be displayed.\n2. In the displayed menu, click on Friend Requests.
+                \n3. The list of friend requests that other users have sent will be displayed, to accept the request click on the check mark, to reject it click on the cross.
+the request press the check mark, to reject it press the cross."
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/manage_fr_req_qs" />
+
+            <TextView
+                android:id="@+id/fr_list_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="How can i view my friends list?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/manage_fr_req_as" />
+
+            <TextView
+                android:id="@+id/fr_list_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Go to the main screen of the application.\n2. Click on friends."
+                app:layout_constraintTop_toBottomOf="@id/fr_list_qs" />
+
+            <TextView
+                android:id="@+id/msg_fr_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="How can i send a message to a friend?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fr_list_as" />
+
+            <TextView
+                android:id="@+id/msg_fr_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Go to the main screen of the application.\n2. Press friends.\n3. Then press Send Message on the friend you want to send a message to."
+                app:layout_constraintTop_toBottomOf="@id/msg_fr_qs" />
+
+            <TextView
+                android:id="@+id/remove_fr_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="How do i remove a friend from my friends list?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/msg_fr_as" />
+
+            <TextView
+                android:id="@+id/remove_fr_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Go to the main screen of the application.\n2. Press friends.\n3. Then press the trash can icon on the friend you wish to remove."
+                app:layout_constraintTop_toBottomOf="@id/remove_fr_qs" />
+
+            <TextView
+                android:id="@+id/view_fr_profile_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="How can i view my friend's profile?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/remove_fr_as" />
+
+            <TextView
+                android:id="@+id/view_fr_profile_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="From the friends list:\n1. Go to the main screen of the application.\n2. Press friends
+\n3. Click on the image of the user whose profile you want to view.
+
+\n\nFrom the chat:
+\n1.Go to the main screen of the application.
+\n2. Select the chat with the user whose profile you want to view.
+\n3. Click on the user's name."
+                app:layout_constraintTop_toBottomOf="@id/view_fr_profile_qs" />
+
+            <TextView
+                android:id="@+id/section_title_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="MY PROFILE"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_fr_profile_as" />
+
+            <TextView
+                android:id="@+id/view_my_profile_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="How can I view my profile?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/section_title_profile" />
+
+            <TextView
+                android:id="@+id/view_my_profile_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Click on your profile picture, a menu with 4 options will be displayed.
+\n2. In the displayed menu, click on Profile."
+                app:layout_constraintTop_toBottomOf="@id/view_my_profile_qs" />
+
+            <TextView
+                android:id="@+id/change_pfp_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="How can i change my profile picture?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_my_profile_as" />
+
+            <TextView
+                android:id="@+id/change_pfp_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Click on your profile picture, a menu with 4 options will be displayed.
+\n2. In the displayed menu, click Profile
+\n3. Then, click on your profile picture and choose an image.
+\n4. Finally, click on accept."
+                app:layout_constraintTop_toBottomOf="@id/change_pfp_qs" />
+
+            <TextView
+                android:id="@+id/change_name_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="How do i change my name in the application?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/change_pfp_as" />
+
+            <TextView
+                android:id="@+id/change_name_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Click on your profile picture, a menu with 4 options will be displayed.
+\n2. In the displayed menu, click on Profile.
+\n3. Then, click on your name and enter your new user name.
+\n4. Finally, click on confirm."
+                app:layout_constraintTop_toBottomOf="@id/change_name_qs" />
+
+            <TextView
+                android:id="@+id/change_mail_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="How do i change my name in the application?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/change_name_as" />
+
+            <TextView
+                android:id="@+id/change_mail_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Once the account is created the email address cannot be changed, as this is the way users will find it in the application."
+                app:layout_constraintTop_toBottomOf="@id/change_mail_qs" />
+
+            <TextView
+                android:id="@+id/logout_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="How can i log out?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/change_mail_as" />
+
+            <TextView
+                android:id="@+id/logout_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Click on your profile picture, a menu with 4 options will be displayed.
+\n2. In the displayed menu, click on Settings.
+\n3. A screen with different options will open, click on Logout.
+\n4. The session will be closed."
+                app:layout_constraintTop_toBottomOf="@id/logout_qs" />
+
+            <TextView
+                android:id="@+id/delete_acc_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="how can i delete my account?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/logout_as" />
+
+            <TextView
+                android:id="@+id/delete_acc_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="(Once this is done, you will not be able to log back in to your account.)
+\n1. Click on your profile picture, this will bring up a menu with 4 options.
+\n2. In the displayed menu, click on Settings.
+\n3. A screen with different options will open, click on delete account.
+\n4. You will be asked to enter your password as a security measure.
+\n5. After entering the password, press CONFIRM.
+\n6. You will be logged out and your account will be deleted."
+                app:layout_constraintTop_toBottomOf="@id/delete_acc_qs" />
+
+            <TextView
+                android:id="@+id/terms_cond_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="How can i read the terms and conditions?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/delete_acc_as" />
+
+            <TextView
+                android:id="@+id/terms_cond_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Click on your profile picture, a menu with 4 options will be displayed.
+\n2. In the displayed menu, click on Settings.
+\n3. A screen with different options will open, click on terms and conditions."
+                app:layout_constraintTop_toBottomOf="@id/terms_cond_qs" />
+
+            <TextView
+                android:id="@+id/section_title_posts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="POSTS"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/terms_cond_as" />
+
+            <TextView
+                android:id="@+id/post_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="How can i publish a post?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/section_title_posts" />
+
+            <TextView
+                android:id="@+id/post_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Go to the main screen of the application.
+\n2. Click on Upload Post.
+\n3. Select an image.
+\n4. You can choose whether or not to place a description.
+\n5. Click on Post."
+                app:layout_constraintTop_toBottomOf="@id/post_qs" />
+
+            <TextView
+                android:id="@+id/see_post_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="How can I see my posts?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/post_as" />
+
+            <TextView
+                android:id="@+id/see_post_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Click on your profile picture, a menu with 4 options will be displayed.
+\n2. In the displayed menu, click Profile.
+\n3. Your published posts will appear in a grid format (if you have not published any post, a message will be displayed).
+\n4. Click on any post to view it in detail."
+                app:layout_constraintTop_toBottomOf="@id/see_post_qs" />
+
+            <TextView
+                android:id="@+id/see_fr_post_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="How can i see my friends posts?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/see_post_as" />
+
+            <TextView
+                android:id="@+id/see_fr_post_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Go to the main screen of the application.
+\n2. Click on Feed.
+\n3. Click on any post to view it in detail."
+                app:layout_constraintTop_toBottomOf="@id/see_fr_post_qs" />
+
+            <TextView
+                android:id="@+id/like_post_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="How can i like a post?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/see_fr_post_as" />
+
+            <TextView
+                android:id="@+id/like_post_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Go to the main screen of the application.
+\n2. Click on Feed.
+\n3. Then, press the Like button on the post you want to like."
+                app:layout_constraintTop_toBottomOf="@id/like_post_qs" />
+
+            <TextView
+                android:id="@+id/com_post_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="how can i comment on a post?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/like_post_as" />
+
+            <TextView
+                android:id="@+id/com_post_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Go to the main screen of the application.
+\n2. Click on Feed
+\n3. On the post you want to comment, click on comments.
+\n4. The post details will open, at the bottom of the screen you will be able to enter your comment.
+\n5. To publish it, press the send button."
+                app:layout_constraintTop_toBottomOf="@id/com_post_qs" />
+
+            <TextView
+                android:id="@+id/section_title_shop_coins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="SHOP AND COINS"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/com_post_as" />
+
+            <TextView
+                android:id="@+id/theme_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="How can i view the theme store?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/section_title_shop_coins" />
+
+            <TextView
+                android:id="@+id/theme_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Go to the main screen of the application.
+\n2. Click on the coin icon at the top of the screen."
+                app:layout_constraintTop_toBottomOf="@id/theme_qs" />
+
+            <TextView
+                android:id="@+id/buy_theme_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="How can i buy a theme?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/theme_as" />
+
+            <TextView
+                android:id="@+id/buy_theme_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="(The prices of the themes are handled with a fictitious currency)
+\n1. Go to the main screen of the application.
+\n2. Click on the currency icon at the top of the screen.
+\n3. Click on the price of the theme to purchase it (you will not be able to purchase it if you have already purchased the theme before or if your balance is less than the price of the theme or if your balance is less than the price of the theme)."
+                app:layout_constraintTop_toBottomOf="@id/buy_theme_qs" />
+
+            <TextView
+                android:id="@+id/earn_coins_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="How can i earn coins to buy themes?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/buy_theme_as" />
+
+            <TextView
+                android:id="@+id/earn_coins_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Go to the main screen of the application.
+\n2. Press Game
+\n3. The game interface will open.
+\n4. Press Start.
+\n5. Every 500 points earned in the game, you will be awarded 10 coins."
+                app:layout_constraintTop_toBottomOf="@id/earn_coins_qs" />
+
+            <TextView
+                android:id="@+id/fr_score_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="How can i see my friends scores?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/earn_coins_as" />
+
+            <TextView
+                android:id="@+id/fr_score_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Go to the main screen of the application.
+\n2. Press Game.
+\n3. The game interface will open and you will be able to see your friends' high scores."
+                app:layout_constraintTop_toBottomOf="@id/fr_score_qs" />
+
+            <TextView
+                android:id="@+id/pur_theme_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="How can i see the themes i have purchased?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fr_score_as" />
+
+            <TextView
+                android:id="@+id/pur_theme_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Click on your profile picture, a menu with 4 options will be displayed.
+\n2. In the displayed menu, click on Settings.
+\n3. A screen with different options will open, click on Themes.
+\n4. Select the theme you want to apply by pressing the Apply button.
+\n5. The application will restart."
+                app:layout_constraintTop_toBottomOf="@id/pur_theme_qs" />
+
+            <TextView
+                android:id="@+id/section_title_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="MESSAGES"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/pur_theme_as" />
+
+            <TextView
+                android:id="@+id/send_image_msg_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="How can I send an image to another user?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/section_title_msg" />
+
+            <TextView
+                android:id="@+id/send_image_msg_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="If you have already sent messages to the user:
+\n1. Go to the main screen of the application.
+\n2. Click on the conversation with the user to whom you want to send the image.
+\n3. Click on the image icon at the bottom right of the screen.
+\n4. Select an image.
+\n5. You can choose whether or not to include a message.
+\n6. Press the send button.
+\n\nIf you have not sent any message to the user before:
+\n1. Go to the main screen of the application.
+\n2. Press Friends
+\n3. Then press Send Message on the friend you wish to send a message to.
+\n4. Press the picture icon at the bottom right of the screen.
+\n5. Select an image.
+\n6. You can choose whether or not to include a message.
+\n7. Press the send button."
+                app:layout_constraintTop_toBottomOf="@id/send_image_msg_qs" />
+
+            <TextView
+                android:id="@+id/delete_msg_qs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="How can i delete a message?"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/send_image_msg_as" />
+
+            <TextView
+                android:id="@+id/delete_msg_as"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Go to the main screen of the application.
+\n2. Click on the conversation with the user to whom you want to send the image.
+\n3. Press and hold the message you want to delete.
+\n4. Press Delete"
+                app:layout_constraintTop_toBottomOf="@id/delete_msg_qs" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
