@@ -37,6 +37,10 @@ class SettingsActivity : AppCompatActivity() {
         binding.faq.setOnClickListener {
             startActivity(Intent(this, QuestionsActivity::class.java))
         }
+
+        binding.termsAndCond.setOnClickListener {
+            startActivity(Intent(this, TermsCondActivity::class.java))
+        }
     }
 
     private fun logOut() {

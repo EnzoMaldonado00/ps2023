@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.activity.TermsCondActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/black"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="Terms and Conditions"
+        app:titleTextColor="@color/white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/container_margin">
+
+            <TextView
+                android:id="@+id/last_update"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last Update: [22/11/2023]"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/accept"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Acceptance of Terms and Conditions:"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/last_update" />
+
+            <TextView
+                android:id="@+id/accept_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="By continuing to use Postly, you confirm and accept these privacy terms and conditions. If you do not agree with these terms, please cease using the application immediately."
+                app:layout_constraintTop_toBottomOf="@id/accept" />
+
+            <TextView
+                android:id="@+id/priv_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Postly Privacy Terms and Conditions"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/accept_text" />
+
+            <TextView
+                android:id="@+id/priv_info_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Welcome to Postly. By using our application and associated services, you agree to comply with and be bound by the following privacy terms and conditions. Please review carefully before using our platform."
+                app:layout_constraintTop_toBottomOf="@id/priv_info" />
+
+            <TextView
+                android:id="@+id/pers_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Collection of Personal Information:"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/priv_info_text" />
+
+            <TextView
+                android:id="@+id/pers_info_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="When you register on Postly with your email, we collect personal information such as your name, email address, and profile picture that you voluntarily provide.
+Continued use of the application implies consent to collect, store, and process this information in accordance with these terms and conditions."
+                app:layout_constraintTop_toBottomOf="@id/pers_info" />
+
+            <TextView
+                android:id="@+id/use_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Use of Information:"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/pers_info_text" />
+
+            <TextView
+                android:id="@+id/use_info_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="We use the collected information to provide Postly services, including managing user accounts, interacting with friends, creating posts, and personalizing profiles.
+We do not share personal information with third parties without the explicit consent of the user, except when necessary to comply with the law or protect our rights."
+                app:layout_constraintTop_toBottomOf="@id/use_info" />
+
+            <TextView
+                android:id="@+id/data_security"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Data Security:"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/use_info_text" />
+
+            <TextView
+                android:id="@+id/data_security_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="We implement reasonable security measures to protect users' personal information. However, we cannot guarantee the absolute security of data transmitted over the internet."
+                app:layout_constraintTop_toBottomOf="@id/data_security" />
+
+            <TextView
+                android:id="@+id/fic_curr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Fictitious Currency and In-App Purchases:"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/data_security_text" />
+
+            <TextView
+                android:id="@+id/fic_curr_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="The fictitious currency obtained within Postly can only be used to unlock color themes and has no real monetary value outside the application.
+In-app purchases related to the fictitious currency are the sole responsibility of the user."
+                app:layout_constraintTop_toBottomOf="@id/fic_curr" />
+
+            <TextView
+                android:id="@+id/coms_msg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Communications and Messaging:"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/fic_curr_text" />
+
+            <TextView
+                android:id="@+id/coms_msg_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Messages exchanged between users through the chat function are private and encrypted to protect the privacy of conversations.
+Users are responsible for the content they share and agree not to distribute inappropriate, illegal, or rights-violating content."
+                app:layout_constraintTop_toBottomOf="@id/coms_msg" />
+
+            <TextView
+                android:id="@+id/user_rights"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="User Rights:"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/coms_msg_text" />
+
+            <TextView
+                android:id="@+id/user_rights_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Users have the right to access, correct, or delete their personal information stored in Postly. They can exercise these rights by contacting the support team."
+                app:layout_constraintTop_toBottomOf="@id/user_rights" />
+
+            <TextView
+                android:id="@+id/changes_priv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Changes in Privacy Terms and Conditions:"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/user_rights_text" />
+
+            <TextView
+                android:id="@+id/changes_priv_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="These privacy terms and conditions may be updated periodically. Users will be notified of significant changes. Continued use of the application after changes constitutes acceptance of the new terms.
+It is important to review and understand these privacy terms and conditions before using Postly. If you have any questions about privacy or data security, feel free to contact us."
+                app:layout_constraintTop_toBottomOf="@id/changes_priv" />
+
+            <TextView
+                android:id="@+id/app_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Appropriate Use of the Application:"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/changes_priv_text" />
+
+            <TextView
+                android:id="@+id/app_user_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Users commit to using Postly ethically and legally, avoiding abusive, defamatory, discriminatory behaviors or actions that infringe on the rights of other users.
+\nIt is strictly prohibited to use the application for illegal activities, such as harassment, disseminating violent content, intellectual property infringement, or any other illicit act."
+                app:layout_constraintTop_toBottomOf="@id/app_user" />
+
+            <TextView
+                android:id="@+id/user_respo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="User Responsibilities:"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/app_user_text" />
+
+            <TextView
+                android:id="@+id/user_respo_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Users are responsible for maintaining the confidentiality of their password and any activity conducted with their account.
+\nUsers are advised to immediately notify Postly in case of suspected unauthorized access to their account."
+                app:layout_constraintTop_toBottomOf="@id/user_respo" />
+
+            <TextView
+                android:id="@+id/age_rest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Age Restrictions:"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/user_respo_text" />
+
+            <TextView
+                android:id="@+id/age_rest_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Postly is intended for users aged 13 and above. Users below this age must have consent and supervision from their parents or legal guardians to use the application."
+                app:layout_constraintTop_toBottomOf="@id/age_rest" />
+
+            <TextView
+                android:id="@+id/ext_serv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Use of External Services:"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/age_rest_text" />
+
+            <TextView
+                android:id="@+id/ext_serv_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Postly uses third-party services like Firebase, Google Play Store, and Apple App Store. The use of these services is subject to their respective terms and conditions."
+                app:layout_constraintTop_toBottomOf="@id/ext_serv" />
+
+            <TextView
+                android:id="@+id/respons_limit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Limitation of Liability:"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/ext_serv_text" />
+
+            <TextView
+                android:id="@+id/respons_limit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Postly is not liable for any loss of data, service interruptions, indirect, incidental, or consequential damages resulting from the use or inability to use the application."
+                app:layout_constraintTop_toBottomOf="@id/respons_limit" />
+
+            <TextView
+                android:id="@+id/applicable_law"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Jurisdiction and Applicable Law:"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/respons_limit_text" />
+
+            <TextView
+                android:id="@+id/applicable_law_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="These terms and conditions are governed by the laws of the country or region where Postly is registered and operates. Any disputes will be resolved by the competent courts in that\n jurisdiction."
+                app:layout_constraintTop_toBottomOf="@id/applicable_law" />
+
+            <TextView
+                android:id="@+id/placeholder"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/applicable_law_text" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

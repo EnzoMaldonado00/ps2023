@@ -39,7 +39,7 @@ import java.util.UUID
 class UserViewModel : ViewModel() {
     // HANDLE POSSIBLE EXCEPTIONS
 
-    private val auth = FirebaseAuth.getInstance()
+    var auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
     private val storage = FirebaseStorage.getInstance()
     private val currentUser = auth.currentUser!!.uid

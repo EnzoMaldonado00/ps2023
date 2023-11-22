@@ -106,6 +106,30 @@
                 app:cardUseCompatPadding="true">
 
                 <TextView
+                    android:id="@+id/terms_and_cond"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:drawablePadding="10dp"
+                    android:focusable="true"
+                    android:padding="5dp"
+                    android:text="@string/terms_and_conditions_text"
+                    android:textColorHighlight="@color/white"
+                    android:textSize="25sp"
+                    app:drawableLeftCompat="@drawable/baseline_business_center_24" />
+
+            </androidx.cardview.widget.CardView>
+
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
+
+                <TextView
                     android:id="@+id/log_out"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

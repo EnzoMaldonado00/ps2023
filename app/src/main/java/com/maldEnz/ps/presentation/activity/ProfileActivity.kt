@@ -2,6 +2,7 @@ package com.maldEnz.ps.presentation.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
@@ -46,6 +47,11 @@ class ProfileActivity : AppCompatActivity() {
 
         userViewModel.postList.observe(this) {
             adapter.submitList(it)
+            if (it.isEmpty()) {
+                binding.emptyStatePosts.visibility = View.VISIBLE
+            } else {
+                binding.emptyStatePosts.visibility = View.GONE
+            }
         }
     }
 

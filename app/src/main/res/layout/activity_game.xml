@@ -25,6 +25,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:text="@string/btn_start_game"/>
 
+    <TextView
+        android:id="@+id/empty_state_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:textColor="@color/black"
+        android:text="@string/score_empty_state_text"
+        app:layout_constraintTop_toTopOf="@id/recycler"
+        app:layout_constraintBottom_toBottomOf="@id/recycler"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"

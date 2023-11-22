@@ -1,6 +1,7 @@
 package com.maldEnz.ps.presentation.activity
 
 import android.os.Bundle
+import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +21,6 @@ class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FunUtils.setAppTheme(this)
-
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -32,6 +32,11 @@ class GameActivity : AppCompatActivity() {
 
         userViewModel.scoreList.observe(this) {
             adapter.submitList(it)
+            if (it.isEmpty()) {
+                binding.emptyStateScore.visibility = View.VISIBLE
+            } else {
+                binding.emptyStateScore.visibility = View.GONE
+            }
         }
 
         binding.btnStart.setOnClickListener {

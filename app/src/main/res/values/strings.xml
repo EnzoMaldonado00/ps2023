@@ -87,6 +87,11 @@
     <string name="f_a_q_title">F.A.Q</string>
     <string name="how_do_i_add_friends_qs">How do I add friends?</string>
     <string name="manage_fr_req_Text">How can i manage incoming friend requests?</string>
+    <string name="terms_and_conditions_text">Terms and Conditions</string>
+    <string name="postly_text">Postly</string>
+    <string name="you_haven_t_uploaded_any_post_text">You haven\'t uploaded any post</string>
+    <string name="score_empty_state_text">Add a friend to see their high score!</string>
+    <string name="empty_state_feed_text">Add a friend to see their posts!</string>
 
 
 </resources>
