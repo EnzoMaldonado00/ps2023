@@ -27,6 +27,8 @@ class ChatViewModel : ViewModel() {
                     val chats = documentSnapshot.get("chats") as List<Map<String, Any>>?
                     if (chats != null) {
                         val recentChatList = mutableListOf<RecentChatModel>()
+                        val chatsCount = chats.size
+                        var usersLoaded = 0
                         chats.map { map ->
                             val chatId = map["chatId"] as String
                             val lastMessage = map["lastMessage"] as String
@@ -62,9 +64,12 @@ class ChatViewModel : ViewModel() {
                                     val recentChatModel = RecentChatModel(user, chat)
 
                                     recentChatList.add(recentChatModel)
-                                    val sortedChats =
-                                        recentChatList.sortedByDescending { it.chatModel.lastMessageTimeStamp }
-                                    chatList.value = sortedChats
+                                    usersLoaded++
+                                    if (chatsCount == usersLoaded) {
+                                        val sortedChats =
+                                            recentChatList.sortedByDescending { it.chatModel.lastMessageTimeStamp }
+                                        chatList.value = sortedChats
+                                    }
                                 }
                             }
                         }

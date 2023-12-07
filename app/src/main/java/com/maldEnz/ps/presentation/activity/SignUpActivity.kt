@@ -19,6 +19,7 @@ import com.maldEnz.ps.R
 import com.maldEnz.ps.databinding.ActivitySignUpBinding
 import com.maldEnz.ps.presentation.fragment.dialog.ErrorDialogFragment
 import com.maldEnz.ps.presentation.fragment.dialog.ImageMethodFragment
+import com.maldEnz.ps.presentation.util.FunUtils
 import java.util.TimeZone
 
 class SignUpActivity : AppCompatActivity() {
@@ -60,6 +61,10 @@ class SignUpActivity : AppCompatActivity() {
                     ErrorDialogFragment.newInstance(getString(R.string.field_error_dialog))
                 dialogFragment.show(supportFragmentManager, "dialog")
             }
+        }
+
+        binding.termsAndCond.setOnClickListener {
+            startActivity(Intent(this, TermsCondActivity::class.java))
         }
     }
 
@@ -118,6 +123,7 @@ class SignUpActivity : AppCompatActivity() {
                                             "themeName" to "DefaultTheme",
                                         ),
                                     ),
+                                    "registerDate" to FunUtils.getDateTime(),
                                 )
 
                                 FirebaseFirestore.getInstance().collection("Users")

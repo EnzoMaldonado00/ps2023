@@ -45,15 +45,12 @@ class FeedFragment : Fragment() {
         binding.recycler.itemAnimator = null
         layoutManager.stackFromEnd = true
         layoutManager.reverseLayout = true
-
+        binding.emptyStateFeeds.visibility = View.VISIBLE
         userViewModel.feedPostList.observe(viewLifecycleOwner) {
-            adapter.submitList(it.sortedBy { post -> post.postModel.timestamp })
-            binding.recycler.scrollToPosition(it.lastIndex)
-            if (it.isEmpty()) {
-                binding.emptyStateFeeds.visibility = View.VISIBLE
-            } else {
-                binding.emptyStateFeeds.visibility = View.GONE
-            }
+            binding.emptyStateFeeds.visibility = View.GONE
+            val sortedList = it.sortedBy { post -> post.postModel.timestamp }
+            adapter.submitList(sortedList)
+            binding.recycler.scrollToPosition(0)
         }
     }
 

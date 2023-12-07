@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ps</string>
+    <string name="app_name">Postly</string>
 
     <!--Login Strings-->
     <string name="email_text">Email</string>
@@ -50,8 +50,8 @@
     <string name="highest_score_text">Highest Score:</string>
     <string name="btn_start_game">Start</string>
     <string name="new_highscore_text">New Highscore!</string>
-    <string name="btn_restart_text">restart</string>
-    <string name="btn_exit_text">exit</string>
+    <string name="btn_restart_text">Restart</string>
+    <string name="btn_exit_text">Exit</string>
     <string name="home_text_bottom_menu">Home</string>
     <string name="feed_text_bottom_menu">Feed</string>
     <string name="upload_post_text_bottom_menu">Upload Post</string>
@@ -91,12 +91,17 @@
     <string name="postly_text">Postly</string>
     <string name="you_haven_t_uploaded_any_post_text">You haven\'t uploaded any post</string>
     <string name="score_empty_state_text">Add a friend to see their high score!</string>
-    <string name="empty_state_feed_text">Add a friend to see their posts!</string>
+    <string name="empty_state_feed_text">No post in sight!</string>
     <string name="btn_ok">OK</string>
     <string name="error_dialog">The account doesn\'t exists.</string>
     <string name="error_text">Error</string>
     <string name="email_exists_dialog">The email is already on use.</string>
     <string name="field_error_dialog">Empty fields.</string>
+    <string name="registered_users_per_day_text">Registered users per day:</string>
+    <string name="start_a_chat_with_a_friend_text">Start a chat with a friend!</string>
+    <string name="the_friends_you_add_will_appear_here_text">The friends you add will appear here</string>
+    <string name="you_have_no_friend_requests_text">You have no friend requests</string>
+    <string name="times_bought_text">Times bought:</string>
 
 
 </resources>

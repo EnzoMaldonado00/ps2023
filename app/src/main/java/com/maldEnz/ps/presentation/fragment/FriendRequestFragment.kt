@@ -32,12 +32,13 @@ class FriendRequestFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = FriendRequestAdapter(friendViewModel)
         userViewModel.getFriendRequests()
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        adapter = FriendRequestAdapter(friendViewModel)
         binding.recyclerView.adapter = adapter
-
+        binding.emptyStateFriendRequest.visibility = View.VISIBLE
         userViewModel.friendRequest.observe(viewLifecycleOwner) { friendRequests ->
+            binding.emptyStateFriendRequest.visibility = View.GONE
             adapter.submitList(friendRequests)
         }
     }

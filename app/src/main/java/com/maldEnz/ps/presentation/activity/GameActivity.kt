@@ -31,7 +31,8 @@ class GameActivity : AppCompatActivity() {
         binding.recycler.adapter = adapter
 
         userViewModel.scoreList.observe(this) {
-            adapter.submitList(it)
+            val sortedList = it.sortedByDescending { model -> model.score.toLong() }
+            adapter.submitList(sortedList)
             if (it.isEmpty()) {
                 binding.emptyStateScore.visibility = View.VISIBLE
             } else {

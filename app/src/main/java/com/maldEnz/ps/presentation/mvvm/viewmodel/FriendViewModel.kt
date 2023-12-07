@@ -34,6 +34,7 @@ class FriendViewModel : ViewModel() {
                     val dateTime = postData["dateTime"] as String
 
                     PostModel(
+                        postId = postData["postId"] as String,
                         authorId = postData["authorId"] as String,
                         authorName = postData["authorName"] as String,
                         dateTime = FunUtils.unifyDateTime(dateTime, dateTimeZone),

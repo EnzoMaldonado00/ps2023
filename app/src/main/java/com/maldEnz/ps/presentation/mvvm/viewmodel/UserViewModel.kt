@@ -168,27 +168,33 @@ class UserViewModel : ViewModel() {
 
     fun getFriendRequests() = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            val docRefer = firestore.collection("Users")
-                .document(currentUser)
+            val docRefer = firestore.collection("Users").document(currentUser)
 
-            docRefer.get().addOnSuccessListener {
-                val friendReqList = it.get("friendRequests") as? List<Map<String, Any>>
+            docRefer.addSnapshotListener { it, _ ->
+                if (it != null && it.exists()) {
+                    val friendReqList = it.get("friendRequests") as? List<Map<String, Any>>
 
-                if (friendReqList != null) {
-                    val friendReqData = mutableListOf<UserModel>()
-                    for (friend in friendReqList) {
-                        val friendId = friend["userId"] as String
+                    if (friendReqList != null) {
+                        val friendReqCounts = friendReqList.size
+                        var usersLoaded = 0
+                        val friendReqData = mutableListOf<UserModel>()
+                        friendReqList.forEach { friend ->
+                            val friendId = friend["userId"] as String
 
-                        val friendDoc = firestore.collection("Users").document(friendId)
+                            val friendDoc = firestore.collection("Users").document(friendId)
 
-                        friendDoc.get().addOnSuccessListener { friendSnapshot ->
-                            val friendName = friendSnapshot.get("userName") as String
-                            val friendEmail = friendSnapshot.get("userEmail") as String
-                            val friendImage = friendSnapshot.get("image") as String
+                            friendDoc.get().addOnSuccessListener { friendSnapshot ->
+                                val friendName = friendSnapshot.get("userName") as String
+                                val friendEmail = friendSnapshot.get("userEmail") as String
+                                val friendImage = friendSnapshot.get("image") as String
 
-                            val user = UserModel(friendId, friendName, friendEmail, friendImage)
-                            friendReqData.add(user)
-                            friendRequest.value = friendReqData
+                                val user = UserModel(friendId, friendName, friendEmail, friendImage)
+                                friendReqData.add(user)
+                                usersLoaded++
+                                if (friendReqCounts == usersLoaded) {
+                                    friendRequest.value = friendReqData
+                                }
+                            }
                         }
                     }
                 }
@@ -475,7 +481,7 @@ class UserViewModel : ViewModel() {
     }
 
     // sobrepasa los limites de lectura y escritura de firebase
-    // posible solucion: ponerlo en corrutina
+// posible solucion: ponerlo en corrutina
     fun userChatState(isTyping: Boolean, friendId: String) {
         val docRefer = firestore.collection("Users")
             .document(friendId)
@@ -761,7 +767,11 @@ class UserViewModel : ViewModel() {
 
                     if (friendList != null) {
                         val friendData = mutableListOf<UserModel>()
-                        for (friend in friendList) {
+
+                        val friendCount = friendList.size
+                        var friendsLoaded = 0
+
+                        friendList.forEach { friend ->
                             val friendId = friend["friendId"] as String
                             val friendDoc = firestore.collection("Users").document(friendId)
 
@@ -772,10 +782,13 @@ class UserViewModel : ViewModel() {
 
                                 val user = UserModel(friendId, friendName, friendEmail, friendImage)
                                 friendData.add(user)
-                                friends.value = friendData
+
+                                friendsLoaded++
+                                if (friendsLoaded == friendCount) {
+                                    friends.value = friendData
+                                }
                             }
                         }
-
                     }
                 }
             }

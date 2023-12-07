@@ -32,6 +32,8 @@ class ShopAdapter(private val userViewModel: UserViewModel) :
             binding.apply {
                 themeName.text = theme.themeName
                 btnBuy.text = theme.price.toString()
+                bought.text = theme.timesUnlocked.toString()
+                description.text = theme.description
 
                 btnBuy.setOnClickListener {
                     userViewModel.buyTheme(theme.themeName, it)

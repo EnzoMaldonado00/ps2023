@@ -13,7 +13,6 @@
     <color name="transparent">#00FFFFFF</color>
 
 
-
     <!--Default Theme Colors -->
     <color name="default_seed">#ffffff</color>
     <color name="default_theme_light_primary">#006874</color>
@@ -266,4 +265,68 @@
     <color name="brown_theme_dark_surfaceTint">#FFB870</color>
     <color name="brown_theme_dark_outlineVariant">#51453A</color>
     <color name="brown_theme_dark_scrim">#000000</color>
+
+    <!--Yellow Theme Colors-->
+
+    <color name="yellow_seed">#FBC02D</color>
+    <color name="yellow_theme_light_primary">#795900</color>
+    <color name="yellow_theme_light_onPrimary">#FFFFFF</color>
+    <color name="yellow_theme_light_primaryContainer">#FFDFA0</color>
+    <color name="yellow_theme_light_onPrimaryContainer">#261A00</color>
+    <color name="yellow_theme_light_secondary">#695F00</color>
+    <color name="yellow_theme_light_onSecondary">#FFFFFF</color>
+    <color name="yellow_theme_light_secondaryContainer">#F9E534</color>
+    <color name="yellow_theme_light_onSecondaryContainer">#201C00</color>
+    <color name="yellow_theme_light_tertiary">#666000</color>
+    <color name="yellow_theme_light_onTertiary">#FFFFFF</color>
+    <color name="yellow_theme_light_tertiaryContainer">#EFE66B</color>
+    <color name="yellow_theme_light_onTertiaryContainer">#1E1C00</color>
+    <color name="yellow_theme_light_error">#BA1A1A</color>
+    <color name="yellow_theme_light_errorContainer">#FFDAD6</color>
+    <color name="yellow_theme_light_onError">#FFFFFF</color>
+    <color name="yellow_theme_light_onErrorContainer">#410002</color>
+    <color name="yellow_theme_light_background">#FFFBFF</color>
+    <color name="yellow_theme_light_onBackground">#1E1B16</color>
+    <color name="yellow_theme_light_surface">#FFFBFF</color>
+    <color name="yellow_theme_light_onSurface">#1E1B16</color>
+    <color name="yellow_theme_light_surfaceVariant">#EDE1CF</color>
+    <color name="yellow_theme_light_onSurfaceVariant">#4D4639</color>
+    <color name="yellow_theme_light_outline">#7F7667</color>
+    <color name="yellow_theme_light_inverseOnSurface">#F8EFE7</color>
+    <color name="yellow_theme_light_inverseSurface">#34302A</color>
+    <color name="yellow_theme_light_inversePrimary">#F8BD2A</color>
+    <color name="yellow_theme_light_shadow">#000000</color>
+    <color name="yellow_theme_light_surfaceTint">#795900</color>
+    <color name="yellow_theme_light_outlineVariant">#D0C5B4</color>
+    <color name="yellow_theme_light_scrim">#000000</color>
+    <color name="yellow_theme_dark_primary">#F8BD2A</color>
+    <color name="yellow_theme_dark_onPrimary">#402D00</color>
+    <color name="yellow_theme_dark_primaryContainer">#5C4300</color>
+    <color name="yellow_theme_dark_onPrimaryContainer">#FFDFA0</color>
+    <color name="yellow_theme_dark_secondary">#DBC90A</color>
+    <color name="yellow_theme_dark_onSecondary">#363100</color>
+    <color name="yellow_theme_dark_secondaryContainer">#4F4800</color>
+    <color name="yellow_theme_dark_onSecondaryContainer">#F9E534</color>
+    <color name="yellow_theme_dark_tertiary">#D2CA53</color>
+    <color name="yellow_theme_dark_onTertiary">#353200</color>
+    <color name="yellow_theme_dark_tertiaryContainer">#4D4800</color>
+    <color name="yellow_theme_dark_onTertiaryContainer">#EFE66B</color>
+    <color name="yellow_theme_dark_error">#FFB4AB</color>
+    <color name="yellow_theme_dark_errorContainer">#93000A</color>
+    <color name="yellow_theme_dark_onError">#690005</color>
+    <color name="yellow_theme_dark_onErrorContainer">#FFDAD6</color>
+    <color name="yellow_theme_dark_background">#1E1B16</color>
+    <color name="yellow_theme_dark_onBackground">#E9E1D8</color>
+    <color name="yellow_theme_dark_surface">#1E1B16</color>
+    <color name="yellow_theme_dark_onSurface">#E9E1D8</color>
+    <color name="yellow_theme_dark_surfaceVariant">#4D4639</color>
+    <color name="yellow_theme_dark_onSurfaceVariant">#D0C5B4</color>
+    <color name="yellow_theme_dark_outline">#998F80</color>
+    <color name="yellow_theme_dark_inverseOnSurface">#1E1B16</color>
+    <color name="yellow_theme_dark_inverseSurface">#E9E1D8</color>
+    <color name="yellow_theme_dark_inversePrimary">#795900</color>
+    <color name="yellow_theme_dark_shadow">#000000</color>
+    <color name="yellow_theme_dark_surfaceTint">#F8BD2A</color>
+    <color name="yellow_theme_dark_outlineVariant">#4D4639</color>
+    <color name="yellow_theme_dark_scrim">#000000</color>
 </resources>

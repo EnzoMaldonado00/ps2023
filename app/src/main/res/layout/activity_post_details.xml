@@ -140,6 +140,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/be_the_first_comment_text"
                     android:visibility="gone"
+                    android:textColor="@color/black"
                     app:layout_constraintBottom_toBottomOf="@id/comment_recycler"
                     app:layout_constraintEnd_toEndOf="@id/comment_recycler"
                     app:layout_constraintStart_toStartOf="@id/comment_recycler"

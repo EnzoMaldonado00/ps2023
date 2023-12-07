@@ -124,7 +124,6 @@ class HomeActivity : AppCompatActivity() {
 
     private fun deployFragHome(fragment: Fragment) {
         val fragmentManager: FragmentManager = supportFragmentManager
-
         val transaction: FragmentTransaction = fragmentManager.beginTransaction()
         transaction.replace(binding.frameContainer.id, fragment)
 

@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.maldEnz.ps.databinding.FragmentFriendListBinding
 import com.maldEnz.ps.presentation.activity.HomeActivity
 import com.maldEnz.ps.presentation.adapter.FriendListAdapter
-import com.maldEnz.ps.presentation.mvvm.model.UserModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.FriendViewModel
 import com.maldEnz.ps.presentation.mvvm.viewmodel.UserViewModel
 import org.koin.android.ext.android.inject
@@ -37,7 +36,9 @@ class FriendListFragment : Fragment() {
         binding.recycler.layoutManager = LinearLayoutManager(requireContext())
         adapter = FriendListAdapter(friendViewModel)
         binding.recycler.adapter = adapter
-        userViewModel.friends.observe(viewLifecycleOwner){
+        binding.emptyStateFriendList.visibility = View.VISIBLE
+        userViewModel.friends.observe(viewLifecycleOwner) {
+            binding.emptyStateFriendList.visibility = View.GONE
             adapter.submitList(it)
         }
     }

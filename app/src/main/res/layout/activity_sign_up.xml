@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:text="@string/choose_img_text"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,12 +35,12 @@
         android:layout_width="@dimen/sign_in_edit_text"
         android:layout_height="@dimen/component_height"
         android:layout_margin="@dimen/container_margin"
+        android:hint="@string/full_name_hint"
         android:importantForAutofill="no"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/user_icon"
-        android:hint="@string/full_name_hint"
         tools:ignore="LabelFor" />
 
     <EditText
@@ -47,12 +48,12 @@
         android:layout_width="@dimen/sign_in_edit_text"
         android:layout_height="@dimen/component_height"
         android:layout_margin="@dimen/container_margin"
+        android:hint="@string/email_hint"
         android:importantForAutofill="no"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/name_edit_text"
-        android:hint="@string/email_hint"
         tools:ignore="LabelFor" />
 
     <EditText
@@ -60,12 +61,12 @@
         android:layout_width="@dimen/sign_in_edit_text"
         android:layout_height="@dimen/component_height"
         android:layout_margin="@dimen/container_margin"
+        android:hint="@string/password_hint"
         android:importantForAutofill="no"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/email"
-        android:hint="@string/password_hint"
         tools:ignore="LabelFor" />
 
     <Button
@@ -88,6 +89,18 @@
         android:text="@string/account_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/terms_and_cond" />
+
+    <TextView
+        android:id="@+id/terms_and_cond"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="By signing up, you agree to the Terms and Conditions."
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_register" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
