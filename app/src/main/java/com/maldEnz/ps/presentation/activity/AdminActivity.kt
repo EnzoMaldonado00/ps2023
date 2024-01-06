@@ -39,7 +39,7 @@ class AdminActivity : AppCompatActivity() {
         adminViewModel.getRegisteredUsers()
         adminViewModel.getAllUsersRegisterDate()
         userViewModel.getThemes()
-        userViewModel.getFeed()
+        //     userViewModel.getFeed()
         adminViewModel.registeredUsers.observe(this) {
             binding.registeredUsers.text = it
         }

@@ -29,6 +29,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
     private val userViewModel: UserViewModel by inject()
+    private var currentFragmentTag: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +60,7 @@ class HomeActivity : AppCompatActivity() {
             binding.placeholder.performClick()
         }
         binding.btnFab.setOnClickListener {
-            deployFrag(AddFriendFragment())
+            deployFrag(AddFriendFragment(), "addFriend")
         }
         bottomNavMenu()
 
@@ -89,7 +90,7 @@ class HomeActivity : AppCompatActivity() {
                     }
 
                     R.id.friend_request_item -> {
-                        deployFragHome(FriendRequestFragment())
+                        deployFrag(FriendRequestFragment(), "friendReq")
                         true
                     }
 
@@ -118,37 +119,44 @@ class HomeActivity : AppCompatActivity() {
         } else {
             userViewModel.getUserData()
             userViewModel.updateUserStatusToOnline()
-            deployFragHome(RecentChatsFragment())
+            deployFragHome(RecentChatsFragment(), "recentChats")
         }
     }
 
-    private fun deployFragHome(fragment: Fragment) {
+    private fun deployFragHome(fragment: Fragment, tag: String) {
         val fragmentManager: FragmentManager = supportFragmentManager
-        val transaction: FragmentTransaction = fragmentManager.beginTransaction()
-        transaction.replace(binding.frameContainer.id, fragment)
+        if (tag != currentFragmentTag) {
+            val transaction: FragmentTransaction = fragmentManager.beginTransaction()
+            transaction.replace(binding.frameContainer.id, fragment)
 
-        transaction.commit()
+            transaction.commit()
+            currentFragmentTag = tag
+        }
     }
 
-    private fun deployFrag(fragment: Fragment) {
+    private fun deployFrag(fragment: Fragment, tag: String) {
         val fragmentManager: FragmentManager = supportFragmentManager
 
-        val transaction: FragmentTransaction = fragmentManager.beginTransaction()
-        transaction.replace(binding.frameContainer.id, fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
+        if (tag != currentFragmentTag) {
+            val transaction: FragmentTransaction = fragmentManager.beginTransaction()
+            transaction.replace(binding.frameContainer.id, fragment, tag)
+            transaction.addToBackStack(null)
+            transaction.commit()
+
+            currentFragmentTag = tag
+        }
     }
 
     private fun bottomNavMenu() {
         binding.bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.bottom_nav_home -> {
-                    deployFragHome(RecentChatsFragment())
+                    deployFragHome(RecentChatsFragment(), "recentChats")
                     true
                 }
 
                 R.id.bottom_nav_feed -> {
-                    deployFrag(FeedFragment())
+                    deployFrag(FeedFragment(), "feed")
                     true
                 }
 
@@ -163,7 +171,7 @@ class HomeActivity : AppCompatActivity() {
                 }
 
                 R.id.bottom_nav_friends -> {
-                    deployFrag(FriendListFragment())
+                    deployFrag(FriendListFragment(), "friendList")
 
                     true
                 }

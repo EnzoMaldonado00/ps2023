@@ -39,10 +39,16 @@ class RecentChatsFragment : Fragment() {
         binding.chatsRecyclerView.adapter = adapter
         binding.chatsRecyclerView.itemAnimator = null
         chatViewModel.loadRecentChats()
-        binding.emptyStateChats.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.VISIBLE
         chatViewModel.chatList.observe(viewLifecycleOwner) { list ->
-            binding.emptyStateChats.visibility = View.GONE
-            adapter.submitList(list)
+            if (list.isNotEmpty()) {
+                binding.emptyStateChats.visibility = View.GONE
+                binding.progressBar.visibility = View.GONE
+                adapter.submitList(list)
+            } else {
+                binding.emptyStateChats.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.GONE
+            }
         }
     }
 }

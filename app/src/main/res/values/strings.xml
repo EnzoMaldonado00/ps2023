@@ -102,6 +102,7 @@
     <string name="the_friends_you_add_will_appear_here_text">The friends you add will appear here</string>
     <string name="you_have_no_friend_requests_text">You have no friend requests</string>
     <string name="times_bought_text">Times bought:</string>
+    <string name="jump_to_top_text">Jump to Top</string>
 
 
 </resources>

@@ -25,7 +25,7 @@ class ChatViewModel : ViewModel() {
             docRefer.addSnapshotListener { documentSnapshot, _ ->
                 if (documentSnapshot != null && documentSnapshot.exists()) {
                     val chats = documentSnapshot.get("chats") as List<Map<String, Any>>?
-                    if (chats != null) {
+                    if (!chats.isNullOrEmpty()) {
                         val recentChatList = mutableListOf<RecentChatModel>()
                         val chatsCount = chats.size
                         var usersLoaded = 0
@@ -73,6 +73,8 @@ class ChatViewModel : ViewModel() {
                                 }
                             }
                         }
+                    } else {
+                        chatList.value = emptyList()
                     }
                 }
             }

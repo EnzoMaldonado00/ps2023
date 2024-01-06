@@ -36,10 +36,16 @@ class FriendListFragment : Fragment() {
         binding.recycler.layoutManager = LinearLayoutManager(requireContext())
         adapter = FriendListAdapter(friendViewModel)
         binding.recycler.adapter = adapter
-        binding.emptyStateFriendList.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.VISIBLE
         userViewModel.friends.observe(viewLifecycleOwner) {
-            binding.emptyStateFriendList.visibility = View.GONE
-            adapter.submitList(it)
+            if (it.isNotEmpty()) {
+                binding.emptyStateFriendList.visibility = View.GONE
+                binding.progressBar.visibility = View.GONE
+                adapter.submitList(it)
+            } else {
+                binding.emptyStateFriendList.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.GONE
+            }
         }
     }
 

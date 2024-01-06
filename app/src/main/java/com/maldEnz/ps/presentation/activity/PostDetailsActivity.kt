@@ -75,9 +75,11 @@ class PostDetailsActivity : AppCompatActivity() {
 
         binding.btnSend.setOnClickListener {
             val commentContent = binding.commentContent.text.toString()
-            postViewModel.uploadPostComment(postId, authorId, commentContent)
-            binding.commentContent.text.clear()
-            binding.commentContent.clearFocus()
+            if (commentContent.isNotEmpty() || commentContent != "") {
+                postViewModel.uploadPostComment(postId, authorId, commentContent)
+                binding.commentContent.text.clear()
+                binding.commentContent.clearFocus()
+            }
         }
 
         binding.btnLike.setOnClickListener {

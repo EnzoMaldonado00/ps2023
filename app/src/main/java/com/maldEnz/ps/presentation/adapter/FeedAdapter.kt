@@ -118,9 +118,9 @@ class FeedAdapter(private val postViewModel: PostViewModel) :
                     it.context.startActivity(intent)
                 }
 
-                if (formattedList.size > 3) {
+                if (formattedList.size > 4) {
                     val shortList =
-                        formattedList.subList(formattedList.lastIndex - 2, formattedList.lastIndex)
+                        formattedList.subList(formattedList.lastIndex, formattedList.lastIndex + 1)
                     adapter.submitList(shortList)
                 } else {
                     adapter.submitList(formattedList)
@@ -134,6 +134,7 @@ class FeedAdapter(private val postViewModel: PostViewModel) :
 
         private fun setupCommentRecyclerView() {
             binding.recyclerComment.layoutManager = LinearLayoutManager(itemView.context)
+            binding.recyclerComment.isNestedScrollingEnabled = false
             binding.recyclerComment.adapter = adapter
         }
     }
