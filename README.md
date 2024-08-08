@@ -1,1 +1,1 @@
-Graduation Project: Social Network
+Graduation Project: Mobile Social Network
